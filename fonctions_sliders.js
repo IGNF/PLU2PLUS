@@ -55,7 +55,7 @@
 					}
 				
 					if (type === 'Continu') {
-						lineMat = new THREE.LineBasicMaterial( { color: couleur, transparent: true, opacity: opacite_aretes_focus } );
+						lineMat = new THREE.LineBasicMaterial( { color: couleur, transparent: false } );
 						for (i=0; i<array.length; i++){
 							
 							array[i].visible = true;
@@ -141,7 +141,7 @@
 					//animate();	
 				}
 				
-				function choixStyleContexte(style, BDVisible) {
+				function choixStyleContexte(style, BDVisible, fContexte, matMurContexte, matToitContexte, lineMatContexte) {
 					clearContexte();
 					if (style === 'Discret') {
 						//BDTopo
@@ -160,8 +160,9 @@
 				}
 				
 				
-				function choixStyleFocus(style) {
+				function choixStyleFocus(style, fFocus, fTexture, roofMaterial, wallMaterial, lineMatFocus) {
 					if (style === 'Discret') {
+						
 						params.color_mur_focus = '#ffffff';
 						params.opacite_mur_focus = 0.7;
 						
@@ -171,7 +172,19 @@
 						params.color_aretes_focus = '#666666';
 						params.type_aretes_focus = 'Tirets';
 						
-						
+						for (i=0; i<arrayMur.length; i++){
+							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus});
+							/*arrayMur[i].material.color.setHex(params.color_mur_focus.replace("#", "0x"));
+							arrayMur[i].material.opacity = params.opacite_mur_focus;
+							arrayMur[i].material.transparent = (params.opacite_mur_focus<1);*/
+							arrayMur.materialNeedsUpdate = true;
+						}
+						for (i=0; i<arrayToit.length; i++){
+							arrayToit[i].material = new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus});
+							arrayToit.materialNeedsUpdate = true;
+						}
+						$(fTexture.domElement).attr("hidden", true);
+						$(fFocus.domElement).attr("hidden", false);
 
 					} else if (style === 'Typique'){
 						params.color_mur_focus = '#270906';
@@ -182,22 +195,94 @@
 
 						params.color_aretes_focus = '#000000';
 						params.type_aretes_focus = 'Continu';
+						
+						for (i=0; i<arrayMur.length; i++){
+							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus});
+							arrayMur.materialNeedsUpdate = true;
+						}
+						for (i=0; i<arrayToit.length; i++){
+							arrayToit[i].material = new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus});
+							arrayToit.materialNeedsUpdate = true;
+						}
+						
+						$(fTexture.domElement).attr("hidden", true);
+						$(fFocus.domElement).attr("hidden", false);
 
+					} else if (style === 'Semi'){
+						for (i=0; i<arrayToit.length; i++){
+							arrayToit[i].material = roofMaterial;
+							arrayToit.materialNeedsUpdate = true;
+						}
+						for (i=0; i<arrayMur.length; i++){
+							arrayMur[i].material = wallMaterial;
+							arrayMur.materialNeedsUpdate = true;
+						}
+						
+						params.type_aretes_focus = 'Invisible';
+						
+						$(fTexture.domElement).attr("hidden", false);
+						$(fFocus.domElement).attr("hidden", true);
+						
 					}
 					
-					for (i=0; i<arrayMur.length; i++){
-						arrayMur[i].material.color.setHex(params.color_mur_focus.replace("#", "0x"));
-						arrayMur[i].material.opacity = params.opacite_mur_focus;
-						arrayMur[i].material.transparent = (params.opacite_mur_focus<1);
-						arrayMur.materialNeedsUpdate = true;
-					}
-					for (i=0; i<arrayToit.length; i++){
-						arrayToit[i].material.color.setHex(params.color_toit_focus.replace("#", "0x"));
-						arrayToit[i].material.opacity = params.opacite_toit_focus;
-						arrayToit[i].material.transparent = (params.opacite_toit_focus<1);
-						arrayToit.materialNeedsUpdate = true;
-					}
+
 					choixAretes (arrayAretes, lineMatFocus, params.type_aretes_focus);
 					
 				}
 				
+				
+				
+			function choixTexture(value, array){
+				
+				var textureMaterial = new THREE.MeshBasicMaterial( {
+					map: null,
+					color: 0xffffff,
+					shading: THREE.SmoothShading
+				} );
+				
+				
+				var textureLoader = new THREE.TextureLoader();
+				textureLoader.load( "./textures/"+value+".jpg", function( map ) {
+					map.wrapS = THREE.RepeatWrapping;
+					map.wrapT = THREE.RepeatWrapping;
+					map.anisotropy = 4;
+					map.repeat.set( 0.1, 0.1 );
+					textureMaterial.side = THREE.DoubleSide;
+					textureMaterial.map = map;
+					textureMaterial.needsUpdate = true;
+				} );
+				
+	
+				for (i=0; i<array.length; i++){
+				array[i].material = textureMaterial;
+				array.materialNeedsUpdate = true;
+				
+			}
+			}
+				
+			function saveJSON(){
+				var txt = JSON.stringify(gui.getSaveObject(), undefined, 2);
+				/*console.log(txt);
+
+				window.open('data:text/json;charset=utf-8,' + escape(txt));*/
+				
+				//var textToSave = document.getElementById("inputTextToSave").value;
+				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
+				var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+				var fileNameToSaveAs = gui.__preset_select.value;
+				//document.getElementById("inputFileNameToSaveAs").value;
+			 
+				var downloadLink = document.createElement("a");
+				downloadLink.download = fileNameToSaveAs;
+				downloadLink.innerHTML = "Download File";
+				downloadLink.href = textToSaveAsURL;
+				downloadLink.style.display = "none";
+				document.body.appendChild(downloadLink);
+			 
+				downloadLink.click();
+				
+
+
+			}
+			
+			

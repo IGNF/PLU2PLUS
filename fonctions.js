@@ -17,6 +17,7 @@
 
 			}
 			
+			
 			//pour appliquer les textures génériques comme les tuiles
 			function assignUVs(geometry) {
 
@@ -27,21 +28,30 @@
 					var components = ['x', 'y', 'z'].sort(function(a, b) {
 						return Math.abs(face.normal[a]) > Math.abs(face.normal[b]);
 					});
+					
+					geometry.computeBoundingBox();
+					var min     = geometry.boundingBox.min;
+
 
 					var v1 = geometry.vertices[face.a];
 					var v2 = geometry.vertices[face.b];
 					var v3 = geometry.vertices[face.c];
 
 					geometry.faceVertexUvs[0].push([
-						new THREE.Vector2(v1[components[0]], v1[components[1]]),
-						new THREE.Vector2(v2[components[0]], v2[components[1]]),
-						new THREE.Vector2(v3[components[0]], v3[components[1]])
+						new THREE.Vector2((v1[components[0]] - min[components[0]]) , (v1[components[1]] - min[components[1]])),
+						new THREE.Vector2((v2[components[0]] - min[components[0]]) , (v2[components[1]] - min[components[1]])),
+						new THREE.Vector2((v3[components[0]] - min[components[0]]) , (v3[components[1]] - min[components[1]]))
+						
+						//new THREE.Vector2(v1[components[0]], v1[components[1]])
+						//new THREE.Vector2(v2[components[0]], v2[components[1]])
+						//new THREE.Vector2(v3[components[0]], v3[components[1]])
 					]);
 
 				});
 
 				geometry.uvsNeedUpdate = true;
 			}
+			
 			
 			//déplace le mesh
 			function moveMesh (mesh, x, y, z) {
@@ -247,7 +257,6 @@
 					var index = img.indexOf(",");
 					var base = img.substring(index+1,img.length);
 					zip.file('Image'+nbImage+'.png', base, {base64: true});
-					//zip.file('Image'+nbImage+'.png',img, {base64: true, binary : true, compression : "DEFLATE"});
 				}catch(zip){					
 					console.log("Browser does not support taking screenshot of 3d context");
 					return;
@@ -269,5 +278,10 @@
 			
 			function emptyZip(zip){
 				nbImage = 0;
-				zip = new JSZip();
+				var i = 1;
+				for (var image in zip.files){
+					zip.remove('Image'+i+'.png');
+					i++;
+				}
+				//return zip;
 			}
