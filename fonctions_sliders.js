@@ -254,10 +254,9 @@
 				
 	
 				for (i=0; i<array.length; i++){
-				array[i].material = textureMaterial;
-				array.materialNeedsUpdate = true;
-				
-			}
+					array[i].material = textureMaterial;
+					array.materialNeedsUpdate = true;
+				}
 			}
 				
 			function saveJSON(){
