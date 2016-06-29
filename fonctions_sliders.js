@@ -37,15 +37,15 @@
 					animate();	
 				}
 				
-				
+				//choix de la couleur d'une surface
 				function choixCouleur (array, value) {
 					for (i=0; i<array.length; i++){				
 						array[i].material.color.setHex(value.replace("#", "0x"));   
 					}
 				}
 				
-				
-				function choixAretes(array, lineMat, type) {
+				//choix du type d'arêtes (continu, tirets, ou invisible)
+				function choixAretes(array, arrayQuads, lineMat, type) {
 				var couleur;
 				
 					if (array === arrayAretes){
@@ -63,6 +63,10 @@
 							array.materialNeedsUpdate = true;
 							//lineMat.needsUpdate = true;
 						}
+												for (i=0; i<arrayQuads.length; i++){
+							arrayQuads[i].visible = false;
+							arrayQuads.materialNeedsUpdate = true;
+						}
 					}
 					else if (type === 'Tirets') {
 						lineMat = new THREE.LineDashedMaterial( { color: couleur, dashSize: 0.7, gapSize: 1 } );
@@ -72,11 +76,39 @@
 							array[i].material = lineMat;
 							array.materialNeedsUpdate = true;
 						}
+												for (i=0; i<arrayQuads.length; i++){
+							arrayQuads[i].visible = false;
+							arrayQuads.materialNeedsUpdate = true;
+						}
 					}
 					else if (type === 'Invisible') {
 						lineMat.visible = false;
 						for (i=0; i<array.length; i++){
 						
+							array[i].visible = false;
+							array.materialNeedsUpdate = true;
+						}
+						for (i=0; i<arrayQuads.length; i++){
+							arrayQuads[i].visible = false;
+							arrayQuads.materialNeedsUpdate = true;
+						}
+					}
+					else if (type === 'Sketchy') {
+						lineMat = createMaterial(10.0);
+						for (i=0; i<arrayQuads.length; i++){
+										/*for ( j = 0; j < array[i].geometry.vertices.length; j=j+2 ) {
+											var lineGeom = createQuad(array[i].geometry.vertices[j],array[i].geometry.vertices[j+1]);
+											var mesh = new THREE.Mesh( lineGeom, lineMat );
+											scene.add(mesh);
+											moveMesh(mesh, -40, 0, -9.4);
+										}*/
+						
+							arrayQuads[i].visible = true;
+							arrayQuads[i].material = lineMat;
+							arrayQuads.materialNeedsUpdate = true;
+						}
+						for (i=0; i<array.length; i++){
+							
 							array[i].visible = false;
 							array.materialNeedsUpdate = true;
 						}
@@ -138,9 +170,9 @@
 							arrayBatiToit[i].visible = true;
 						}	
 					}	
-					//animate();	
 				}
 				
+				//choix entre un contexte discret ou photoréaliste (texturé)
 				function choixStyleContexte(style, BDVisible, fContexte, matMurContexte, matToitContexte, lineMatContexte) {
 					clearContexte();
 					if (style === 'Discret') {
@@ -159,7 +191,7 @@
 				return BDVisible;
 				}
 				
-				
+				//choix entre un focus discret, typique ou semi-réaliste (texturé)
 				function choixStyleFocus(style, fFocus, fTexture, roofMaterial, wallMaterial, lineMatFocus) {
 					if (style === 'Discret') {
 						
@@ -174,9 +206,6 @@
 						
 						for (i=0; i<arrayMur.length; i++){
 							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus});
-							/*arrayMur[i].material.color.setHex(params.color_mur_focus.replace("#", "0x"));
-							arrayMur[i].material.opacity = params.opacite_mur_focus;
-							arrayMur[i].material.transparent = (params.opacite_mur_focus<1);*/
 							arrayMur.materialNeedsUpdate = true;
 						}
 						for (i=0; i<arrayToit.length; i++){
@@ -231,7 +260,7 @@
 				}
 				
 				
-				
+			//choix de la texture du focus semiréaliste	
 			function choixTexture(value, array){
 				
 				var textureMaterial = new THREE.MeshBasicMaterial( {
@@ -259,17 +288,13 @@
 				}
 			}
 				
+			//sauvegarde de la configuration des paramètres actuels dans un fichier
 			function saveJSON(){
 				var txt = JSON.stringify(gui.getSaveObject(), undefined, 2);
-				/*console.log(txt);
-
-				window.open('data:text/json;charset=utf-8,' + escape(txt));*/
-				
-				//var textToSave = document.getElementById("inputTextToSave").value;
 				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
 				var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
 				var fileNameToSaveAs = gui.__preset_select.value;
-				//document.getElementById("inputFileNameToSaveAs").value;
+
 			 
 				var downloadLink = document.createElement("a");
 				downloadLink.download = fileNameToSaveAs;

@@ -107,7 +107,7 @@
 			}
 			
 			
-				function loadObjFocus(fileObj, matMur, matToit, arrayMur, arrayToit, arrayAretes, lineMat){
+				function loadObjFocus(fileObj, matMur, matToit, arrayMur, arrayToit, arrayAretes, arrayQuads, lineMat, quadMat){
 
 					var objLoader = new THREE.OBJLoader();
 					
@@ -123,7 +123,15 @@
 
 									var mesh = new THREE.Mesh(geometry);
 									
-									var edges = new THREE.EdgesHelper(mesh, lineMat, 30);
+									var edges = new THREE.EdgesHelper(mesh);
+
+									var geom = edges.geometry;
+									var vvv = geom.getAttribute('position');
+
+									//var material = createMaterial(10.0);
+
+
+
 									
 									var line = new THREE.Line( geo2line(edges.geometry), lineMat, THREE.LinePieces );
 									moveMesh(line, -40, 0, -9.4);
@@ -131,6 +139,13 @@
 									if (child.name.endsWith("non")){
 										child.visible = false;
 									}else if(child.name.startsWith("mur")){
+										for ( i = 0; i < vvv.length-5; i=i+6 ) {
+											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
+											var mesh = new THREE.Mesh( lineGeom, quadMat );
+											arrayQuads.push(mesh);
+											scene.add(mesh);
+											moveMesh(mesh, -40, 0, -9.4);
+										}
 										var meshWall = new THREE.Mesh(geometry, matMur);
 										moveMesh(meshWall, -40, 0, -9.4);
 										meshWall.renderOrder = 1;
@@ -140,11 +155,20 @@
 										scene.add(line);
 										arrayAretes.push(line);
 										arrayMur.push(meshWall);
+
+
 									}else{
 										for (var k=0; k<child.geometry.attributes.normal.array.length; k++){
 											child.geometry.attributes.normal.array[k] = -child.geometry.attributes.normal.array[k];
 										}
 										var meshRoof = new THREE.Mesh(geometry, matToit);
+										for ( i = 0; i < vvv.length-5; i=i+6 ) {
+											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
+											var mesh = new THREE.Mesh( lineGeom, quadMat );
+											arrayQuads.push(mesh);
+											scene.add(mesh);
+											moveMesh(mesh, -40, 0, -9.4);
+										}
 										moveMesh(meshRoof, -40, 0, -9.4);
 										meshRoof.renderOrder = 2;
 										meshRoof.userData = {focus : true};
@@ -153,6 +177,7 @@
 										arrayAretes.push(line);
 										arrayToit.push(meshRoof);
 										scene.add(line);
+
 									}
 									
 							}
@@ -286,4 +311,83 @@
 				//return zip;
 			}
 			
-			
+			function createMaterial(width){
+
+				var texture = THREE.ImageUtils.loadTexture( "paint-brush.png" );
+				//texture.wrapT =texture.wrapS = THREE.RepeatWrapping;
+				texture.repeat.set( 0.1, 0.1 );
+				texture.anisotropy = 10;
+
+				//Materiel appliqué à toutes les géométries de la couche
+				var material = new THREE.ShaderMaterial( {
+
+					uniforms: {
+						time: { value: 1.0 },
+						thickness : { value: width },
+						resolution: { value: new THREE.Vector2(window.innerWidth,window.innerHeight) }, // todo: vraie resolution
+						texture1: { type: "t", value: texture }
+					},
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+				} );
+				material.transparent = true;
+
+
+				return material;
+			}
+
+           
+			function createQuad(pt1,pt2){
+
+				//Définition propre a chaque géométrie
+				var geometry = new THREE.BufferGeometry();
+
+				var vertices = new Float32Array( [
+					pt1.x, pt1.y,  pt1.z, // -1
+					pt2.x, pt2.y,  pt2.z, // -1
+					pt2.x, pt2.y,  pt2.z, //  1
+
+					pt2.x, pt2.y,  pt2.z, //  1
+					pt1.x, pt1.y,  pt1.z, //  1
+					pt1.x, pt1.y,  pt1.z  // -1
+				] );
+
+				var vertices2 = new Float32Array( [
+					pt2.x, pt2.y,  pt2.z,
+					pt1.x, pt1.y,  pt1.z,
+					pt1.x, pt1.y,  pt1.z,
+
+
+					pt1.x, pt1.y,  pt1.z,
+					pt2.x, pt2.y,  pt2.z,
+					pt2.x, pt2.y,  pt2.z
+				] );
+
+
+
+				geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+				geometry.addAttribute( 'position2', new THREE.BufferAttribute( vertices2, 3 ) );
+					opacity = new Float32Array( geometry.attributes.position.count );
+
+				var uv = new Float32Array( [
+					-1, -1,
+					1, -1,
+					1,  1,
+
+					1, 1,
+					-1, 1,
+					-1,-1
+				] );
+
+
+
+				for(var i= 0; i < geometry.attributes.position.count ;i ++){
+					opacity[i] = Math.random();
+				}
+
+				geometry.addAttribute( 'opacity', new THREE.BufferAttribute( opacity, 1 ) );
+				geometry.addAttribute( 'uv', new THREE.BufferAttribute( uv, 2 ) );
+
+				return geometry;
+			}
