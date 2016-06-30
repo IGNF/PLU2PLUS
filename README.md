@@ -10,14 +10,14 @@ Si vous utilisez Chrome, il faudra sans doute ajouter --allow-file-access-from-f
 
 
 3. Une fois tous les éléments de la page chargés, vous pouvez agir sur les sliders pour modifier l'apparence des bâtiments avec les éléments suivants :
-- transparence
-- couleur
-- type d'arêtes
-- ombrage des murs (pour le focus)
-- type de focus par défaut (entre discret, typique et semi-réaliste)
-- type de contexte (entre discret et photoréaliste)
-- source de données du contexte (entre BDtopo et bâti3D)
-- style du fond (cadastre ou orthophoto)
+    - transparence
+    - couleur  
+    - type d'arêtes
+    - ombrage des murs (pour le focus)
+    - type de focus par défaut (entre discret, typique et semi-réaliste)
+    - type de contexte (entre discret et photoréaliste)
+    - source de données du contexte (entre BDtopo et bâti3D)
+    - style du fond (cadastre ou orthophoto)
 
 
 4. Il est possible de prendre des captures d'écran en cliquant sur « Capture d'écran ». Le compteur en dessous se met à jour pour indiquer combien de photos ont été prises. Il est possible de les télécharger toutes ensemble en cliquant ensuite sur « Télécharger les images ».

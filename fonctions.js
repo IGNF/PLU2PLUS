@@ -127,11 +127,6 @@
 
 									var geom = edges.geometry;
 									var vvv = geom.getAttribute('position');
-
-									//var material = createMaterial(10.0);
-
-
-
 									
 									var line = new THREE.Line( geo2line(edges.geometry), lineMat, THREE.LinePieces );
 									moveMesh(line, -40, 0, -9.4);
@@ -162,13 +157,13 @@
 											child.geometry.attributes.normal.array[k] = -child.geometry.attributes.normal.array[k];
 										}
 										var meshRoof = new THREE.Mesh(geometry, matToit);
-										for ( i = 0; i < vvv.length-5; i=i+6 ) {
+										/*for ( i = 0; i < vvv.length-5; i=i+6 ) {
 											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
 											var mesh = new THREE.Mesh( lineGeom, quadMat );
 											arrayQuads.push(mesh);
 											scene.add(mesh);
 											moveMesh(mesh, -40, 0, -9.4);
-										}
+										}*/
 										moveMesh(meshRoof, -40, 0, -9.4);
 										meshRoof.renderOrder = 2;
 										meshRoof.userData = {focus : true};
@@ -313,10 +308,14 @@
 			
 			function createMaterial(width){
 
-				var texture = THREE.ImageUtils.loadTexture( "paint-brush.png" );
-				//texture.wrapT =texture.wrapS = THREE.RepeatWrapping;
+				var texture = THREE.ImageUtils.loadTexture( "pencil1-tiled-136-135.png" );
+				var texture2 = THREE.ImageUtils.loadTexture( "paint-brush.png" );
+				var texture3 = THREE.ImageUtils.loadTexture( "brush3-387-186.png" );
+				/*texture.wrapS = THREE.RepeatWrapping;
 				texture.repeat.set( 0.1, 0.1 );
 				texture.anisotropy = 10;
+				texture.anisotropy = 10;*/
+				var color = new THREE.Color().setHex(params.color_aretes_focus.replace("#", "0x"));
 
 				//Materiel appliqué à toutes les géométries de la couche
 				var material = new THREE.ShaderMaterial( {
@@ -325,7 +324,10 @@
 						time: { value: 1.0 },
 						thickness : { value: width },
 						resolution: { value: new THREE.Vector2(window.innerWidth,window.innerHeight) }, // todo: vraie resolution
-						texture1: { type: "t", value: texture }
+						texture1: { type: "t", value: texture },
+						texture2: { type: "t", value: texture2 },
+						texture3: { type: "t", value: texture3 },
+						color : {type: 'v3', value: [color.r,color.g,color.b]}
 					},
 					vertexShader: document.getElementById( 'vertexShader' ).textContent,
 					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
@@ -368,7 +370,6 @@
 
 				geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 				geometry.addAttribute( 'position2', new THREE.BufferAttribute( vertices2, 3 ) );
-					opacity = new Float32Array( geometry.attributes.position.count );
 
 				var uv = new Float32Array( [
 					-1, -1,
@@ -381,12 +382,6 @@
 				] );
 
 
-
-				for(var i= 0; i < geometry.attributes.position.count ;i ++){
-					opacity[i] = Math.random();
-				}
-
-				geometry.addAttribute( 'opacity', new THREE.BufferAttribute( opacity, 1 ) );
 				geometry.addAttribute( 'uv', new THREE.BufferAttribute( uv, 2 ) );
 
 				return geometry;

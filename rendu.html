@@ -28,11 +28,11 @@
 	<body>		
 		<script type="x-shader/x-vertex" id="vertexShader">
 		
-			attribute float opacity;
 			attribute vec3  position2;
 			uniform   vec2  resolution;
 			uniform   float thickness;
 			varying   vec3 v_uv;
+			varying   float choixTex;
 			void main() {
 			gl_Position = projectionMatrix *
 							modelViewMatrix *
@@ -45,10 +45,22 @@
 			vec2 normal = normalize((gl_Position.xy/gl_Position.w - Position2.xy/Position2.w) * resolution); // * 0.5
 			normal = uv.x * uv.y * vec2(-normal.y, normal.x);
 
-			if (distance(cameraPosition,position)>100.0){
-				gl_Position.xy += 100.0*(thickness/distance(cameraPosition,position)) * gl_Position.w * normal * 2.0 / resolution;
+			if (distance(cameraPosition,(position + position2)/2.0)>25.0){
+				gl_Position.xy += 25.0*(thickness/distance(cameraPosition,(position + position2)/2.0)) * gl_Position.w * normal * 2.0 / resolution;
 				}
-			else {gl_Position.xy += thickness * gl_Position.w * normal * 2.0 / resolution;}
+			else {
+				gl_Position.xy += thickness * gl_Position.w * normal * 2.0 / resolution;
+			}
+
+			if (distance(position, position2) < 3.0){
+				choixTex = 1.0;
+				
+			} else if (distance(position, position2) > 10.0){
+				choixTex = 3.0;
+			//	v_uv = vec3(2.0*(uv.x-0.5),uv.y,1.)*gl_Position.w;
+			}else {
+				choixTex = 2.0;
+			}
 
 			v_uv = vec3(uv,1.)*gl_Position.w;
 
@@ -59,14 +71,25 @@
 		</script>
 		<script type="x-shader/x-fragment" id="fragmentShader">
 			varying vec3  v_uv;
+			varying float choixTex;
 			uniform sampler2D texture1;
+			uniform sampler2D texture2;
+			uniform sampler2D texture3;
+			uniform vec3 color;
+			
 
 			void main() {
 			vec2 uv = v_uv.xy/v_uv.z;
+			vec4 baseColor = texture2D(texture1, (uv+1.)*0.5);
 
-			vec4 baseColor = texture2D(texture1, (1.+uv)*0.5);   
+			if (choixTex == 2.0){
+				baseColor = texture2D(texture2, (uv+1.)*0.5);   
+			} else if (choixTex == 3.0){
+				baseColor = texture2D(texture3, (uv+1.)*0.5);   
+			}
+
 			if ( baseColor.a < 0.5 ) discard;
-			gl_FragColor = baseColor;
+			gl_FragColor = baseColor+vec4(color,1.0);
 			}
 		
 		</script>
@@ -164,7 +187,7 @@
 						opacite_toit_contexte:0.9,
 						type_material : 'Avec',
 						type_aretes_focus : 'Continu',
-						epaisseur_aretes_focus : 5.0,
+						epaisseur_aretes_focus : 14.0,
 						type_aretes_contexte : 'Tirets',
 						type_fond : 'Cadastre',
 						color_mur_focus : "#77615B",
@@ -202,8 +225,8 @@
 					var color_aretes_focus = fFocus.addColor( params, 'color_aretes_focus' ).name('# Arêtes focus').listen();
 					var color_aretes_contexte = fContexte.addColor( params, 'color_aretes_contexte' ).name('# Arêtes contexte').listen();
 					var type_mat_mur = fFocus.add(params, 'type_material', [ "Sans", "Avec"]).name('Ombrage').listen();
-					var type_aretes_focus = fFocus.add(params, 'type_aretes_focus', [ "Continu", "Tirets", "Invisible", "Sketchy"]).name('Epaisseur arêtes').listen();
-					var epaisseur_aretes_focus = fFocus.add(params, 'epaisseur_aretes_focus',  1,20,1).name('Arêtes focus').listen();
+					var type_aretes_focus = fFocus.add(params, 'type_aretes_focus', [ "Continu", "Tirets", "Invisible", "Sketchy"]).name('Arêtes focus').listen();
+					var epaisseur_aretes_focus = fFocus.add(params, 'epaisseur_aretes_focus',  1,100,1).name('Epaisseur arêtes').listen();
 					var type_aretes_contexte = fContexte.add(params, 'type_aretes_contexte', [ "Continu", "Tirets", "Invisible"]).name('Arêtes contexte').listen();
 					var type_fond = gui.add(params, 'type_fond', [ "Cadastre", "Orthophoto"]).name('Fond').listen();
 					var saturation = fContexte.add( params, 'saturation_contexte',0,0.3,0.001 ).name('Saturation').listen();
@@ -241,12 +264,12 @@
 					opacite_toit_contexte.onChange(function(value){   matToitContexte.opacity = value; matToitContexte.transparent = (value < 1.0); });
 					type_mat_mur.onChange(function(value) { choixMat(value); });
 					type_aretes_focus.onChange(function(value) { lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, value);});
-					epaisseur_aretes_focus.onChange(function(value) {});
+					epaisseur_aretes_focus.onChange(function(value) { epaisseurAretes(value, arrayQuads)});
 					type_aretes_contexte.onChange(function(value) { lineMatContexte = choixAretes(arrayAretesContexte, lineMatContexte, value);});
 					type_fond.onChange(function(value) { choixFond(value); });
 					color_mur_focus.onChange(function(value) { choixCouleur(arrayMur,value);});	
 					color_toit_focus.onChange(function(value) {choixCouleur(arrayToit,value);});
-					color_aretes_focus.onChange(function(value) {choixCouleur(arrayAretes,value);});
+					color_aretes_focus.onChange(function(value) {choixCouleur(arrayAretes,value); choixCouleurQuads(arrayQuads,value);});
 					color_aretes_contexte.onChange(function(value) {choixCouleur(arrayAretesContexte,value);});
 					saturation.onChange(function(value) { matMurContexte.color.setHSL(params.teinte_mur_contexte, value, params.brightness_contexte); matToitContexte.color.setHSL(params.teinte_toit_contexte, value, params.brightness_contexte);	});
 					brightness.onChange(function(value) { matMurContexte.color.setHSL(params.teinte_mur_contexte, params.saturation_contexte, value); matToitContexte.color.setHSL(params.teinte_toit_contexte, params.saturation_contexte, value);	});
@@ -268,7 +291,7 @@
 					var lineMatContexte = new THREE.LineDashedMaterial();
 					var matMurContexte = new THREE.MeshLambertMaterial({color: couleur_mur_contexte, side: THREE.DoubleSide, transparent : (params.opacite_mur_contexte < 1.0), opacity : params.opacite_mur_contexte});
 					var matToitContexte = new THREE.MeshLambertMaterial({color: couleur_toit_contexte, side: THREE.DoubleSide, transparent :(params.opacite_toit_contexte < 1.0), opacity : params.opacite_toit_contexte});
-					 var quadMatFocus = createMaterial(10.0);
+					var quadMatFocus = createMaterial(14.0);
 
 
 					var textureLoader = new THREE.TextureLoader();
@@ -311,12 +334,14 @@
 						params.style_focus = '';
 					}
 					if (params.type_aretes_focus === 'Sketchy'){
-						lineMatFocus = choixAretes(arrayAretes, arrayQuads, quadMatFocus, params.type_aretes_focus);
+						quadMatFocus = choixAretes(arrayAretes, arrayQuads, quadMatFocus, params.type_aretes_focus);
+						lineMatFocus.visible = false;
 					} else {
-					lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, params.type_aretes_focus);
-
-					lineMatContexte = choixAretes(arrayAretesContexte, lineMatContexte, params.type_aretes_contexte);
+						lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, params.type_aretes_focus);
+						quadMatFocus.visible = false;
 					}
+					lineMatContexte = choixAretes(arrayAretesContexte, lineMatContexte, params.type_aretes_contexte);
+
 					
 					
 

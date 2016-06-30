@@ -43,6 +43,15 @@
 						array[i].material.color.setHex(value.replace("#", "0x"));   
 					}
 				}
+
+				//choix de la couleur d'une surface
+				function choixCouleurQuads (array, value) {
+					var color = new THREE.Color().setHex(value.replace("#", "0x"));
+					for (i=0; i<array.length; i++){				
+						array[i].material.uniforms.color.value = [color.r, color.g, color.b];   
+					}
+				}
+				
 				
 				//choix du type d'arêtes (continu, tirets, ou invisible)
 				function choixAretes(array, arrayQuads, lineMat, type) {
@@ -94,15 +103,8 @@
 						}
 					}
 					else if (type === 'Sketchy') {
-						lineMat = createMaterial(10.0);
-						for (i=0; i<arrayQuads.length; i++){
-										/*for ( j = 0; j < array[i].geometry.vertices.length; j=j+2 ) {
-											var lineGeom = createQuad(array[i].geometry.vertices[j],array[i].geometry.vertices[j+1]);
-											var mesh = new THREE.Mesh( lineGeom, lineMat );
-											scene.add(mesh);
-											moveMesh(mesh, -40, 0, -9.4);
-										}*/
-						
+						lineMat = createMaterial(params.epaisseur_aretes_focus);
+						for (i=0; i<arrayQuads.length; i++){		
 							arrayQuads[i].visible = true;
 							arrayQuads[i].material = lineMat;
 							arrayQuads.materialNeedsUpdate = true;
@@ -258,6 +260,13 @@
 					choixAretes (arrayAretes, lineMatFocus, params.type_aretes_focus);
 					
 				}
+
+			function epaisseurAretes(value, arrayQuads)	{
+				for (i=0;i<arrayQuads.length;i++){
+					arrayQuads[i].material.uniforms.thickness.value = value;
+					arrayQuads.materialNeedsUpdate = true;
+				}
+			}
 				
 				
 			//choix de la texture du focus semiréaliste	
