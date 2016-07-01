@@ -4,16 +4,17 @@
   "remembered": {
     "Default": {
       "0": {
-        "opacite_mur_focus": 1,
-        "opacite_toit_focus": 1,
-        "opacite_mur_contexte": 1,
-        "opacite_toit_contexte": 1,
-        "color_mur_focus": "#ff00d1",
-        "color_toit_focus": "#00e1ff",
+        "opacite_mur_focus": 0.46038396022282574,
+        "opacite_toit_focus": 0.42092247791801213,
+        "opacite_mur_contexte": 0.8103066814866455,
+        "opacite_toit_contexte": 0.7866297921037573,
+        "color_mur_focus": "#89aa4c",
+        "color_toit_focus": "#46abb9",
         "color_aretes_focus": "#000000",
         "color_aretes_contexte": "#1064ff",
         "type_material": "Avec",
         "type_aretes_focus": "Sketchy",
+        "epaisseur_aretes_focus": 50,
         "type_aretes_contexte": "Continu",
         "type_fond": "Cadastre",
         "saturation_contexte": 0.27228422790321405,
@@ -25,8 +26,7 @@
         "style_focus": "",
         "texture_mur": "wall",
         "texture_toit": "roof",
-        "nb_images": 0,
-        "epaisseur_aretes_focus": 50
+        "nb_images": 0
       }
     }
   },
@@ -34,13 +34,7 @@
     "Focus": {
       "preset": "Default",
       "closed": false,
-      "folders": {
-        "Epaisseur": {
-          "preset": "Default",
-          "closed": false,
-          "folders": {}
-        }
-      }
+      "folders": {}
     },
     "Focus texture": {
       "preset": "Default",

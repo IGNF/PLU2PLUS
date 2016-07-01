@@ -45,8 +45,8 @@
 			vec2 normal = normalize((gl_Position.xy/gl_Position.w - Position2.xy/Position2.w) * resolution); // * 0.5
 			normal = uv.x * uv.y * vec2(-normal.y, normal.x);
 
-			if (distance(cameraPosition,(position + position2)/2.0)>25.0){
-				gl_Position.xy += 25.0*(thickness/distance(cameraPosition,(position + position2)/2.0)) * gl_Position.w * normal * 2.0 / resolution;
+			if (length((gl_Position.xyz+Position2.xyz)/2.0)>25.0){
+				gl_Position.xy += 25.0*(thickness/length((gl_Position.xyz+Position2.xyz)/2.0)) * gl_Position.w * normal * 2.0 / resolution;
 				}
 			else {
 				gl_Position.xy += thickness * gl_Position.w * normal * 2.0 / resolution;
@@ -88,8 +88,8 @@
 				baseColor = texture2D(texture3, (uv+1.)*0.5);   
 			}
 
-			if ( baseColor.a < 0.5 ) discard;
-			gl_FragColor = baseColor+vec4(color,1.0);
+			if ( baseColor.a < 0.3 ) discard;
+				gl_FragColor = baseColor+vec4(color,0.0);
 			}
 		
 		</script>
@@ -103,6 +103,7 @@
 		<script src="js/MTLLoader.js"></script>
 		<script src="fonctions.js"></script>
 		<script src="fonctions_sliders.js"></script>
+		<script src="fonctions_load.js"></script>
 		<script src="js/FileSaver.min.js"></script>
 		<script src="js/Stuk-jszip-4cbaf0e/dist/jszip.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
@@ -140,6 +141,7 @@
 		var arrayToit = [];
 		var arrayAretes = [];				
 		var arrayQuads = [];				
+		var arrayQuadsContexte = [];				
 		var arrayBDToit = [];
 		var arrayBDMur = [];
 		var arrayAretesContexteBati = [];
@@ -177,6 +179,7 @@
 					var fFocus = gui.addFolder('Focus'),
 					fTexture = gui.addFolder('Focus texture'),
 					fContexte = gui.addFolder('Contexte');
+					
 					$(fTexture.domElement).attr("hidden", true);
 					
 					//paramètres dat.gui
@@ -226,7 +229,7 @@
 					var color_aretes_contexte = fContexte.addColor( params, 'color_aretes_contexte' ).name('# Arêtes contexte').listen();
 					var type_mat_mur = fFocus.add(params, 'type_material', [ "Sans", "Avec"]).name('Ombrage').listen();
 					var type_aretes_focus = fFocus.add(params, 'type_aretes_focus', [ "Continu", "Tirets", "Invisible", "Sketchy"]).name('Arêtes focus').listen();
-					var epaisseur_aretes_focus = fFocus.add(params, 'epaisseur_aretes_focus',  1,100,1).name('Epaisseur arêtes').listen();
+
 					var type_aretes_contexte = fContexte.add(params, 'type_aretes_contexte', [ "Continu", "Tirets", "Invisible"]).name('Arêtes contexte').listen();
 					var type_fond = gui.add(params, 'type_fond', [ "Cadastre", "Orthophoto"]).name('Fond').listen();
 					var saturation = fContexte.add( params, 'saturation_contexte',0,0.3,0.001 ).name('Saturation').listen();
@@ -235,7 +238,7 @@
 					var teinte_toit = fContexte.add( params, 'teinte_toit_contexte',0,1,0.001  ).name('Teinte toit').listen();
 					var type_contexte = fContexte.add(params, 'type_contexte', [ "BDTopo", "Bati3D"]).name('Source').listen();
 					var style_contexte = gui.add(params, 'style_contexte', [ "Discret", "Photoréaliste"]).name('Style contexte').listen();
-					var style_focus = gui.add(params, 'style_focus', [ "Discret", "Typique", "Semi"]).name('Style focus').listen();
+					var style_focus = gui.add(params, 'style_focus', [ "Discret", "Typique", "Semi", "Sketchy"]).name('Style focus').listen();
 					var texture_mur = fTexture.add(params, 'texture_mur', [ "bricks", "wall", "stone-wall"]).name('Texture mur').listen();
 					var texture_toit = fTexture.add(params, 'texture_toit', [ "roof", "water"]).name('Texture toit').listen();
 					var pos_cam = gui.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();	
@@ -246,7 +249,9 @@
 					var save_json = gui.add(params, 'save_json').name('Sauvegarder la configuration').listen();
 					var couleur_mur_contexte = new THREE.Color().setHSL(params.teinte_mur_contexte, params.saturation_contexte, params.brightness_contexte);
 					var couleur_toit_contexte = new THREE.Color().setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
-									
+					var fEp = fFocus.addFolder('Epaisseur');	
+					var epaisseur_aretes_focus = fEp.add(params, 'epaisseur_aretes_focus',  10,100,1).name('Epaisseur arêtes').listen();	
+					$(fEp.domElement).attr("hidden", false);	
 					
 					//.onChange sliders
 					opacite_mur_focus.onChange(function(value){  
@@ -265,7 +270,7 @@
 					type_mat_mur.onChange(function(value) { choixMat(value); });
 					type_aretes_focus.onChange(function(value) { lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, value);});
 					epaisseur_aretes_focus.onChange(function(value) { epaisseurAretes(value, arrayQuads)});
-					type_aretes_contexte.onChange(function(value) { lineMatContexte = choixAretes(arrayAretesContexte, lineMatContexte, value);});
+					type_aretes_contexte.onChange(function(value) { lineMatContexte = choixAretes(arrayAretesContexte,arrayQuadsContexte, lineMatContexte, value);});
 					type_fond.onChange(function(value) { choixFond(value); });
 					color_mur_focus.onChange(function(value) { choixCouleur(arrayMur,value);});	
 					color_toit_focus.onChange(function(value) {choixCouleur(arrayToit,value);});
@@ -340,7 +345,7 @@
 						lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, params.type_aretes_focus);
 						quadMatFocus.visible = false;
 					}
-					lineMatContexte = choixAretes(arrayAretesContexte, lineMatContexte, params.type_aretes_contexte);
+					lineMatContexte = choixAretes(arrayAretesContexte, arrayQuadsContexte, lineMatContexte, params.type_aretes_contexte);
 
 					
 					
@@ -371,11 +376,13 @@
 			var couleur_fond = 0xAADFF4;
 		
 			scene = new THREE.Scene();
+			//scene2 = new THREE.Scene();
 			var WIDTH = window.innerWidth,
 			HEIGHT = window.innerHeight;
 			renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer: true });
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.setClearColor( couleur_fond, 0.5);
+			//renderer.autoClear = false; // 2 scenes
 			document.body.appendChild(renderer.domElement);
 			camera = new THREE.PerspectiveCamera(10, WIDTH / HEIGHT, 10, 100000);
 			camera.position.set(-300,425,325);
@@ -409,7 +416,10 @@
 			
 		function animate() {
 			requestAnimationFrame(animate);
+			//renderer.clear();
 			renderer.render(scene, camera);
+			//renderer.clearDepth();
+			//renderer.render(scene2, camera);
 			controls.update();
 			for (var i in gui.__controllers) {
 				gui.__controllers[i].updateDisplay();

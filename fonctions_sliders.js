@@ -2,18 +2,10 @@
 				function choixMat(type) {
 				
 					if (type === 'Avec') {
-						
-						for (i=0; i<arrayMur.length; i++){
-							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus});
-							arrayMur.materialNeedsUpdate = true;
-						}
+						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus}));
 					}
 					else if (type === 'Sans') {
-					
-						for (i=0; i<arrayMur.length; i++){
-							arrayMur[i].material = new THREE.MeshBasicMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus});
-							arrayMur.materialNeedsUpdate = true;
-						}
+						changeMat(arrayMur,new THREE.MeshBasicMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus}));
 					}
 					
 				}
@@ -56,9 +48,13 @@
 				//choix du type d'arêtes (continu, tirets, ou invisible)
 				function choixAretes(array, arrayQuads, lineMat, type) {
 				var couleur;
+				var fEp = gui.__folders.Focus.__folders.Epaisseur;
+				
 				
 					if (array === arrayAretes){
+						$(fEp.domElement).attr("hidden", true);
 						couleur = params.color_aretes_focus;
+						ok = true;
 					} else {
 						couleur = params.color_aretes_contexte;
 					}
@@ -72,7 +68,7 @@
 							array.materialNeedsUpdate = true;
 							//lineMat.needsUpdate = true;
 						}
-												for (i=0; i<arrayQuads.length; i++){
+						for (i=0; i<arrayQuads.length; i++){
 							arrayQuads[i].visible = false;
 							arrayQuads.materialNeedsUpdate = true;
 						}
@@ -85,7 +81,7 @@
 							array[i].material = lineMat;
 							array.materialNeedsUpdate = true;
 						}
-												for (i=0; i<arrayQuads.length; i++){
+						for (i=0; i<arrayQuads.length; i++){
 							arrayQuads[i].visible = false;
 							arrayQuads.materialNeedsUpdate = true;
 						}
@@ -103,11 +99,24 @@
 						}
 					}
 					else if (type === 'Sketchy') {
+						$(fEp.domElement).attr("hidden", false);
+						//gui.load.folders['Focus'].folders['Epaisseur'].closed = false;
+						fEp.__ul.className = "";
 						lineMat = createMaterial(params.epaisseur_aretes_focus);
 						for (i=0; i<arrayQuads.length; i++){		
 							arrayQuads[i].visible = true;
-							arrayQuads[i].material = lineMat;
-							arrayQuads.materialNeedsUpdate = true;
+							/*if (arrayQuads[i].userData.toit === true){
+								lineMat2 = createMaterial(params.epaisseur_aretes_focus);
+								lineMat2.polygonOffset = true;
+								lineMat2.polygonOffsetFactor = 0.0;
+								lineMat2.polygonOffsetUnits = -151.0;
+								lineMat2.needsUpdate = true;
+								arrayQuads[i].material = lineMat2;
+								arrayQuads.materialNeedsUpdate = true;
+							} else {*/
+								arrayQuads[i].material = lineMat;
+								arrayQuads.materialNeedsUpdate = true;
+							//}
 						}
 						for (i=0; i<array.length; i++){
 							
@@ -205,15 +214,10 @@
 		
 						params.color_aretes_focus = '#666666';
 						params.type_aretes_focus = 'Tirets';
-						
-						for (i=0; i<arrayMur.length; i++){
-							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus});
-							arrayMur.materialNeedsUpdate = true;
-						}
-						for (i=0; i<arrayToit.length; i++){
-							arrayToit[i].material = new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus});
-							arrayToit.materialNeedsUpdate = true;
-						}
+						params.type_material = 'Avec';
+
+						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}));
+						changeMat(arrayToit,new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
 						$(fTexture.domElement).attr("hidden", true);
 						$(fFocus.domElement).attr("hidden", false);
 
@@ -226,38 +230,47 @@
 
 						params.color_aretes_focus = '#000000';
 						params.type_aretes_focus = 'Continu';
-						
-						for (i=0; i<arrayMur.length; i++){
-							arrayMur[i].material = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus});
-							arrayMur.materialNeedsUpdate = true;
-						}
-						for (i=0; i<arrayToit.length; i++){
-							arrayToit[i].material = new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus});
-							arrayToit.materialNeedsUpdate = true;
-						}
+						params.type_material = 'Avec';
+
+						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}) );
+						changeMat(arrayToit, new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
 						
 						$(fTexture.domElement).attr("hidden", true);
 						$(fFocus.domElement).attr("hidden", false);
 
 					} else if (style === 'Semi'){
-						for (i=0; i<arrayToit.length; i++){
-							arrayToit[i].material = roofMaterial;
-							arrayToit.materialNeedsUpdate = true;
-						}
-						for (i=0; i<arrayMur.length; i++){
-							arrayMur[i].material = wallMaterial;
-							arrayMur.materialNeedsUpdate = true;
-						}
+
+						changeMat(arrayMur, wallMaterial);
+						changeMat(arrayToit, roofMaterial);
 						
 						params.type_aretes_focus = 'Invisible';
 						
 						$(fTexture.domElement).attr("hidden", false);
 						$(fFocus.domElement).attr("hidden", true);
 						
+					} else if (style === 'Sketchy'){
+
+						params.color_mur_focus = '#a45f58';
+						params.opacite_mur_focus = 1.0;
+						
+						params.color_toit_focus = '#ffb48c';						
+						params.opacite_toit_focus = 1.0;
+		
+						params.color_aretes_focus = '#000000';
+						params.type_aretes_focus = 'Sketchy';
+						params.epaisseur_aretes_focus = 75.0;
+						params.type_material = 'Avec';
+
+						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}));
+						changeMat(arrayToit,new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
+						$(fTexture.domElement).attr("hidden", true);
+						$(fFocus.domElement).attr("hidden", false);
+						
 					}
+
 					
 
-					choixAretes (arrayAretes, lineMatFocus, params.type_aretes_focus);
+					choixAretes (arrayAretes, arrayQuads, lineMatFocus, params.type_aretes_focus);
 					
 				}
 
@@ -316,6 +329,43 @@
 				
 
 
+			}
+
+
+			function saveScreenshot(zip){
+				try {
+					nbImage++;
+					var img = renderer.domElement.toDataURL("image/png");
+					var index = img.indexOf(",");
+					var base = img.substring(index+1,img.length);
+					zip.file('Image'+nbImage+'.png', base, {base64: true});
+				}catch(zip){					
+					console.log("Browser does not support taking screenshot of 3d context");
+					return;
+				}
+			}
+			
+			function downloadAll(zip){
+				zip.generateAsync({type:"blob"})
+				.then(function (blob) {
+					saveAs(blob, "images.zip");
+				});
+			}
+			
+			function resetCam(camera){
+				camera.position.set(-300,425,325);
+				controls.target.set( -50, 30, 0 );
+			}
+			
+			
+			function emptyZip(zip){
+				nbImage = 0;
+				var i = 1;
+				for (var image in zip.files){
+					zip.remove('Image'+i+'.png');
+					i++;
+				}
+				//return zip;
 			}
 			
 			

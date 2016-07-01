@@ -14,6 +14,7 @@
         "color_aretes_contexte": "#ff1010",
         "type_material": "Avec",
         "type_aretes_focus": "Invisible",
+        "epaisseur_aretes_focus": 14,
         "type_aretes_contexte": "Tirets",
         "type_fond": "Orthophoto",
         "saturation_contexte": 0.13219596572112569,
@@ -23,7 +24,7 @@
         "type_contexte": "Bati3D",
         "style_contexte": "Discret",
         "style_focus": "Semi",
-        "texture_mur": "bricks",
+        "texture_mur": "wall",
         "texture_toit": "roof",
         "nb_images": 0
       }
