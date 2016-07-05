@@ -75,12 +75,14 @@
 			uniform sampler2D texture1;
 			uniform sampler2D texture2;
 			uniform sampler2D texture3;
+			//uniform sampler2D paper;
 			uniform vec3 color;
 			
 
 			void main() {
 			vec2 uv = v_uv.xy/v_uv.z;
 			vec4 baseColor = texture2D(texture1, (uv+1.)*0.5);
+			//vec4 paperColor = texture2D(paper, (uv+1.)*0.5 );
 
 			if (choixTex == 2.0){
 				baseColor = texture2D(texture2, (uv+1.)*0.5);   
@@ -89,7 +91,7 @@
 			}
 
 			if ( baseColor.a < 0.3 ) discard;
-				gl_FragColor = baseColor+vec4(color,0.0);
+				gl_FragColor = baseColor+vec4(color,0.0); //0.0 si on veut la transparence des arêtes
 			}
 		
 		</script>
@@ -191,6 +193,7 @@
 						type_material : 'Avec',
 						type_aretes_focus : 'Continu',
 						epaisseur_aretes_focus : 14.0,
+						type_trait : 'irregulier',
 						type_aretes_contexte : 'Tirets',
 						type_fond : 'Cadastre',
 						color_mur_focus : "#77615B",
@@ -229,7 +232,6 @@
 					var color_aretes_contexte = fContexte.addColor( params, 'color_aretes_contexte' ).name('# Arêtes contexte').listen();
 					var type_mat_mur = fFocus.add(params, 'type_material', [ "Sans", "Avec"]).name('Ombrage').listen();
 					var type_aretes_focus = fFocus.add(params, 'type_aretes_focus', [ "Continu", "Tirets", "Invisible", "Sketchy"]).name('Arêtes focus').listen();
-
 					var type_aretes_contexte = fContexte.add(params, 'type_aretes_contexte', [ "Continu", "Tirets", "Invisible"]).name('Arêtes contexte').listen();
 					var type_fond = gui.add(params, 'type_fond', [ "Cadastre", "Orthophoto"]).name('Fond').listen();
 					var saturation = fContexte.add( params, 'saturation_contexte',0,0.3,0.001 ).name('Saturation').listen();
@@ -251,6 +253,7 @@
 					var couleur_toit_contexte = new THREE.Color().setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
 					var fEp = fFocus.addFolder('Epaisseur');	
 					var epaisseur_aretes_focus = fEp.add(params, 'epaisseur_aretes_focus',  10,100,1).name('Epaisseur arêtes').listen();	
+					var type_trait = fEp.add(params, 'type_trait', ['irregulier', 'brush', 'paint-brush', 'two', 'scribble', 'light', 'wavy', 'dotted', 'thick' ]).name('Style de trait').listen();	
 					$(fEp.domElement).attr("hidden", false);	
 					
 					//.onChange sliders
@@ -270,6 +273,7 @@
 					type_mat_mur.onChange(function(value) { choixMat(value); });
 					type_aretes_focus.onChange(function(value) { lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, value);});
 					epaisseur_aretes_focus.onChange(function(value) { epaisseurAretes(value, arrayQuads)});
+					type_trait.onChange(function(value) { choixTrait(value, arrayQuads)});
 					type_aretes_contexte.onChange(function(value) { lineMatContexte = choixAretes(arrayAretesContexte,arrayQuadsContexte, lineMatContexte, value);});
 					type_fond.onChange(function(value) { choixFond(value); });
 					color_mur_focus.onChange(function(value) { choixCouleur(arrayMur,value);});	
@@ -280,7 +284,7 @@
 					brightness.onChange(function(value) { matMurContexte.color.setHSL(params.teinte_mur_contexte, params.saturation_contexte, value); matToitContexte.color.setHSL(params.teinte_toit_contexte, params.saturation_contexte, value);	});
 					teinte_mur.onChange(function(value) { matMurContexte.color.setHSL(value, params.saturation_contexte, params.brightness_contexte); });
 					teinte_toit.onChange(function(value) {matToitContexte.color.setHSL(value, params.saturation_contexte, params.brightness_contexte);	});
-					type_contexte.onChange(function(value) { choixContexte(value, arrayBatiMur, arrayBatiToit, arrayAretesContexteBati, arrayBDMur, arrayBDToit, arrayAretesContexteBD, arrayAretesContexte, lineMatContexte);});
+					type_contexte.onChange(function(value) { arrayAretesContexte = choixContexte(value, arrayBatiMur, arrayBatiToit, arrayAretesContexteBati, arrayBDMur, arrayBDToit, arrayAretesContexteBD, arrayAretesContexte, lineMatContexte);});
 					style_contexte.onChange(function(value) { BDVisible = choixStyleContexte(value, BDVisible, fContexte, matMurContexte, matToitContexte,lineMatContexte); });
 					style_focus.onChange(function(value) { choixStyleFocus(value, fFocus, fTexture,roofMaterial,wallMaterial, lineMatFocus); });
 					texture_mur.onChange(function(value) {choixTexture(value, arrayMur);});
@@ -296,7 +300,7 @@
 					var lineMatContexte = new THREE.LineDashedMaterial();
 					var matMurContexte = new THREE.MeshLambertMaterial({color: couleur_mur_contexte, side: THREE.DoubleSide, transparent : (params.opacite_mur_contexte < 1.0), opacity : params.opacite_mur_contexte});
 					var matToitContexte = new THREE.MeshLambertMaterial({color: couleur_toit_contexte, side: THREE.DoubleSide, transparent :(params.opacite_toit_contexte < 1.0), opacity : params.opacite_toit_contexte});
-					var quadMatFocus = createMaterial(14.0);
+					var quadMatFocus = createMaterial(params.epaisseur_aretes_focus, params.type_trait);
 
 
 					var textureLoader = new THREE.TextureLoader();

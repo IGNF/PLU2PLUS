@@ -57,6 +57,7 @@
 						ok = true;
 					} else {
 						couleur = params.color_aretes_contexte;
+						arrayQuads = [];
 					}
 				
 					if (type === 'Continu') {
@@ -100,9 +101,8 @@
 					}
 					else if (type === 'Sketchy') {
 						$(fEp.domElement).attr("hidden", false);
-						//gui.load.folders['Focus'].folders['Epaisseur'].closed = false;
-						fEp.__ul.className = "";
-						lineMat = createMaterial(params.epaisseur_aretes_focus);
+						fEp.open();
+						lineMat = createMaterial(params.epaisseur_aretes_focus, params.type_trait);
 						for (i=0; i<arrayQuads.length; i++){		
 							arrayQuads[i].visible = true;
 							/*if (arrayQuads[i].userData.toit === true){
@@ -132,11 +132,11 @@
 				
 				
 				//choix entre bati3D et BDtopo
-				function choixContexte(type, arrayBatiMur, arrayBatiToit,arrayAretesBati, arrayBDMur, arrayBDToit, arrayAretesBD, lineMat) {
+				function choixContexte(type, arrayBatiMur, arrayBatiToit,arrayAretesBati, arrayBDMur, arrayBDToit, arrayAretesBD,arrayAretesContexte, lineMat) {
 					
 					if (type === 'BDTopo') {
 						arrayAretesContexte = arrayAretesBD;
-						choixAretes(arrayAretesContexte,lineMat, params.type_aretes_contexte);
+						//choixAretes(arrayAretesContexte, arrayQuads, lineMat, params.type_aretes_contexte);
 						for (i=0; i<arrayAretesBati.length; i++) {
 							arrayAretesBati[i].visible=false;
 						}
@@ -161,7 +161,7 @@
 					}
 					else if (type === 'Bati3D') {
 						arrayAretesContexte = arrayAretesBati;
-						choixAretes(arrayAretesContexte, lineMat, params.type_aretes_contexte);
+						
 						for (j=0; j<arrayBDMur.length; j++) {
 							arrayBDMur[j].visible = false;
 						}	
@@ -180,7 +180,11 @@
 						for (i=0; i<arrayBatiToit.length; i++) {
 							arrayBatiToit[i].visible = true;
 						}	
-					}	
+					}
+
+					choixAretes(arrayAretesContexte, arrayQuads, lineMat, params.type_aretes_contexte);
+
+					return arrayAretesContexte;	
 				}
 				
 				//choix entre un contexte discret ou photoréaliste (texturé)
@@ -247,6 +251,7 @@
 						
 						$(fTexture.domElement).attr("hidden", false);
 						$(fFocus.domElement).attr("hidden", true);
+						fTexture.open();
 						
 					} else if (style === 'Sketchy'){
 
@@ -309,6 +314,13 @@
 					array.materialNeedsUpdate = true;
 				}
 			}
+
+			function choixTrait(value, arrayQuads) {
+				mat = createMaterial(params.epaisseur_aretes_focus, value);
+				changeMat(arrayQuads,mat);
+
+			}
+
 				
 			//sauvegarde de la configuration des paramètres actuels dans un fichier
 			function saveJSON(){

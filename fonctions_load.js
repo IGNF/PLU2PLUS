@@ -25,7 +25,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 									var mesh = new THREE.Mesh(cGeo, material);
 									if (nom === 'parcelle' || nom === 'photo'){
 										mesh.userData = {fond : true};
-										//mesh.renderOrder = 3;
+										mesh.renderOrder = 4;
 									}
 									mesh.name = nom+chId;
 									mesh.visible = visible;
@@ -75,7 +75,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
                                             mesh.userData = {focus : true};
 											arrayQuads.push(mesh);
 
-											//mesh.renderOrder = 1;
+											mesh.renderOrder = 1;
                                             
 											scene.add(mesh);
 											moveMesh(mesh, -40, 0, -9.35);
@@ -100,6 +100,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
 											var mesh = new THREE.Mesh( lineGeom, quadMat );
                                             mesh.userData = {focus : true};
+											mesh.renderOrder = 3;
 											arrayQuads.push(mesh);
 											scene.add(mesh);
 											moveMesh(mesh, -40, 0, -9.35);

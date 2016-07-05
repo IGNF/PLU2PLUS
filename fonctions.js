@@ -103,11 +103,15 @@
 			
 			
 			//crée le material texturé associé aux arêtes sketchy
-			function createMaterial(width){
+			function createMaterial(width, value){
 
-				var texture = THREE.ImageUtils.loadTexture( "pencil1-tiled-136-135.png" );
-				var texture2 = THREE.ImageUtils.loadTexture( "paint-brush.png" );
-				var texture3 = THREE.ImageUtils.loadTexture( "chalk1-155-142.png" );
+				//var texture = THREE.ImageUtils.loadTexture( "strokes/pencil1-tiled-136-135.png" );
+				var texture = THREE.ImageUtils.loadTexture( "strokes/small.png" );
+				//var texture2 = THREE.ImageUtils.loadTexture( "strokes/paint-brush.png" );
+				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
+				var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
+				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/chalk1-155-142.png" );
+				var paper = THREE.ImageUtils.loadTexture("paper.png");
 				/*texture.wrapS = THREE.RepeatWrapping;
 				texture.repeat.set( 0.1, 0.1 );
 				texture.anisotropy = 10;
@@ -124,6 +128,7 @@
 						texture1: { type: "t", value: texture },
 						texture2: { type: "t", value: texture2 },
 						texture3: { type: "t", value: texture3 },
+						paper: { type: "t", value: paper },
 						color : {type: 'v3', value: [color.r,color.g,color.b]}
 					},
 					vertexShader: document.getElementById( 'vertexShader' ).textContent,
