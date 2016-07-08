@@ -2,10 +2,10 @@
 				function choixMat(type) {
 				
 					if (type === 'Avec') {
-						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus}));
+						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus, polygonOffset : true, polygonOffsetUnits : 10}));
 					}
 					else if (type === 'Sans') {
-						changeMat(arrayMur,new THREE.MeshBasicMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus}));
+						changeMat(arrayMur,new THREE.MeshBasicMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :true, opacity : params.opacite_mur_focus, polygonOffset : true, polygonOffsetUnits : 10}));
 					}
 					
 				}
@@ -220,8 +220,8 @@
 						params.type_aretes_focus = 'Tirets';
 						params.type_material = 'Avec';
 
-						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}));
-						changeMat(arrayToit,new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
+						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus, polygonOffset : true, polygonOffsetUnits : 10}));
+						changeMat(arrayToit,new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus, polygonOffset : true, polygonOffsetUnits : 10}));
 						$(fTexture.domElement).attr("hidden", true);
 						$(fFocus.domElement).attr("hidden", false);
 
@@ -236,8 +236,8 @@
 						params.type_aretes_focus = 'Continu';
 						params.type_material = 'Avec';
 
-						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}) );
-						changeMat(arrayToit, new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
+						changeMat(arrayMur,new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus, polygonOffset : true, polygonOffsetUnits : 10}) );
+						changeMat(arrayToit, new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus, polygonOffset : true, polygonOffsetUnits : 10}));
 						
 						$(fTexture.domElement).attr("hidden", true);
 						$(fFocus.domElement).attr("hidden", false);
@@ -266,8 +266,8 @@
 						params.epaisseur_aretes_focus = 75.0;
 						params.type_material = 'Avec';
 
-						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus}));
-						changeMat(arrayToit,new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus}));
+						changeMat(arrayMur, new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent :(params.opacite_mur_focus<1), opacity : params.opacite_mur_focus, polygonOffset : true, polygonOffsetUnits : 10}));
+						changeMat(arrayToit,new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus, polygonOffset : true, polygonOffsetUnits : 10}));
 						$(fTexture.domElement).attr("hidden", true);
 						$(fFocus.domElement).attr("hidden", false);
 						
@@ -319,6 +319,21 @@
 				mat = createMaterial(params.epaisseur_aretes_focus, value);
 				changeMat(arrayQuads,mat);
 
+			}
+
+			function echangeCouleurs(arrayMur, arrayToit) {
+				coulToit = params.color_toit_focus;
+				coulMur = params.color_mur_focus;
+				choixCouleur(arrayMur,coulToit);
+				choixCouleur(arrayToit,coulMur);
+				params.color_toit_focus = coulMur;
+				params.color_mur_focus = coulToit;
+			}
+
+			function assortirToit(arrayToit) {
+				coulMur = params.color_mur_focus;
+				choixCouleur(arrayToit,coulMur);
+				params.color_toit_focus = coulMur;
 			}
 
 				

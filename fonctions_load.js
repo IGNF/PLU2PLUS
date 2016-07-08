@@ -22,6 +22,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 									var material = materials.materials[chId];
 									material.side = THREE.DoubleSide;
 									material.shininess = 1.0;
+									//material.color = new THREE.Color(0xffffff);
 									var mesh = new THREE.Mesh(cGeo, material);
 									if (nom === 'parcelle' || nom === 'photo'){
 										mesh.userData = {fond : true};
@@ -85,6 +86,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 										meshWall.renderOrder = 2;
 										meshWall.userData = {focus : true};
 										line.userData = {focus : true};
+										//line.renderOrder = 1;
 										scene.add(meshWall);
 										scene.add(line);
 										arrayAretes.push(line);
@@ -109,6 +111,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 										meshRoof.renderOrder = 3;
 										meshRoof.userData = {focus : true};
 										line.userData = {focus : true};
+										//line.renderOrder = 1;
 										scene.add(meshRoof);
 										arrayAretes.push(line);
 										arrayToit.push(meshRoof);

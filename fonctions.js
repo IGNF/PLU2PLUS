@@ -111,7 +111,7 @@
 				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 				var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/chalk1-155-142.png" );
-				var paper = THREE.ImageUtils.loadTexture("paper.png");
+				var paper = THREE.ImageUtils.loadTexture("paper2.png");
 				/*texture.wrapS = THREE.RepeatWrapping;
 				texture.repeat.set( 0.1, 0.1 );
 				texture.anisotropy = 10;

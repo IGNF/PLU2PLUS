@@ -108,7 +108,7 @@
 		<script src="fonctions_load.js"></script>
 		<script src="js/FileSaver.min.js"></script>
 		<script src="js/Stuk-jszip-4cbaf0e/dist/jszip.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 		<script>
 
 
@@ -211,6 +211,8 @@
 						texture_toit : 'roof',
 						focus_typique : function() {choixStyleFocus('Typique')},
 						focus_discret : function() {choixStyleFocus('Discret')},
+						echange_couleurs : function() {echangeCouleurs(arrayMur, arrayToit)},
+						assortir_toit : function() {assortirToit(arrayToit)},
 						save_screenshot : function() {saveScreenshot(zip)},
 						nb_images : nbImage,
 						download : function(){downloadAll(zip)},
@@ -222,12 +224,14 @@
 					
 					
 					//variables dat.gui
+					var echange_couleurs = fFocus.add(params, 'echange_couleurs').name('Intervertir les couleurs').listen(); 
+					var assortir_toit = fFocus.add(params, 'assortir_toit').name('Assortir le toit aux murs').listen(); 
+					var color_mur_focus = fFocus.addColor( params, 'color_mur_focus' ).name('Couleur mur focus').listen();
 					var opacite_mur_focus = fFocus.add( params, 'opacite_mur_focus',0,1,0.1 ).name('Opacité mur').listen();
+					var color_toit_focus = fFocus.addColor( params, 'color_toit_focus' ).name('Couleur toit focus').listen();
 					var opacite_toit_focus = fFocus.add( params, 'opacite_toit_focus',0,1,0.1 ).name('Opacité toit').listen();		
 					var opacite_mur_contexte = fContexte.add( params, 'opacite_mur_contexte',0.1,1,0.1 ).name('Opacité mur').listen();
 					var opacite_toit_contexte = fContexte.add( params, 'opacite_toit_contexte',0.1,1,0.1 ).name('Opacité toit').listen();
-					var color_mur_focus = fFocus.addColor( params, 'color_mur_focus' ).name('Couleur mur focus').listen();
-					var color_toit_focus = fFocus.addColor( params, 'color_toit_focus' ).name('Couleur toit focus').listen();
 					var color_aretes_focus = fFocus.addColor( params, 'color_aretes_focus' ).name('# Arêtes focus').listen();
 					var color_aretes_contexte = fContexte.addColor( params, 'color_aretes_contexte' ).name('# Arêtes contexte').listen();
 					var type_mat_mur = fFocus.add(params, 'type_material', [ "Sans", "Avec"]).name('Ombrage').listen();
@@ -295,7 +299,7 @@
 					
 					//initialisation des materials
 					var matMurFocus = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent : (params.opacite_mur_focus < 1.0), opacity : params.opacite_mur_focus});			
-					var matToitFocus = new THREE.MeshLambertMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus < 1.0), opacity : params.opacite_toit_focus});
+					var matToitFocus = new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus < 1.0), opacity : params.opacite_toit_focus});
 					var lineMatFocus = new THREE.LineBasicMaterial();
 					var lineMatContexte = new THREE.LineDashedMaterial();
 					var matMurContexte = new THREE.MeshLambertMaterial({color: couleur_mur_contexte, side: THREE.DoubleSide, transparent : (params.opacite_mur_contexte < 1.0), opacity : params.opacite_mur_contexte});
@@ -351,7 +355,10 @@
 					}
 					lineMatContexte = choixAretes(arrayAretesContexte, arrayQuadsContexte, lineMatContexte, params.type_aretes_contexte);
 
-					
+					matMurFocus.polygonOffset =  true;
+					matMurFocus.polygonOffsetUnits= 10;
+					matToitFocus.polygonOffset =  true;
+					matToitFocus.polygonOffsetUnits= 10;
 					
 
 					//chargement des modèles
