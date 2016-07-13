@@ -136,7 +136,34 @@
 				}
 			}*/
 
-		var scene, camera, renderer, gui, params;
+		(function(){
+			// Convert array to object
+			var convArrToObj = function(array){
+				var thisEleObj = new Object();
+				if(typeof array == "object"){
+					for(var i in array){
+						var thisEle = convArrToObj(array[i]);
+						thisEleObj[i] = thisEle;
+					}
+				}else {
+					thisEleObj = array;
+				}
+				return thisEleObj;
+			};
+			var oldJSONStringify = JSON.stringify;
+			JSON.stringify = function(input){
+				if(oldJSONStringify(input) == '[]')
+					return oldJSONStringify(convArrToObj(input));
+				else
+					return oldJSONStringify(input);
+			};
+		})();
+
+		var scene, camera, renderer, gui, params, plane, selection, clock;
+		var raycaster = new THREE.Raycaster();
+		var offset = new THREE.Vector3();
+		var objects = [];
+		var positions = [];
 
 		//initialisation des mesh et lines
 		var arrayMur = [];
@@ -151,10 +178,14 @@
 		var arrayBatiMur = [];
 		var arrayBatiToit = [];
 		var arrayAretesContexte = [];
+
+		var arrayLineArbre = [];
+		var arrayArbre = [];
 		
 		
 		var zip = new JSZip();
 		var nbImage = 0;
+		var nbArbres = 0;
 
 		//initFileUploads();
 			
@@ -206,6 +237,7 @@
 						teinte_toit_contexte : 0.5,
 						type_contexte : 'BDTopo',
 						style_contexte : 'Discret',
+						//clarte_contexte : function() {changerClarte(arrayBatiMur, arrayBatiToit, arrayBDMur, arrayBDToit)},
 						style_focus : '',
 						texture_mur : 'wall',
 						texture_toit : 'roof',
@@ -218,7 +250,11 @@
 						download : function(){downloadAll(zip)},
 						pos_camera : function() {resetCam(camera)},
 						empty_zip : function() {emptyZip(zip)},
-						save_json :  function() {saveJSON()}
+						save_json :  function() {saveJSON()},
+						ajout_arbre :  function() {addArbre()},
+						suppr_arbre : function() {supprArbre()},
+						arbres : ''
+						//JSON.stringify(objects[0])
 					};
 					gui.remember(params);
 					
@@ -239,25 +275,31 @@
 					var type_aretes_contexte = fContexte.add(params, 'type_aretes_contexte', [ "Continu", "Tirets", "Invisible"]).name('Arêtes contexte').listen();
 					var type_fond = gui.add(params, 'type_fond', [ "Cadastre", "Orthophoto"]).name('Fond').listen();
 					var saturation = fContexte.add( params, 'saturation_contexte',0,0.3,0.001 ).name('Saturation').listen();
-					var brightness = fContexte.add( params, 'brightness_contexte',0.7,1,0.001 ).name('Luminosité').listen();
+					var brightness = fContexte.add( params, 'brightness_contexte',0.0,1,0.001 ).name('Luminosité').listen();
 					var teinte_mur = fContexte.add( params, 'teinte_mur_contexte',0,1,0.001  ).name('Teinte mur').listen();
 					var teinte_toit = fContexte.add( params, 'teinte_toit_contexte',0,1,0.001  ).name('Teinte toit').listen();
 					var type_contexte = fContexte.add(params, 'type_contexte', [ "BDTopo", "Bati3D"]).name('Source').listen();
-					var style_contexte = gui.add(params, 'style_contexte', [ "Discret", "Photoréaliste"]).name('Style contexte').listen();
+					var style_contexte = gui.add(params, 'style_contexte', [ "Discret", "Typique", "Photoréaliste"]).name('Style contexte').listen();
+					//var clarte_contexte = gui.add(params, 'clarte_contexte').name('Clarté contexte').listen();
 					var style_focus = gui.add(params, 'style_focus', [ "Discret", "Typique", "Semi", "Sketchy"]).name('Style focus').listen();
 					var texture_mur = fTexture.add(params, 'texture_mur', [ "bricks", "wall", "stone-wall"]).name('Texture mur').listen();
 					var texture_toit = fTexture.add(params, 'texture_toit', [ "roof", "water"]).name('Texture toit').listen();
 					var pos_cam = gui.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();	
+					var ajout_arbre = gui.add(params, 'ajout_arbre').name('Ajouter un arbre').listen();	
+					var suppr_arbre = gui.add(params, 'suppr_arbre').name('Supprimer le dernier arbre').listen();	
 					var save_screenshot = gui.add(params, 'save_screenshot').name('Capture d\'écran').listen();
 					var nb_images = gui.add(params, 'nb_images').name('Nombre d\'images').listen();
+					var arbres = gui.add(params, 'arbres').name('Arbres').listen();
+					//gui.__controllers[8].domElement.hidden = true
+					$(arbres.__li).attr("hidden", true);
 					var download = gui.add(params, 'download').name('Télécharger les images').listen();	
 					var empty_zip = gui.add(params, 'empty_zip').name('Supprimer les images enregistrées').listen();
 					var save_json = gui.add(params, 'save_json').name('Sauvegarder la configuration').listen();
 					var couleur_mur_contexte = new THREE.Color().setHSL(params.teinte_mur_contexte, params.saturation_contexte, params.brightness_contexte);
 					var couleur_toit_contexte = new THREE.Color().setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
-					var fEp = fFocus.addFolder('Epaisseur');	
+					var fEp = fFocus.addFolder('Arêtes');	
 					var epaisseur_aretes_focus = fEp.add(params, 'epaisseur_aretes_focus',  10,100,1).name('Epaisseur arêtes').listen();	
-					var type_trait = fEp.add(params, 'type_trait', ['irregulier', 'brush', 'paint-brush', 'two', 'scribble', 'light', 'wavy', 'dotted', 'thick' ]).name('Style de trait').listen();	
+					var type_trait = fEp.add(params, 'type_trait', ['irregulier', 'brush', 'paint-brush', 'two', 'scribble', 'light', 'wavy', 'dotted', 'thick', 'fast' ]).name('Style de trait').listen();	
 					$(fEp.domElement).attr("hidden", false);	
 					
 					//.onChange sliders
@@ -370,8 +412,18 @@
 					loadObjMtl('./models/outAnouk/Ortho.mtl','./models/outAnouk/Ortho.obj',-2,0,-2,'photo',!cadastre);
 					loadObjMtl('./models/outAnouk/Parcelle.mtl','./models/outAnouk/Parcelle.obj',0,0,-1.1,'parcelle',cadastre);
 					
+					//chargement des arbres enregistrés
+					if (params.arbres){
+						var posParse = JSON.parse(params.arbres);
+						nbArbres = posParse.length;
+						for ( var i = 0; i < nbArbres; i++ ) {
+							loadArbre('./models/tree.mtl','./models/tree.obj', posParse[i]);
+						}
+					}
 
 					animate();
+
+
 
 				};
 				reader.readAsText(file);
@@ -380,6 +432,80 @@
 			
 				
 		}
+
+		//gestion du drag&drop pour les arbres
+		function onDocumentMouseDown (event) {
+			// Get mouse position
+			var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+			var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+			// Get 3D vector from 3D mouse position using 'unproject' function
+			var vector = new THREE.Vector3(mouseX, mouseY, 1);
+			vector.unproject(camera);
+
+			// Set the raycaster position
+			raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+			// Find all intersected objects
+			var intersects = raycaster.intersectObjects(objects);
+
+			if (intersects.length > 0) {
+				// Disable the controls
+				controls.enabled = false;
+
+				// Set the selection - first intersected object
+				selection = intersects[0].object;
+
+				// Calculate the offset
+				var intersects = raycaster.intersectObject(plane);
+				offset.copy(intersects[0].point).sub(plane.position);
+			}
+		}
+
+
+		
+
+
+		 function onDocumentMouseMove (event) {
+			event.preventDefault();
+
+			// Get mouse position
+			var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+			var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+			// Get 3D vector from 3D mouse position using 'unproject' function
+			var vector = new THREE.Vector3(mouseX, mouseY, 1);
+			vector.unproject(camera);
+
+			// Set the raycaster position
+			raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+			if (selection) {
+				// Check the position where the plane is intersected
+				var intersects = raycaster.intersectObject(plane);
+				// Reposition the object based on the intersection point with the plane
+				selection.position.copy(intersects[0].point.sub(offset));
+			} else {
+				// Update position of the plane if need
+				var intersects = raycaster.intersectObjects(objects);
+				if (intersects.length > 0) {
+				plane.position.copy(intersects[0].object.position);
+				plane.lookAt(camera.position);
+				}
+			}
+		}
+
+		 function onDocumentMouseUp(event) {
+			 if (selection){
+				 for ( var i = 0; i < positions.length; i++ ) {
+					 positions[i] = objects[i].position;
+					}
+			}
+			// Enable the controls
+			controls.enabled = true;
+			selection = null;
+		}
+
 				
 
 				
@@ -388,6 +514,7 @@
 		
 			scene = new THREE.Scene();
 			//scene2 = new THREE.Scene();
+			clock = new THREE.Clock();
 			var WIDTH = window.innerWidth,
 			HEIGHT = window.innerHeight;
 			renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer: true });
@@ -399,6 +526,10 @@
 			camera.position.set(-300,425,325);
 			camera.up.set(0,0,1);
 			scene.add(camera);
+
+			plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff}));
+			plane.visible = true;
+			scene.add(plane);
 			
 			window.addEventListener('resize', function() {		
 				var WIDTH = window.innerWidth,
@@ -407,6 +538,10 @@
 				camera.aspect = WIDTH / HEIGHT;
 				camera.updateProjectionMatrix();
 			});
+
+			document.addEventListener('mousemove', this.onDocumentMouseMove, false);
+			document.addEventListener('mousedown', this.onDocumentMouseDown, false);
+	  		document.addEventListener('mouseup', this.onDocumentMouseUp, false);
 			
 			//lights
 			var light = new THREE.HemisphereLight(0xffffff, 0.8);

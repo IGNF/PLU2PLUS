@@ -174,3 +174,53 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 				});
 				
 			}
+
+
+			function loadArbre(fileMTL,fileOBJ,pos){
+
+
+				var mtlLoader = new THREE.MTLLoader();
+				mtlLoader.load( fileMTL, function( materials ) {
+				
+					materials.preload();
+		
+					//loader du fichier .obj
+					var objLoader = new THREE.OBJLoader();
+					objLoader.setMaterials( materials );
+					objLoader.load( fileOBJ, function ( object ) {
+						var arrMesh = [];
+
+						object.traverse( function ( child ) {
+
+								if ( child instanceof THREE.Mesh) {
+									child.material.needsUpdate = true;
+									child.material.side = THREE.DoubleSide;
+									var cGeo = new THREE.Geometry().fromBufferGeometry(child.geometry);	
+		
+									var mesh = new THREE.Mesh(cGeo, child.material);
+
+									arrMesh.push(mesh);
+
+
+
+								}
+						} );
+						
+						meshGeo = mergeMeshes(arrMesh);
+						moveMesh(meshGeo, pos.x,pos.y,pos.z);
+						var scale = 0.04;
+						meshGeo.scale.set(scale,scale,scale);
+						meshGeo.rotation.set(Math.PI/2,0,0);
+						meshGeo.userData = {arbre : true};
+						objects.push(meshGeo);
+						positions.push(meshGeo.position);
+						scene.add(meshGeo);
+
+					});
+				
+				});
+
+				
+			}
+
+

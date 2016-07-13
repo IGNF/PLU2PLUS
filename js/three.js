@@ -9063,7 +9063,8 @@ THREE.Object3D.prototype = {
 
 		if ( this.geometry !== undefined ) {
 
-			if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
+			//if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
+			if ( meta.geometries !== undefined && meta.geometries[ this.geometry.uuid ] === undefined ) {
 
 				meta.geometries[ this.geometry.uuid ] = this.geometry.toJSON( meta );
 
@@ -9075,7 +9076,8 @@ THREE.Object3D.prototype = {
 
 		if ( this.material !== undefined ) {
 
-			if ( meta.materials[ this.material.uuid ] === undefined ) {
+			//if ( meta.materials[ this.material.uuid ] === undefined ) {
+			if ( meta.materials !== undefined && meta.materials[ this.material.uuid ] === undefined ) {
 
 				meta.materials[ this.material.uuid ] = this.material.toJSON( meta );
 
@@ -22023,7 +22025,8 @@ THREE.Texture.prototype = {
 
 	toJSON: function ( meta ) {
 
-		if ( meta.textures[ this.uuid ] !== undefined ) {
+		//if ( meta.textures[ this.uuid ] !== undefined ) {
+		if ( meta !== undefined && meta.textures[ this.uuid ] !== undefined ) {
 
 			return meta.textures[ this.uuid ];
 

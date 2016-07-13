@@ -91,7 +91,7 @@
 				var to_remove = [];
 
 				scene.traverse ( function( child ) {
-					if ( (child instanceof THREE.Mesh || child instanceof THREE.Line) && !child.userData.focus === true && !child.userData.fond === true ) {
+					if ( (child instanceof THREE.Mesh || child instanceof THREE.Line) && !child.userData.focus === true && !child.userData.fond === true && !child.userData.arbre === true ) {
 						to_remove.push( child );
 					 }
 				} );
@@ -198,4 +198,28 @@
 						array[i].material = mat;
 						array.materialNeedsUpdate = true;
 					}
+			}
+
+
+			function mergeMeshes (meshArr) {
+				var geometry = new THREE.Geometry(),
+					materials = [],
+					m,
+					materialPointer = 0,
+					reindex = 0;
+
+				for (var i = 0; i < meshArr.length; i++) {
+					m = meshArr[i];
+
+					if (m.material.materials) {
+						for (var j = 0; j < m.material.materials.length; j++) {
+							materials[materialPointer++] = m.material.materials[j];
+						}
+					} else if (m.material) {
+						materials[materialPointer++] = m.material;
+					}
+					geometry.merge(m.geometry, m.matrix, reindex);
+					reindex = materialPointer;
+				}
+				return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 			}
