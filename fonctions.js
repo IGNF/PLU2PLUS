@@ -73,8 +73,8 @@
 			
 			//capture d'écran
 			function capture(e){
-				//Listen to 'P' key
-				if(e.which !== 80) return;  
+				//Listen to 'Down arrow' key
+				if(e.which !== 40) return;  
 				try {
 					window.open(renderer.domElement.toDataURL("image/png"));      
 				} 
@@ -100,23 +100,53 @@
 					scene.remove( to_remove[i] );
 				}
 			}
+
+			//retire de la scène tous les quads de la couche
+			function clearQuads(couche) {
+				var to_remove = [];
+
+				scene.traverse ( function( child ) {
+					if ( child.userData.quad === true && child.userData.couche === couche.id) {
+						to_remove.push( child );
+					 }
+				} );
+
+				for ( var i = 0; i < to_remove.length; i++ ) {
+					scene.remove( to_remove[i] );
+				}
+			}
+
+			//retire de la scène tous les éléments de la couche
+			function clearCouche(couche) {
+				var to_remove = [];
+
+				scene.traverse ( function( child ) {
+					if (child.userData.couche === couche.id) {
+						to_remove.push( child );
+					 }
+				} );
+
+				for ( var i = 0; i < to_remove.length; i++ ) {
+					scene.remove( to_remove[i] );
+				}
+			}
 			
 			
 			//crée le material texturé associé aux arêtes sketchy
-			function createMaterial(width, value){
+			function createMaterial(width, value, color){
 
 				//var texture = THREE.ImageUtils.loadTexture( "strokes/pencil1-tiled-136-135.png" );
 				var texture = THREE.ImageUtils.loadTexture( "strokes/small.png" );
 				//var texture2 = THREE.ImageUtils.loadTexture( "strokes/paint-brush.png" );
-				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
-				var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
+				var texture2 = THREE.ImageUtils.loadTexture( value );
+				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/chalk1-155-142.png" );
 				var paper = THREE.ImageUtils.loadTexture("paper2.png");
 				/*texture.wrapS = THREE.RepeatWrapping;
 				texture.repeat.set( 0.1, 0.1 );
 				texture.anisotropy = 10;
 				texture.anisotropy = 10;*/
-				var color = new THREE.Color().setHex(params.color_aretes_focus.replace("#", "0x"));
+				//var color = new THREE.Color().setHex(params.color_aretes_focus.replace("#", "0x"));
 
 				//Materiel appliqué à toutes les géométries de la couche
 				var material = new THREE.ShaderMaterial( {
@@ -125,9 +155,9 @@
 						time: { value: 1.0 },
 						thickness : { value: width },
 						resolution: { value: new THREE.Vector2(window.innerWidth,window.innerHeight) }, // todo: vraie resolution
-						texture1: { type: "t", value: texture },
+						texture1: { type: "t", value: texture2 },
 						texture2: { type: "t", value: texture2 },
-						texture3: { type: "t", value: texture3 },
+						texture3: { type: "t", value: texture2 },
 						paper: { type: "t", value: paper },
 						color : {type: 'v3', value: [color.r,color.g,color.b]}
 					},
@@ -223,3 +253,133 @@
 				}
 				return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 			}
+
+
+			function matFromLayer (couche) {
+						if (couche.style.parameters.fill.type === 'uni') {
+							var mat = new THREE.MeshLambertMaterial({
+								color: couche.style.parameters.fill.color, 
+								side: THREE.DoubleSide, 
+								transparent : (couche.style.parameters.fill.opacite < 1.0), 
+								opacity : couche.style.parameters.fill.opacite});		
+						}else if (couche.style.parameters.fill.type === 'texture') {
+							var mat = new THREE.MeshBasicMaterial( {color: couche.style.parameters.fill.color} );
+
+						}
+
+
+				return mat;
+
+			}
+
+			function lineMatFromLayer (couche) {
+
+						var color = couche.style.parameters.stroke.color;
+						var opacity = couche.style.parameters.stroke.opacite;
+						var transparent = (opacity <1.0 );
+						if (couche.style.parameters.stroke.type === 'Continu') {
+							var lineMat = new THREE.LineBasicMaterial({color: color, opacity: opacity ,transparent: transparent  } );
+						} else if (couche.style.parameters.stroke.type === 'Tirets'){
+							var lineMat = new THREE.LineDashedMaterial({color: color, opacity: opacity ,transparent: transparent });
+								//, dashSize : couche.style.parameters.stroke.parameters.dash, gapSize : couche.style.parameters.stroke.parameters.gap  } );
+						}else if (couche.style.parameters.stroke.type === 'Invisible'){
+							var lineMat = new THREE.LineBasicMaterial({color: color, visible : false } );
+						}else if(couche.style.parameters.stroke.type === 'Sketchy'){ 
+							var lineMat = new THREE.LineBasicMaterial({color: color, opacity: 0.0 ,transparent: true, visible : false } );
+						}	
+
+				return lineMat;
+
+			}
+
+			function quadMatFromLayer (couche) {
+
+				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.URI, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
+				return quadMat;
+
+			}
+
+
+			function elementVisible(id, visible){
+				$(document.getElementById(id)).attr("hidden", !visible);	
+			}
+
+
+			function getCoucheByName (name) {
+				for (j = 0; j < parse.couches.length; j++){
+						if (parse.couches[j].name === name){
+							return parse.couches[j];
+						}
+				}
+
+				//return couche;
+			}
+
+
+			function initGUICouche (couche){
+				var folder = gui.addFolder(couche.name);
+				gui.__folders[couche.name].__ul.id = "folder"+couche.id;
+					//params["uriSource"+couche.id] = couche.URI;
+					//params["uriSource"+couche.id] = function() {chargeData()};
+					params["name"+couche.id] = couche.name;
+					params["colorFill"+couche.id] = couche.style.parameters.fill.color;
+					params["opaFill"+couche.id] = couche.style.parameters.fill.opacite;
+					params["colorStroke"+couche.id] = couche.style.parameters.stroke.color;
+					params["typeStroke"+couche.id] = couche.style.parameters.stroke.type;
+					params["uriStroke"+couche.id] = "./strokes/thick.png";
+					params["widthStroke"+couche.id] = 50.0;
+
+					//folder.add( params, "uriSource"+couche.id ).name("Source de données").listen();
+					//gui.__folders[couche.name].__ul.lastChild.id = "uriSource"+couche.id;
+					folder.add( params, "name"+couche.id ).name("Nom couche").listen();
+					folder.addColor( params, "colorFill"+couche.id ).name("Couleur").listen();
+					folder.add( params, "opaFill"+couche.id, 0,1,0.1 ).name("Opacité").listen();
+					folder.add( params, "typeStroke"+couche.id, [ "Continu", "Tirets", "Invisible", "Sketchy"] ).name("Type arêtes").listen();
+				 	folder.addColor( params, "colorStroke"+couche.id ).name("Couleur arêtes").listen();
+					gui.__folders[couche.name].__ul.lastChild.id = "colorStroke"+couche.id;
+					folder.add( params, "uriStroke"+couche.id, [ "./strokes/wavy.png", "./strokes/two.png", "./strokes/thick.png", "./strokes/brush.png", "./strokes/tirets.png", "./strokes/tirets2.png"] ).name("Style trait").listen();
+					gui.__folders[couche.name].__ul.lastChild.id = "uriStroke"+couche.id;
+					folder.add( params, "widthStroke"+couche.id, 10, 100, 1 ).name("Epaisseur").listen();
+					gui.__folders[couche.name].__ul.lastChild.id = "widthStroke"+couche.id;
+					elementVisible("uriStroke"+couche.id,false);
+					elementVisible("widthStroke"+couche.id,false);
+					if (couche.style.parameters.stroke.type === "Sketchy"){
+						params["uriStroke"+couche.id] = couche.style.parameters.stroke.parameters.URI;
+						params["widthStroke"+couche.id] = couche.style.parameters.stroke.parameters.width;
+						elementVisible("widthStroke"+couche.id,true);
+						elementVisible("uriStroke"+couche.id,true);
+					}
+					if (couche.style.parameters.stroke.type === "Invisible"){
+						elementVisible("colorStroke"+couche.id,false);
+					}
+
+			}
+
+			function addCouche (URI){
+				var nvCouche = {
+					id : newID,
+					name : "Default"+newID,
+					URI : URI,
+					position : {displacement : {x:0, y:0, z:0},rotation : {x:0, y:0, z:0},scale : {x:1, y:1, z:1}},
+					style : {name : "Default", parameters : {fill : {opacite : 1.0, color : "#ce7157", type : "uni"}, stroke : {opacite : 1.0, color : "#ffffff", type : "Continu"}}}
+				};
+
+				parse.couches[parse.couches.length] = nvCouche;
+				loadCouche(nvCouche);
+				initGUICouche(nvCouche);
+				newID++;
+			}
+
+			
+			function clearParse (couche){
+
+				var index = parse.couches.indexOf(couche);
+				if (index > -1) {
+					parse.couches.splice(index, 1);
+				}
+				//gui.__folders[couche.name].__ul.hidden = true;
+				delete gui.__folders[couche.name];
+				document.getElementById("folder"+couche.id).remove();
+			}
+
+

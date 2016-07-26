@@ -1,0 +1,274 @@
+{
+	"couches": [{
+		"id" : "1",
+		"name" : "Toits focus",
+		"URI" : "./models/Obj/Roofshp_2.0_ 1.5_0_ene-40568.31442220514.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"rotation" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "1",
+				"y" : "1",
+				"z" : "1"
+			}
+		},
+		"style": {
+			"name" : "Discret",
+			"parameters": {
+			  "fill" : {
+				"opacite": 1.0,
+				"color": "#ce7157",
+				"type" : "uni"
+			  },
+			  "stroke" : {
+				"opacite": 0.5,
+				"color": "#000000",
+				"type" : "Invisible"
+			  } 
+			}
+		}
+	},{
+		"id" : "2",
+		"name" : "Murs focus",
+		"URI" : "./models/Obj/Wallshp_2.0_ 1.5_0_ene-40568.31442220514.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"rotation" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "1",
+				"y" : "1",
+				"z" : "1"
+			}
+		},
+		"style": {
+			"name" : "Discret",
+			"parameters": {
+			  "fill" : {
+				"opacite": 0.5,
+				"color": "#ff00d1",
+				"type" : "uni"
+			  },
+			  "stroke" : {
+				"opacite": 0.5,
+				"color": "#000000",
+				"type" : "Expressive",
+				"parameters" : {
+					"URI" : "./strokes/thick.png",
+					"width" : "60.0"
+				}
+			  } 
+			}
+		}
+	},
+	{
+		"id" : "3",
+		"name" : "Murs contexte",
+		"URI" : "./models/outAnouk/BDTopoMurs.obj",
+		"position" : {
+			"displacement" : {
+				"x" : 0,
+				"y" : 0,
+				"z" : 0
+			},
+			"rotation" : {
+				"x" : 0,
+				"y" : 0,
+				"z" : 0
+			},
+			"scale" : {
+				"x" : 1,
+				"y" : 1,
+				"z" : 1
+			}
+		},
+		"style": {
+			"name" : "Test",
+			"parameters": {
+			  "fill" : {
+				"opacite": 1.0,
+				"color": "#0000ff",
+				"type" : "uni"
+			  },
+			  "stroke" : {
+				"opacite": 1.0,
+				"color": "#ffffff",
+				"type" : "Tirets"
+				
+			  } 
+			}
+		}
+	},
+	{
+		"id" : "4",
+		"name" : "Toits contexte",
+		"URI" : "./models/outAnouk/BDTopoToit.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"rotation" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "1",
+				"y" : "1",
+				"z" : "1"
+			}
+		},
+		"style": {
+			"name" : "Test2",
+			"parameters": {
+			  "fill" : {
+				"opacite": 1.0,
+				"color": "#a10c00",
+				"type" : "uni"
+			  },
+			  "stroke" : {
+				"opacite": 0.5,
+				"color": "#ffffff",
+				"type" : "Invisible"
+			  } 
+			}
+		}
+	},
+	{
+		"id" : "5",
+		"name" : "Arbre 1",
+		"URI" : "./models/2378_obj.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "30",
+				"y" : "0",
+				"z" : "-15"
+			},
+			"rotation" : {
+				"x" : "1.5708",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "0.04",
+				"y" : "0.04",
+				"z" : "0.04"
+			}
+		},
+		"style": {
+			"name" : "vegetation",
+			"parameters": {
+			  "fill" : {
+				"opacite": 1.0,
+				"color": "#ffffff",
+				"type" : "texture",
+				"parameters" : {
+					"URI" : "./models/2378_obj.mtl"
+				}
+			  },
+			  "stroke" : {
+				"opacite": 1.0,
+				"color": "#ffffff",
+				"type" : "Invisible"
+			  } 
+			}
+		}
+	},
+	{
+		"id" : "6",
+		"name" : "Arbre 2",
+		"URI" : "./models/tree.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "50",
+				"y" : "0",
+				"z" : "-15"
+			},
+			"rotation" : {
+				"x" : "1.5708",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "0.05",
+				"y" : "0.05",
+				"z" : "0.05"
+			}
+		},
+		"style": {
+			"name" : "vegetation",
+			"parameters": {
+			  "fill" : {
+				"opacite": 0.2,
+				"color": "#ffffff",
+				"type" : "texture",
+				"parameters" : {
+					"URI" : "./models/tree.mtl"
+				}
+			  },
+			  "stroke" : {
+				"opacite": 1.0,
+				"color": "#ffffff",
+				"type" : "Invisible"
+			  } 
+			}
+		}
+	},
+	{
+		"id" : "7",
+		"name" : "Fond",
+		"URI" : "./models/outAnouk/Parcelle.obj",
+		"position" : {
+			"displacement" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "-2"
+			},
+			"rotation" : {
+				"x" : "0",
+				"y" : "0",
+				"z" : "0"
+			},
+			"scale" : {
+				"x" : "1",
+				"y" : "1",
+				"z" : "1"
+			}
+		},
+		"style": {
+			"name" : "parcelle",
+			"parameters": {
+			  "fill" : {
+				"opacite": 1.0,
+				"color": "#46B35F",
+				"type" : "texture",
+				"parameters" : {
+					"URI" : "./models/outAnouk/Parcelle.mtl"
+				}
+			  },
+			  "stroke" : {
+				"opacite": 0.5,
+				"color": "#ffffff",
+				"type" : "Invisible"
+			  } 
+			}
+		}
+	}]
+}

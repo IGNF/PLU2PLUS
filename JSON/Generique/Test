@@ -1,0 +1,280 @@
+{
+	"couches": [
+		{
+			"id": "1",
+			"name": "Toits focus",
+			"URI": "./models/Obj/Roof_Hini_4.0_Slope_2.5.obj",
+			"position": {
+				"displacement": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"rotation": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "1",
+					"y": "1",
+					"z": "1"
+				}
+			},
+			"style": {
+				"name": "Discret",
+				"parameters": {
+					"fill": {
+						"opacite": 1,
+						"color": "#ce7157",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#000000",
+						"type": "Invisible"
+					}
+				}
+			}
+		},
+		{
+			"id": "2",
+			"name": "Murs focus",
+			"URI": "./models/Obj/Wall_Hini_4.0_Slope_2.5.obj",
+			"position": {
+				"displacement": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"rotation": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "1",
+					"y": "1",
+					"z": "1"
+				}
+			},
+			"style": {
+				"name": "Discret",
+				"parameters": {
+					"fill": {
+						"opacite": 0.5,
+						"color": "#006e33",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#555555",
+						"type": "Sketchy",
+						"parameters": {
+							"URI": "./strokes/thick.png",
+							"width": "60.0"
+						}
+					}
+				}
+			}
+		},
+		{
+			"id": "3",
+			"name": "Murs contexte",
+			"URI": "./models/outAnouk/BDTopoMurs.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Test",
+				"parameters": {
+					"fill": {
+						"opacite": 1,
+						"color": "#585887",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Tirets"
+					}
+				}
+			}
+		},
+		{
+			"id": "4",
+			"name": "Toits contexte",
+			"URI": "./models/outAnouk/BDTopoToit.obj",
+			"position": {
+				"displacement": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"rotation": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "1",
+					"y": "1",
+					"z": "1"
+				}
+			},
+			"style": {
+				"name": "Test2",
+				"parameters": {
+					"fill": {
+						"opacite": 1,
+						"color": "#9db679",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			}
+		},
+		{
+			"id": "5",
+			"name": "Arbre 1",
+			"URI": "./models/2378_obj.obj",
+			"position": {
+				"displacement": {
+					"x": "30",
+					"y": "0",
+					"z": "-15"
+				},
+				"rotation": {
+					"x": "1.5708",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "0.04",
+					"y": "0.04",
+					"z": "0.04"
+				}
+			},
+			"style": {
+				"name": "vegetation",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#ffffff",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/2378_obj.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			}
+		},
+		{
+			"id": "6",
+			"name": "Arbre 2",
+			"URI": "./models/tree.obj",
+			"position": {
+				"displacement": {
+					"x": "50",
+					"y": "0",
+					"z": "-15"
+				},
+				"rotation": {
+					"x": "1.5708",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "0.05",
+					"y": "0.05",
+					"z": "0.05"
+				}
+			},
+			"style": {
+				"name": "vegetation",
+				"parameters": {
+					"fill": {
+						"opacite": 0.6708451991818318,
+						"color": "#247a1f",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/tree.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#15410c",
+						"type": "Sketchy",
+						"parameters": {
+							"URI": "./strokes/wavy.png",
+							"width": 30
+						}
+					}
+				}
+			}
+		},
+		{
+			"id": "7",
+			"name": "Fond",
+			"URI": "./models/outAnouk/Parcelle.obj",
+			"position": {
+				"displacement": {
+					"x": "0",
+					"y": "0",
+					"z": "-2"
+				},
+				"rotation": {
+					"x": "0",
+					"y": "0",
+					"z": "0"
+				},
+				"scale": {
+					"x": "1",
+					"y": "1",
+					"z": "1"
+				}
+			},
+			"style": {
+				"name": "parcelle",
+				"parameters": {
+					"fill": {
+						"opacite": 1,
+						"color": "#cfe3ff",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/outAnouk/Parcelle.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			}
+		}
+	]
+}

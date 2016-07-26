@@ -102,7 +102,7 @@
 					else if (type === 'Sketchy') {
 						$(fEp.domElement).attr("hidden", false);
 						fEp.open();
-						lineMat = createMaterial(params.epaisseur_aretes_focus, params.type_trait);
+						lineMat = createMaterial(params.epaisseur_aretes_focus, params.type_trait, params.color_aretes_focus);
 						for (i=0; i<arrayQuads.length; i++){		
 							arrayQuads[i].visible = true;
 							/*if (arrayQuads[i].userData.toit === true){
@@ -192,11 +192,11 @@
 					clearContexte();
 					if (style === 'Discret') {
 						//BDTopo
-						loadObj( './models/outAnouk/BDTopoMurs.obj', matMurContexte, lineMatContexte, arrayAretesContexteBD, arrayBDMur, 0, BDVisible);
-						loadObj( './models/outAnouk/BDTopoToit.obj', matToitContexte, lineMatContexte, arrayAretesContexteBD, arrayBDToit, 0, BDVisible);
+						loadObj( './models/outAnouk/BDTopoMurs.obj', arrayAretesContexteBD, arrayBDMur, BDVisible);
+						loadObj( './models/outAnouk/BDTopoToit.obj', arrayAretesContexteBD, arrayBDToit, BDVisible);
 						//Bati3D
-						loadObj( './models/outAnouk/Bati3DMur.obj', matMurContexte, lineMatContexte, arrayAretesContexteBati, arrayBatiMur, 1, !BDVisible);
-						loadObj( './models/outAnouk/Bati3DToit.obj', matToitContexte, lineMatContexte, arrayAretesContexteBati, arrayBatiToit, 1, !BDVisible);
+						//loadObj( './models/outAnouk/Bati3DMur.obj', arrayAretesContexteBati, arrayBatiMur, !BDVisible);
+						//loadObj( './models/outAnouk/Bati3DToit.obj', arrayAretesContexteBati, arrayBatiToit, !BDVisible);
 						$(fContexte.domElement).attr("hidden", false);
 					} else if (style === 'Typique') {
 
@@ -214,11 +214,11 @@
 						var matToit = new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus<1), opacity : params.opacite_toit_focus, polygonOffset : true, polygonOffsetUnits : 10})
 						var lineMat = new THREE.LineBasicMaterial( { color: params.color_aretes_focus, transparent: false } );
 						//BDTopo
-						loadObj( './models/outAnouk/BDTopoMurs.obj', matMur, lineMat, arrayAretesContexteBD, arrayBDMur, 0, BDVisible);
-						loadObj( './models/outAnouk/BDTopoToit.obj', matToit, lineMat, arrayAretesContexteBD, arrayBDToit, 0, BDVisible);
+						loadObj( './models/outAnouk/BDTopoMurs.obj', arrayAretesContexteBD, arrayBDMur, BDVisible);
+						loadObj( './models/outAnouk/BDTopoToit.obj', arrayAretesContexteBD, arrayBDToit, BDVisible);
 						//Bati3D
-						loadObj( './models/outAnouk/Bati3DMur.obj', matMur, lineMat, arrayAretesContexteBati, arrayBatiMur, 1, !BDVisible);
-						loadObj( './models/outAnouk/Bati3DToit.obj', matToit, lineMat, arrayAretesContexteBati, arrayBatiToit, 1, !BDVisible);
+						loadObj( './models/outAnouk/Bati3DMur.obj', arrayAretesContexteBati, arrayBatiMur, !BDVisible);
+						loadObj( './models/outAnouk/Bati3DToit.obj', arrayAretesContexteBati, arrayBatiToit, !BDVisible);
 						$(fContexte.domElement).attr("hidden", true);
 					} else if (style === 'Photoréaliste'){
 						BDVisible = (params.type_contexte === 'BDTopo');
@@ -340,7 +340,7 @@
 			}
 
 			function choixTrait(value, arrayQuads) {
-				mat = createMaterial(params.epaisseur_aretes_focus, value);
+				mat = createMaterial(params.epaisseur_aretes_focus, value, params.color_aretes_focus);
 				changeMat(arrayQuads,mat);
 
 			}
@@ -359,27 +359,6 @@
 				choixCouleur(arrayToit,coulMur);
 				params.color_toit_focus = coulMur;
 			}
-
-
-			/*function changerClarte(arrayBatiMur, arrayBatiToit, arrayBDMur, arrayBDToit){
-				params.brightness_contexte = 0.2;
-				for (j=0; j<arrayBDMur.length; j++) {
-					arrayBDMur[j].material.color.setHSL(params.teinte_mur_contexte, params.saturation_contexte, params.brightness_contexte);
-					arrayBDMur[j].material.needsUpdate = true;
-				}	
-				for (j=0; j<arrayBDToit.length; j++) {
-					arrayBDToit[j].material.color.setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
-					arrayBDToit[j].material.needsUpdate = true;
-				}
-				for (j=0; j<arrayBatiMur.length; j++) {
-					arrayBatiMur[j].material.color.setHSL(params.teinte_mur_contexte, params.saturation_contexte, params.brightness_contexte);
-					arrayBatiMur[j].material.needsUpdate = true;
-				}
-				for (j=0; j<arrayBatiToit.length; j++) {
-					arrayBatiToit[j].material.color.setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
-					arrayBatiToit[j].material.needsUpdate = true;
-				}
-			}*/
 
 				
 			//sauvegarde de la configuration des paramètres actuels dans un fichier
@@ -402,6 +381,24 @@
 				
 
 
+			}
+
+			function saveConfig() {
+				var txt = JSON.stringify(parse, undefined, '\t');
+				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
+				var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+				var fileNameToSaveAs = gui.__preset_select.value;
+
+			 
+				var downloadLink = document.createElement("a");
+				downloadLink.download = fileNameToSaveAs;
+				downloadLink.innerHTML = "Download File";
+				downloadLink.href = textToSaveAsURL;
+				downloadLink.style.display = "none";
+				document.body.appendChild(downloadLink);
+			 
+				downloadLink.click();
+				
 			}
 
 
@@ -468,5 +465,246 @@
 				
 				
 			}
+
+
+
 			
+			function changeColor(couche, value) {
+				var to_change = [];
+
+				var ancienne_value = couche.style.parameters.fill.color;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.fill.color = value;
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id ) {
+							to_change.push( child );
+						}
+					} );
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].material.color = new THREE.Color().setHex(value.replace("#", "0x"));
+						to_change[i].material.needsUpdate = true;
+					}
+				}
+			}
+
+			function changeColorAretes(couche, value) {
+				var to_changeLine = [];
+				var to_changeQuad = [];
+
+				var ancienne_value = couche.style.parameters.stroke.color;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.stroke.color = value;
+					var color = new THREE.Color().setHex(value.replace("#", "0x"));
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Line && child.userData.couche === couche.id ) {
+							to_changeLine.push( child );
+						} else if (child.userData.quad === true && child.userData.couche === couche.id) {
+							to_changeQuad.push(child);
+						}
+					} );
+
+					for ( var i = 0; i < to_changeLine.length; i++ ) {
+						to_changeLine[i].material.color = color;
+						to_changeLine[i].material.needsUpdate = true;
+					}
+					for ( var i = 0; i < to_changeQuad.length; i++ ) {
+						to_changeQuad[i].material.uniforms.color.value = [color.r, color.g, color.b];   
+						to_changeQuad[i].material.needsUpdate = true;
+					}
+
+				}
+			}
+
+			function changeOpacite(couche, value) {
+				var to_change = [];
+				var ancienne_value = couche.style.parameters.fill.opacite;
+
+				//if (ancienne_value !== value) {
+					couche.style.parameters.fill.opacite = value;
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id ) {
+							to_change.push( child );
+						}
+					} );
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].material.opacity = value;
+						to_change[i].material.transparent = (value < 1.0);	
+						to_change[i].material.needsUpdate = true;
+					}
+
+				//}
+			}
+
+			function changeTypeAretes(couche, value) {
+
+				var to_changeLine = [];
+				var ancienne_value = couche.style.parameters.stroke.type;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.stroke.type = value;
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Line && child.userData.couche === couche.id ) {
+							to_changeLine.push( child );
+						}
+					} );
+
+					if (value !== 'Sketchy' && ancienne_value === 'Sketchy'){
+						clearQuads(couche);
+						elementVisible("uriStroke"+couche.id, false);
+						elementVisible("widthStroke"+couche.id,false);
+					}
+
+					if (value === 'Sketchy'&& ancienne_value !== 'Sketchy') {
+						couche.style.parameters.stroke.parameters = {};
+						couche.style.parameters.stroke.parameters.URI = './strokes/thick.png';
+						couche.style.parameters.stroke.parameters.width = 50.0;
+						var quadMat = quadMatFromLayer(couche);
+		
+						for ( var i = 0; i < to_changeLine.length; i++ ) {
+							var vertices = to_changeLine[i].geometry.vertices;
+							for (var j = 0; j < vertices.length-1; j=j+2 ) {
+								var lineGeom = createQuad(vertices[j], vertices[j+1]);
+								var quad = new THREE.Mesh( lineGeom, quadMat);
+								quad.userData = {couche : couche.id, quad : true };
+								moveMesh(quad, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
+								quad.rotation.set(couche.position.rotation.x,couche.position.rotation.y,couche.position.rotation.z);
+								quad.scale.set(couche.position.scale.x,couche.position.scale.y,couche.position.scale.z);
+								scene.add(quad);
+							}
+						}					
+						elementVisible("uriStroke"+couche.id, true);
+						elementVisible("widthStroke"+couche.id,true);
+					}
+
+					if (value === 'Invisible'){
+						elementVisible("colorStroke"+couche.id, false);
+					} else {
+						elementVisible("colorStroke"+couche.id, true);
+					}
+
+					var lineMat = lineMatFromLayer(couche);
+
+
+					for ( var i = 0; i < to_changeLine.length; i++ ) {
+						to_changeLine[i].material = lineMat;
+						to_changeLine[i].material.needsUpdate = true;
+					}
+
+				}
+
+			}
+
+
+			function changeStyleTrait(couche,value) {
+				var to_changeQuad = [];
+				var ancienne_value = couche.style.parameters.stroke.parameters.URI;
+				
+
+				if (ancienne_value !== value) {
+
+					couche.style.parameters.stroke.parameters.URI = value;
+
+					scene.traverse ( function( child ) {
+						if ( child.userData.quad === true && child.userData.couche === couche.id ) {
+							to_changeQuad.push( child );
+						}
+					} );
+					//var texture = THREE.ImageUtils.loadTexture( value );
+					var color = new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x"));
+					mat = createMaterial(couche.style.parameters.stroke.parameters.width, value, couche.style.parameters.stroke.color);
+
+					for ( var i = 0; i < to_changeQuad.length; i++ ) {
+						to_changeQuad[i].material = mat;
+						to_changeQuad[i].material.uniforms.color.value = [color.r, color.g, color.b];
+						to_changeQuad[i].material.needsUpdate = true;
+					}
+
+				}
+
+			}
+
+			function changeEpaisseur(couche, value) {
+				var to_changeQuad = [];
+				var ancienne_value = couche.style.parameters.stroke.parameters.width;
+				
+
+				if (ancienne_value !== value) {
+
+					couche.style.parameters.stroke.parameters.width = value;
+
+					scene.traverse ( function( child ) {
+						if ( child.userData.quad === true && child.userData.couche === couche.id ) {
+							to_changeQuad.push( child );
+						}
+					} );
+
+
+					for ( var i = 0; i < to_changeQuad.length; i++ ) {
+						to_changeQuad[i].material.uniforms.thickness.value = value;   
+						to_changeQuad[i].material.needsUpdate = true;
+					}
+
+				}
+
+
+			}
+
+
+			function changeSourceCouche (couche, URI){
+				clearCouche(couche);
+				couche.URI = URI;
+				if (couche.style.parameters.fill.type === 'texture') {
+					var mtl = URI.replace("obj", "mtl");
+					couche.style.parameters.fill.parameters.URI = mtl;
+				}
+				loadCouche(couche);
+			}
+
 			
+
+			function chargeData(){
+				//var input = document.getElementById("file"+no);
+				var container = document.getElementById("container");
+				var input = document.createElement("input");
+                input.type = "file";
+                input.name = "file"+no;
+				input.style = "display:none";
+                container.appendChild(input);
+				input.addEventListener("change",function(event){
+					no++;
+					var file = this.files[0];  
+					var reader = new FileReader();
+					reader.onload = function(progressEvent){
+						var obj = this.result;
+						addCouche(obj);
+					};
+					reader.readAsDataURL(file);
+			  	});
+				input.click();
+			}
+			
+
+			function changeName(couche, value){
+				var ancienne_value = couche.name;
+				if (ancienne_value !== value && !(gui.__folders[couche.name].__controllers[0].__input === document.activeElement))
+				// && ( elem.type || elem.href ))
+				{
+					couche.name = value;
+					//gui.__folders[value] = gui.__folders[ancienne_value];
+					//gui.__folders[ancienne_value].__ul.hidden = true;
+					delete gui.__folders[ancienne_value];
+					document.getElementById("folder"+couche.id).remove();
+					initGUICouche(couche);
+
+					gui.__folders[value].open();
+
+				}
+			}
