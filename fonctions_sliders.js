@@ -535,7 +535,12 @@
 
 					for ( var i = 0; i < to_change.length; i++ ) {
 						to_change[i].material.opacity = value;
-						to_change[i].material.transparent = (value < 1.0);	
+						/*if (couche.style.parameters.fill.type === 'texture'){
+							to_change[i].material.transparent = true;
+						} else {*/
+							to_change[i].material.transparent = (value < 1.0);
+						//}
+							
 						to_change[i].material.needsUpdate = true;
 					}
 
@@ -684,8 +689,9 @@
 					var reader = new FileReader();
 					reader.onload = function(progressEvent){
 						var obj = this.result;
-						addCouche(obj);
+						addCouche("./models/"+file.name);
 					};
+					//reader.readAsText(file.name);
 					reader.readAsDataURL(file);
 			  	});
 				input.click();
@@ -708,3 +714,68 @@
 
 				}
 			}
+
+			function changeTypeSurface (couche, value) {
+				var to_change = [];
+				var ancienne_value = couche.style.parameters.fill.type;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.fill.type = value;
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad !== true ) {
+							to_change.push( child );
+						}
+					} );
+
+					couche.style.parameters.fill.parameters = {};
+
+
+					if (value === 'image'){
+						couche.style.parameters.fill.parameters.URI = "./textures/wall.jpg";
+						elementVisible("imageFill"+couche.id,true);
+					} else {
+						elementVisible("imageFill"+couche.id,false);
+					}
+					if (couche.style.parameters.fill.type === 'texture') {
+						changeSourceCouche(couche,couche.URI);
+					} else if (ancienne_value === 'texture') {
+						clearCouche(couche);
+						loadCouche(couche);
+					}
+					var mat = matFromLayer(couche);
+					//var mat =wallMaterial;
+
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].material = mat;
+						to_change[i].material.needsUpdate = true;
+					}
+
+				}
+			}
+
+
+		function changeTexture (couche, value) {
+			var to_change = [];
+				var ancienne_value = couche.style.parameters.fill.parameters.URI;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.fill.parameters.URI = value;
+
+					scene.traverse ( function( child ) {
+						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad !== true ) {
+							to_change.push( child );
+						}
+					} );
+				}
+				var mat = matFromLayer(couche);
+
+				for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].material = mat;
+						to_change[i].material.needsUpdate = true;
+					}
+
+
+
+		}

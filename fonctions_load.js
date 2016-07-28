@@ -229,12 +229,14 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 							if ( child instanceof THREE.Mesh ) {
 
 									var geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
-									
 
 									if (couche.style.parameters.fill.type === 'texture') {
 										mat = child.material;
 										mat.side = THREE.DoubleSide;
 										//mat.color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
+										//mat.transparent = true;
+									} else {
+										assignUVs(geometry);
 									}
 
 
@@ -252,6 +254,8 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
 											var quad = new THREE.Mesh( lineGeom, quadMat);
 											quad.userData = {couche : couche.id, quad : true };
+
+											//quad.renderOrder = couche.order;
 	
 											moveMesh(quad, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
 											quad.rotation.set(couche.position.rotation.x,couche.position.rotation.y,couche.position.rotation.z);
@@ -260,11 +264,24 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 										}
 									}
 									
-									if (couche.name.indexOf('Mur') !== -1){
-										mesh.renderOrder = 3;
+									/*if (couche.name.indexOf('Mur') !== -1){
+										mesh.renderOrder = 1;
+										line.renderOrder = 1;
 									}else{
-										mesh.renderOrder = 4;
+										mesh.renderOrder = 2;
+										line.renderOrder = 2;
 									}
+									if (couche.name.indexOf('Arbre') !== -1){
+										mesh.renderOrder = 3;
+										line.renderOrder = 3;
+									}
+									if (couche.name.indexOf('Fond') !== -1){
+										mesh.renderOrder = 1;
+										line.renderOrder = 1;
+									}*/
+
+									mesh.renderOrder = couche.order;
+									line.renderOrder = couche.order;
 
 									moveMesh(mesh, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
 									moveMesh(line, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);

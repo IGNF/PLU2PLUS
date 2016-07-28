@@ -3,7 +3,7 @@
 		{
 			"id": "1",
 			"name": "Toits focus",
-			"URI": "./models/Obj/Roof_Hini_4.0_Slope_2.5.obj",
+			"URI": "./models/Roof_Hini_4.0_Slope_2.5.obj",
 			"position": {
 				"displacement": {
 					"x": "0",
@@ -25,7 +25,7 @@
 				"name": "Discret",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#ce7157",
 						"type": "uni"
 					},
@@ -35,12 +35,13 @@
 						"type": "Invisible"
 					}
 				}
-			}
+			},
+			"order": 2
 		},
 		{
 			"id": "2",
 			"name": "Murs focus",
-			"URI": "./models/Obj/Wall_Hini_4.0_Slope_2.5.obj",
+			"URI": "./models/Wall_Hini_4.0_Slope_2.5.obj",
 			"position": {
 				"displacement": {
 					"x": "0",
@@ -76,12 +77,13 @@
 						}
 					}
 				}
-			}
+			},
+			"order": 1
 		},
 		{
 			"id": "3",
 			"name": "Murs contexte",
-			"URI": "./models/outAnouk/BDTopoMurs.obj",
+			"URI": "./models/BDTopoMurs.obj",
 			"position": {
 				"displacement": {
 					"x": 0,
@@ -103,7 +105,7 @@
 				"name": "Test",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#585887",
 						"type": "uni"
 					},
@@ -113,12 +115,13 @@
 						"type": "Tirets"
 					}
 				}
-			}
+			},
+			"order": 1
 		},
 		{
 			"id": "4",
 			"name": "Toits contexte",
-			"URI": "./models/outAnouk/BDTopoToit.obj",
+			"URI": "./models/BDTopoToit.obj",
 			"position": {
 				"displacement": {
 					"x": "0",
@@ -140,7 +143,7 @@
 				"name": "Test2",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#9db679",
 						"type": "uni"
 					},
@@ -150,7 +153,8 @@
 						"type": "Invisible"
 					}
 				}
-			}
+			},
+			"order": 2
 		},
 		{
 			"id": "5",
@@ -168,9 +172,9 @@
 					"z": "0"
 				},
 				"scale": {
-					"x": "0.04",
-					"y": "0.04",
-					"z": "0.04"
+					"x": "0.01",
+					"y": "0.01",
+					"z": "0.01"
 				}
 			},
 			"style": {
@@ -190,7 +194,8 @@
 						"type": "Invisible"
 					}
 				}
-			}
+			},
+			"order": 3
 		},
 		{
 			"id": "6",
@@ -225,7 +230,7 @@
 						}
 					},
 					"stroke": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#15410c",
 						"type": "Sketchy",
 						"parameters": {
@@ -234,12 +239,13 @@
 						}
 					}
 				}
-			}
+			},
+			"order": 3
 		},
 		{
 			"id": "7",
 			"name": "Fond",
-			"URI": "./models/outAnouk/Parcelle.obj",
+			"URI": "./models/Parcelle.obj",
 			"position": {
 				"displacement": {
 					"x": "0",
@@ -261,11 +267,11 @@
 				"name": "parcelle",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#cfe3ff",
 						"type": "texture",
 						"parameters": {
-							"URI": "./models/outAnouk/Parcelle.mtl"
+							"URI": "./models/Parcelle.mtl"
 						}
 					},
 					"stroke": {
@@ -274,7 +280,8 @@
 						"type": "Invisible"
 					}
 				}
-			}
+			},
+			"order": 1
 		}
 	]
 }

@@ -90,6 +90,7 @@
 		<script src="fonctions.js"></script>
 		<script src="fonctions_sliders.js"></script>
 		<script src="fonctions_load.js"></script>
+		<script src="fonctions_gui.js"></script>
 		<script src="js/FileSaver.min.js"></script>
 		<script src="js/Stuk-jszip-4cbaf0e/dist/jszip.min.js"></script>
 		<script src="js/jquery.min.js"></script>
@@ -126,218 +127,9 @@
 		var no = 1;
 		var newID;
 		//var dom = new dat.dom();
-			
-		loadAll();
-			
-		function loadAll(){
-			
-			//chargement du JSON
-			var input = document.getElementById("file");
-			input.addEventListener("change",function(){
-				var file = this.files[0];  
-				var reader = new FileReader();
-				reader.onload = function(progressEvent){
-
-					input.style = 'display:none;';	
-					var json = this.result;
-
-					init();
-
-					parse = JSON.parse(json);
-					newID = parse.couches.length+1;
-			
-					//gui = new dat.GUI({ autoplace: false, width: 400, load : JSON.parse(json)});
-					gui = new dat.GUI({ autoplace: false, width: 400});
-					
-					//dossiers
-					/*var fFocus = gui.addFolder('Focus'),
-					fTexture = gui.addFolder('Focus texture'),
-					fContexte = gui.addFolder('Contexte');
-					
-					$(fTexture.domElement).attr("hidden", true);*/
-
-					var coucheFond = getCoucheByName("Fond");
-					var coucheToitFocus = getCoucheByName("Toits focus");
-					var coucheMurFocus = getCoucheByName("Murs focus");
-					
-					//paramètres dat.gui
-					params = {
-						/*opacite_mur_focus: 1.0,
-						opacite_toit_focus: 1.0,
-						opacite_mur_contexte:0.9,
-						opacite_toit_contexte:0.9,
-						type_material : 'Avec',
-						type_aretes_focus : 'Continu',
-						epaisseur_aretes_focus : 14.0,
-						type_trait : './strokes/irregulier.png',
-						type_aretes_contexte : 'Tirets',
-						type_fond : 'Orthophoto',
-						color_mur_focus : "#77615B",
-						color_toit_focus : "#CE7157",
-						color_aretes_focus : "#222222",
-						color_aretes_contexte : "#aaaaaa",
-						saturation_contexte : 0.1,
-						brightness_contexte : 0.9,
-						teinte_mur_contexte : 0.5,
-						teinte_toit_contexte : 0.5,
-						type_contexte : 'BDTopo',
-						style_contexte : 'Discret',
-						style_focus : '',
-						texture_mur : 'wall',
-						texture_toit : 'roof',
-						focus_typique : function() {choixStyleFocus('Typique')},
-						focus_discret : function() {choixStyleFocus('Discret')},
-						echange_couleurs : function() {echangeCouleurs(arrayMur, arrayToit)},
-						assortir_toit : function() {assortirToit(arrayToit)},
-						save_screenshot : function() {saveScreenshot(zip)},
-						nb_images : nbImage,
-						download : function(){downloadAll(zip)},
-						
-						empty_zip : function() {emptyZip(zip)},
-						save_json :  function() {saveJSON()},
-						ajout_arbre :  function() {addArbre()},
-						suppr_arbre : function() {supprArbre()},
-						arbres : ''*/
-						pos_camera : function() {resetCam(camera)},
-						save_config :  function() {saveConfig()},
-						type_fond : coucheFond.URI,
-						h_ini : parseInt(coucheMurFocus.URI.substring(23,24)),
-						s_pente : parseFloat(coucheMurFocus.URI.substring(33,36)),
-						add_couche : function () {chargeData()},
-						suppr_couche : ''
-						//function() {supprCouche()}
-
-					};
-					//params.setAttribute("color", "#222222");
-					//params.color ="#222222" ;
-					gui.remember(params);
-
-					var pos_cam = gui.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();
-					var save_config = gui.add(params, 'save_config').name('Sauvegarder la configuration').listen();
-					var type_fond = gui.add(params, 'type_fond', [ "./models/outAnouk/Parcelle.obj", "./models/outAnouk/Ortho.obj"]).name('Fond').listen();
-					var h_ini = gui.add(params, 'h_ini', 0,6).step(2).name("Hauteur initiale").listen();
-					var s_pente = gui.add(params, 's_pente', 0,3.0).step(0.5).name("Pente").listen();
-					var add_couche = gui.add(params, 'add_couche').name("Nouvelle couche").listen();
-					var suppr_couche = gui.add(params, 'suppr_couche').name("Supprimer couche").listen();
-
-
-					
-					type_fond.onChange(function(value) { changeSourceCouche(coucheFond, value); });
-					h_ini.onFinishChange(function(value) {
-						changeSourceCouche(coucheMurFocus, "./models/Obj/Wall_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj");
-						changeSourceCouche(coucheToitFocus, "./models/Obj/Roof_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj")
-					});
-					s_pente.onFinishChange(function(value) {
-						changeSourceCouche(coucheMurFocus, "./models/Obj/Wall_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj");
-						changeSourceCouche(coucheToitFocus, "./models/Obj/Roof_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj")
-					});
-					suppr_couche.onFinishChange(function(value) {
-						clearCouche(getCoucheByName(value));
-						clearParse(getCoucheByName(value));
-					});
-
-					//var color = fFocus.addColor( params, 'color' ).name('Couleur').listen();
-					//variables dat.gui
-					/*var echange_couleurs = fFocus.add(params, 'echange_couleurs').name('Intervertir les couleurs').listen(); 
-					var assortir_toit = fFocus.add(params, 'assortir_toit').name('Assortir le toit aux murs').listen(); 
-					var color_mur_focus = fFocus.addColor( params, 'color_mur_focus' ).name('Couleur mur focus').listen();
-					var opacite_mur_focus = fFocus.add( params, 'opacite_mur_focus',0,1,0.1 ).name('Opacité mur').listen();
-					var color_toit_focus = fFocus.addColor( params, 'color_toit_focus' ).name('Couleur toit focus').listen();
-					var opacite_toit_focus = fFocus.add( params, 'opacite_toit_focus',0,1,0.1 ).name('Opacité toit').listen();		
-					var opacite_mur_contexte = fContexte.add( params, 'opacite_mur_contexte',0.1,1,0.1 ).name('Opacité mur').listen();
-					var opacite_toit_contexte = fContexte.add( params, 'opacite_toit_contexte',0.1,1,0.1 ).name('Opacité toit').listen();
-					var color_aretes_focus = fFocus.addColor( params, 'color_aretes_focus' ).name('# Arêtes focus').listen();
-					var color_aretes_contexte = fContexte.addColor( params, 'color_aretes_contexte' ).name('# Arêtes contexte').listen();
-					var type_mat_mur = fFocus.add(params, 'type_material', [ "Sans", "Avec"]).name('Ombrage').listen();
-					var type_aretes_focus = fFocus.add(params, 'type_aretes_focus', [ "Continu", "Tirets", "Invisible", "Sketchy"]).name('Arêtes focus').listen();
-					var type_aretes_contexte = fContexte.add(params, 'type_aretes_contexte', [ "Continu", "Tirets", "Invisible"]).name('Arêtes contexte').listen();
-					var type_fond = gui.add(params, 'type_fond', [ "Cadastre", "Orthophoto"]).name('Fond').listen();
-					var saturation = fContexte.add( params, 'saturation_contexte',0,0.3,0.001 ).name('Saturation').listen();
-					var brightness = fContexte.add( params, 'brightness_contexte',0.0,1,0.001 ).name('Luminosité').listen();
-					var teinte_mur = fContexte.add( params, 'teinte_mur_contexte',0,1,0.001  ).name('Teinte mur').listen();
-					var teinte_toit = fContexte.add( params, 'teinte_toit_contexte',0,1,0.001  ).name('Teinte toit').listen();
-					var type_contexte = fContexte.add(params, 'type_contexte', [ "BDTopo", "Bati3D"]).name('Source').listen();
-					var style_contexte = gui.add(params, 'style_contexte', [ "Discret", "Typique", "Photoréaliste"]).name('Style contexte').listen();
-					var style_focus = gui.add(params, 'style_focus', [ "Discret", "Typique", "Semi", "Sketchy"]).name('Style focus').listen();
-					var texture_mur = fTexture.add(params, 'texture_mur', [ "bricks", "wall", "stone-wall"]).name('Texture mur').listen();
-					var texture_toit = fTexture.add(params, 'texture_toit', [ "roof", "water"]).name('Texture toit').listen();
-						
-					var ajout_arbre = gui.add(params, 'ajout_arbre').name('Ajouter un arbre').listen();	
-					var suppr_arbre = gui.add(params, 'suppr_arbre').name('Supprimer le dernier arbre').listen();	
-					var save_screenshot = gui.add(params, 'save_screenshot').name('Capture d\'écran').listen();
-					var nb_images = gui.add(params, 'nb_images').name('Nombre d\'images').listen();
-					var arbres = gui.add(params, 'arbres').name('Arbres').listen();
-					$(arbres.__li).attr("hidden", true);
-					var download = gui.add(params, 'download').name('Télécharger les images').listen();	
-					var empty_zip = gui.add(params, 'empty_zip').name('Supprimer les images enregistrées').listen();
-					var save_json = gui.add(params, 'save_json').name('Sauvegarder la configuration').listen();
-					var couleur_mur_contexte = new THREE.Color().setHSL(params.teinte_mur_contexte, params.saturation_contexte, params.brightness_contexte);
-					var couleur_toit_contexte = new THREE.Color().setHSL(params.teinte_toit_contexte, params.saturation_contexte, params.brightness_contexte);
-					var fEp = fFocus.addFolder('Arêtes');	
-					var epaisseur_aretes_focus = fEp.add(params, 'epaisseur_aretes_focus',  10,100,1).name('Epaisseur arêtes').listen();	
-					var type_trait = fEp.add(params, 'type_trait', ['irregulier', 'brush', 'paint-brush', 'two', 'scribble', 'light', 'wavy', 'dotted', 'thick', 'fast' ]).name('Style de trait').listen();	
-					$(fEp.domElement).attr("hidden", false);	*/
-					
-					//.onChange sliders
-					/*opacite_mur_focus.onChange(function(value){  
-						for (i=0; i<arrayMur.length; i++){				
-							arrayMur[i].material.opacity = value;   
-							arrayMur[i].material.transparent = (value < 1.0);
-							}
-						});
-					opacite_toit_focus.onChange(function(value){
-						for (i=0; i<arrayToit.length; i++){				
-							arrayToit[i].material.opacity = value;   
-							arrayToit[i].material.transparent = (value < 1.0);
-							}  });
-					opacite_mur_contexte.onChange(function(value){   matMurContexte.opacity = value; matMurContexte.transparent = (value < 1.0);});
-					opacite_toit_contexte.onChange(function(value){   matToitContexte.opacity = value; matToitContexte.transparent = (value < 1.0); });
-					type_mat_mur.onChange(function(value) { choixMat(value); });
-					type_aretes_focus.onChange(function(value) { lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, value);});
-					epaisseur_aretes_focus.onChange(function(value) { epaisseurAretes(value, arrayQuads)});
-					type_trait.onChange(function(value) { choixTrait(value, arrayQuads)});
-					type_aretes_contexte.onChange(function(value) { lineMatContexte = choixAretes(arrayAretesContexte,arrayQuadsContexte, lineMatContexte, value);});
-					type_fond.onChange(function(value) { choixFond(value); });
-					color_mur_focus.onChange(function(value) { choixCouleur(arrayMur,value);});	
-					color_toit_focus.onChange(function(value) {choixCouleur(arrayToit,value);});
-					color_aretes_focus.onChange(function(value) {choixCouleur(arrayAretes,value); choixCouleurQuads(arrayQuads,value);});
-					color_aretes_contexte.onChange(function(value) {choixCouleur(arrayAretesContexte,value);});
-					saturation.onChange(function(value) { matMurContexte.color.setHSL(params.teinte_mur_contexte, value, params.brightness_contexte); matToitContexte.color.setHSL(params.teinte_toit_contexte, value, params.brightness_contexte);	});
-					brightness.onChange(function(value) { matMurContexte.color.setHSL(params.teinte_mur_contexte, params.saturation_contexte, value); matToitContexte.color.setHSL(params.teinte_toit_contexte, params.saturation_contexte, value);	});
-					teinte_mur.onChange(function(value) { matMurContexte.color.setHSL(value, params.saturation_contexte, params.brightness_contexte); });
-					teinte_toit.onChange(function(value) {matToitContexte.color.setHSL(value, params.saturation_contexte, params.brightness_contexte);	});
-					type_contexte.onChange(function(value) { arrayAretesContexte = choixContexte(value, arrayBatiMur, arrayBatiToit, arrayAretesContexteBati, arrayBDMur, arrayBDToit, arrayAretesContexteBD, arrayAretesContexte, lineMatContexte);});
-					style_contexte.onChange(function(value) { BDVisible = choixStyleContexte(value, BDVisible, fContexte, matMurContexte, matToitContexte,lineMatContexte); });
-					style_focus.onChange(function(value) { choixStyleFocus(value, fFocus, fTexture,roofMaterial,wallMaterial, lineMatFocus); });
-					texture_mur.onChange(function(value) {choixTexture(value, arrayMur);});
-					texture_toit.onChange(function(value) {choixTexture(value, arrayToit);});
-					save_screenshot.onFinishChange(function(value) {params.nb_images = nbImage+1;});
-					empty_zip.onFinishChange(function(value) {params.nb_images = 0;});*/
-					
-					
-					//initialisation des materials
-					/*var matMurFocus = new THREE.MeshLambertMaterial({color: params.color_mur_focus, side: THREE.DoubleSide, transparent : (params.opacite_mur_focus < 1.0), opacity : params.opacite_mur_focus});			
-					var matToitFocus = new THREE.MeshBasicMaterial({color: params.color_toit_focus, side: THREE.DoubleSide, transparent :(params.opacite_toit_focus < 1.0), opacity : params.opacite_toit_focus});
-					var lineMatFocus = new THREE.LineBasicMaterial();
-					var lineMatContexte = new THREE.LineDashedMaterial();
-					var matMurContexte = new THREE.MeshLambertMaterial({color: couleur_mur_contexte, side: THREE.DoubleSide, transparent : (params.opacite_mur_contexte < 1.0), opacity : params.opacite_mur_contexte});
-					var matToitContexte = new THREE.MeshLambertMaterial({color: couleur_toit_contexte, side: THREE.DoubleSide, transparent :(params.opacite_toit_contexte < 1.0), opacity : params.opacite_toit_contexte});
-					var quadMatFocus = createMaterial("./strokes/irregulier.png", params.type_trait, params.color_aretes_focus);
-
-
-					var textureLoader = new THREE.TextureLoader();
-					var roofMaterial = new THREE.MeshBasicMaterial( {map: null, color: 0xffffff, shading: THREE.SmoothShading} );
-					textureLoader.load( "./textures/"+params.texture_toit+".jpg", function( map ) {
-						map.wrapS = THREE.RepeatWrapping;
-						map.wrapT = THREE.RepeatWrapping;
-						map.anisotropy = 4;
-						map.repeat.set( 0.1, 0.1 );
-						roofMaterial.side = THREE.DoubleSide;
-						roofMaterial.map = map;
-						roofMaterial.needsUpdate = true;
-					} );
-					var wallMaterial = new THREE.MeshBasicMaterial( {map: null,color: 0xffffff,shading: THREE.SmoothShading} );
-					textureLoader.load( "./textures/"+params.texture_mur+".jpg", function( map ) {
+		/*var textureLoader = new THREE.TextureLoader();
+		var wallMaterial = new THREE.MeshBasicMaterial( {map: null,color: 0xffffff,shading: THREE.SmoothShading} );
+					textureLoader.load( "./textures/wall.jpg", function( map ) {
 						map.wrapS = THREE.RepeatWrapping;
 						map.wrapT = THREE.RepeatWrapping;
 						map.anisotropy = 4;
@@ -345,77 +137,14 @@
 						wallMaterial.side = THREE.DoubleSide;
 						wallMaterial.map = map;
 						wallMaterial.needsUpdate = true;
-					} );
-					
-					
-					//paramètres à initialiser
-					var opacite_aretes_focus = 1.0;
-					var cadastre = (params.type_fond === 'Cadastre');
-					var BDVisible = (params.type_contexte === 'BDTopo');
-					if (BDVisible){
-						arrayAretesContexte = arrayAretesContexteBD;
-					} else{
-						arrayAretesContexte = arrayAretesContexteBati;
-					}
-					if (params.style_focus === 'Semi'){
-						matMurFocus = wallMaterial;
-						matToitFocus = roofMaterial;
-						choixStyleFocus(params.style_focus, fFocus, fTexture,roofMaterial,wallMaterial, lineMatFocus);
-					} else {
-						params.style_focus = '';
-					}
-					if (params.type_aretes_focus === 'Sketchy'){
-						quadMatFocus = choixAretes(arrayAretes, arrayQuads, quadMatFocus, params.type_aretes_focus);
-						lineMatFocus.visible = false;
-					} else {
-						lineMatFocus = choixAretes(arrayAretes, arrayQuads, lineMatFocus, params.type_aretes_focus);
-						quadMatFocus.visible = false;
-					}
-					lineMatContexte = choixAretes(arrayAretesContexte, arrayQuadsContexte, lineMatContexte, params.type_aretes_contexte);
-
-					matMurFocus.polygonOffset =  true;
-					matMurFocus.polygonOffsetUnits= 10;
-					matToitFocus.polygonOffset =  true;
-					matToitFocus.polygonOffsetUnits= 10;*/
-					
-
-					//chargement des modèles
-					//focus
-					//loadObjFocus( './models/export_fin_moit.obj', matMurFocus, matToitFocus, arrayMur, arrayToit, arrayAretes, arrayQuads, lineMatFocus, quadMatFocus);
-					//contexte
-					//choixStyleContexte(params.style_contexte, BDVisible, fContexte, matMurContexte, matToitContexte,lineMatContexte);
-					//fond
-					//loadObjMtl('./models/outAnouk/Ortho.mtl','./models/outAnouk/Ortho.obj',-2,0,-2,'photo',!cadastre);
-					//loadObj('./models/outAnouk/Ortho.obj',arrayAretesOrtho,arrayOrtho,true);
-					//loadObj('./models/outAnouk/Parcelle.obj',arrayAretesOrtho,arrayOrtho,true);
-					//loadObjMtl('./models/outAnouk/Parcelle.mtl','./models/outAnouk/Parcelle.obj',0,0,-1.1,'parcelle',cadastre);
-					//loadObj('./models/tree.obj', arrayAretesArbres, arrayArbres, true);
-					loadLayers();
-					loadParams();
-					
-					//chargement des arbres enregistrés
-					/*if (params.arbres){
-						var posParse = JSON.parse(params.arbres);
-						nbArbres = posParse.length;
-						for ( var i = 0; i < nbArbres; i++ ) {
-							loadArbre('./models/tree.mtl','./models/tree.obj', posParse[i]);
-						}
-					}*/
-
-					animate();
-
-
-
-				};
-				reader.readAsText(file);
-			  });
-			input.click();
+		} );*/
 			
-				
-		}
+		loadAll();
+			
+		
 
 		//gestion du drag&drop pour les arbres
-		function onDocumentMouseDown (event) {
+		/*function onDocumentMouseDown (event) {
 			// Get mouse position
 			var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
 			var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -485,7 +214,7 @@
 			// Enable the controls
 			controls.enabled = true;
 			selection = null;
-		}
+		}*/
 
 				
 
@@ -528,7 +257,7 @@
 			scene.add(light);
 			var sphereSize = 1;
 			var pointLightHelper = new THREE.HemisphereLightHelper( light, sphereSize );
-			scene.add( pointLightHelper );
+			//scene.add( pointLightHelper );
 			var light2 = new THREE.HemisphereLight(0xffffff, 0.5);
 			light2.position.set(-50,80,-20);
 			scene.add(light2);
@@ -557,6 +286,10 @@
 				if (parse.couches[j].style.parameters.stroke.type === "Sketchy"){
 					changeStyleTrait(parse.couches[j], params["uriStroke"+parse.couches[j].id] );
 					changeEpaisseur(parse.couches[j], params["widthStroke"+parse.couches[j].id])
+				}
+				changeTypeSurface (parse.couches[j], params["typeFill"+parse.couches[j].id] );
+				if (parse.couches[j].style.parameters.fill.type === "image"){
+					changeTexture (parse.couches[j], params["imageFill"+parse.couches[j].id] );
 				}
 			}
 
