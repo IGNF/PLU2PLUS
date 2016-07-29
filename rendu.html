@@ -96,127 +96,26 @@
 		<script src="js/jquery.min.js"></script>
 		<script>
 
-		var scene, camera, renderer, gui, params, plane, selection, clock;
-		var raycaster = new THREE.Raycaster();
+		var scene, camera, renderer, gui, params, light2;
+		//, plane, selection, clock;
+		/*var raycaster = new THREE.Raycaster();
 		var offset = new THREE.Vector3();
 		var objects = [];
-		var positions = [];
+		var positions = [];*/
 
-		//initialisation des mesh et lines
-		var arrayMur = [];
-		var arrayToit = [];
-		var arrayAretes = [];				
-		var arrayQuads = [];				
-		var arrayQuadsContexte = [];				
-		var arrayBDToit = [];
-		var arrayBDMur = [];
-		var arrayAretesContexteBati = [];
-		var arrayAretesContexteBD = [];
-		var arrayBatiMur = [];
-		var arrayBatiToit = [];
-		var arrayAretesContexte = [];
-		var arrayOrtho = [];
-		var arrayAretesOrtho = [];
-		var arrayArbres = [];
-		var arrayAretesArbres = [];
 		
 		var zip = new JSZip();
 		var nbImage = 0;
-		var nbArbres = 0;
+		//var nbArbres = 0;
 		var parse;
 		var no = 1;
 		var newID;
-		//var dom = new dat.dom();
-		/*var textureLoader = new THREE.TextureLoader();
-		var wallMaterial = new THREE.MeshBasicMaterial( {map: null,color: 0xffffff,shading: THREE.SmoothShading} );
-					textureLoader.load( "./textures/wall.jpg", function( map ) {
-						map.wrapS = THREE.RepeatWrapping;
-						map.wrapT = THREE.RepeatWrapping;
-						map.anisotropy = 4;
-						map.repeat.set( 0.1, 0.1 );
-						wallMaterial.side = THREE.DoubleSide;
-						wallMaterial.map = map;
-						wallMaterial.needsUpdate = true;
-		} );*/
+
 			
 		loadAll();
 			
 		
-
-		//gestion du drag&drop pour les arbres
-		/*function onDocumentMouseDown (event) {
-			// Get mouse position
-			var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-			var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-			// Get 3D vector from 3D mouse position using 'unproject' function
-			var vector = new THREE.Vector3(mouseX, mouseY, 1);
-			vector.unproject(camera);
-
-			// Set the raycaster position
-			raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
-
-			// Find all intersected objects
-			var intersects = raycaster.intersectObjects(objects);
-
-			if (intersects.length > 0) {
-				// Disable the controls
-				controls.enabled = false;
-
-				// Set the selection - first intersected object
-				selection = intersects[0].object;
-
-				// Calculate the offset
-				var intersects = raycaster.intersectObject(plane);
-				offset.copy(intersects[0].point).sub(plane.position);
-			}
-		}
-
-
-		
-
-
-		 function onDocumentMouseMove (event) {
-			event.preventDefault();
-
-			// Get mouse position
-			var mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-			var mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-			// Get 3D vector from 3D mouse position using 'unproject' function
-			var vector = new THREE.Vector3(mouseX, mouseY, 1);
-			vector.unproject(camera);
-
-			// Set the raycaster position
-			raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
-
-			if (selection) {
-				// Check the position where the plane is intersected
-				var intersects = raycaster.intersectObject(plane);
-				// Reposition the object based on the intersection point with the plane
-				selection.position.copy(intersects[0].point.sub(offset));
-			} else {
-				// Update position of the plane if need
-				var intersects = raycaster.intersectObjects(objects);
-				if (intersects.length > 0) {
-				plane.position.copy(intersects[0].object.position);
-				plane.lookAt(camera.position);
-				}
-			}
-		}
-
-		 function onDocumentMouseUp(event) {
-			 if (selection){
-				 for ( var i = 0; i < positions.length; i++ ) {
-					 positions[i] = objects[i].position;
-					}
-			}
-			// Enable the controls
-			controls.enabled = true;
-			selection = null;
-		}*/
-
-				
+	
 
 				
 		function init() {
@@ -229,15 +128,27 @@
 			renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer: true });
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.setClearColor( couleur_fond, 0.5);
+			renderer.shadowMap.enabled = true;
+      		renderer.shadowMapSoft = true;
+
 			document.body.appendChild(renderer.domElement);
-			camera = new THREE.PerspectiveCamera(10, WIDTH / HEIGHT, 10, 100000);
-			camera.position.set(-300,425,325);
+			if (parse.parameters.camera.type === 'ortho') {
+				camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, parse.parameters.camera.near, parse.parameters.camera.far); 
+			} else {
+				camera = new THREE.PerspectiveCamera(parse.parameters.camera.fov, WIDTH / HEIGHT, parse.parameters.camera.near, parse.parameters.camera.far);
+			}
+
+			//camera = new THREE.PerspectiveCamera(parse.parameters.camera.fov, WIDTH / HEIGHT, parse.parameters.camera.near, parse.parameters.camera.far);
+			//camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, parse.parameters.camera.near, parse.parameters.camera.far); 
+			//camera.position.set(-300,425,325);
+			camera.position.set(parse.parameters.camera.position.x,parse.parameters.camera.position.y,parse.parameters.camera.position.z);
 			camera.up.set(0,0,1);
 			scene.add(camera);
 
-			plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff}));
+
+			/*plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff}));
 			plane.visible = false;
-			scene.add(plane);
+			scene.add(plane);*/
 			
 			window.addEventListener('resize', function() {		
 				var WIDTH = window.innerWidth,
@@ -247,21 +158,51 @@
 				camera.updateProjectionMatrix();
 			});
 
-			document.addEventListener('mousemove', this.onDocumentMouseMove, false);
+			/*document.addEventListener('mousemove', this.onDocumentMouseMove, false);
 			document.addEventListener('mousedown', this.onDocumentMouseDown, false);
-	  		document.addEventListener('mouseup', this.onDocumentMouseUp, false);
+	  		document.addEventListener('mouseup', this.onDocumentMouseUp, false);*/
 			
 			//lights
 			var light = new THREE.HemisphereLight(0xffffff, 0.8);
 			light.position.set(250,100,-100);
-			scene.add(light);
-			var sphereSize = 1;
-			var pointLightHelper = new THREE.HemisphereLightHelper( light, sphereSize );
-			//scene.add( pointLightHelper );
-			var light2 = new THREE.HemisphereLight(0xffffff, 0.5);
-			light2.position.set(-50,80,-20);
+			/*light.castShadow = true;
+			light.shadowDarkness = 0.5;
+			light.shadowCameraFar = 1000;
+
+			light.shadow.camera.right     =  5;
+			light.shadowCameraLeft     = -5;
+			light.shadowCameraTop      =  5;
+			light.shadowCameraBottom   = -5;*/
+
+			//scene.add(light);
+			var lightbis = new THREE.HemisphereLight(0xffffff, 0.5);
+			lightbis.position.set(-50,80,-20);
+			//scene.add(lightbis);
+			light2 = new THREE.DirectionalLight(0xffffff, 1.0);
+			light2.position.set(150,100,410);
+
+			light2.castShadow = true;
+			light2.shadowDarkness = 1.0;
+			light2.shadow.camera.far = 1500;
+			light2.shadow.camera.near = 100;	// keep near and far planes as tight as possible
+
+			light2.shadow.camera.right     =  550;
+			light2.shadow.camera.left     = -550;
+			light2.shadow.camera.top    =  550;
+			light2.shadow.camera.bottom  = -550;
+
+			light2.shadowMapWidth = 4096;    // power of 2
+			light2.shadowMapHeight = 4096;
+    
+   
+
+    		//light2.shadowCameraFov = 200;
+    		light2.shadowBias = -0.001; 
+			var helper = new THREE.CameraHelper( light2.shadow.camera );
+			//scene.add( helper );
+			//light2.shadow.camera.castShadow = true;
 			scene.add(light2);
-			var ambientLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+			var ambientLight = new THREE.AmbientLight( 0xffffff, 0.8 ); // soft white light
 			scene.add( ambientLight );
 			
 			//controls

@@ -1,4 +1,13 @@
-{
+{	
+	"parameters" : {
+		"camera" : {
+			"type" : "perspective",
+			"position" : { "x" : -300, "y" : 425, "z": 725 },
+			"near" : 10,
+			"far" : 100000,
+			"fov" : 10
+		}
+	},
 	"couches": [
 		{
 			"id": "1",

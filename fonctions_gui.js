@@ -10,20 +10,20 @@ function loadAll(){
 					input.style = 'display:none;';	
 					var json = this.result;
 
-					init();
+					
 
 					parse = JSON.parse(json);
+
+                    init();
 					newID = parse.couches.length+1;
 			
 					//gui = new dat.GUI({ autoplace: false, width: 400, load : JSON.parse(json)});
 					gui = new dat.GUI({ autoplace: false, width: 400});
 					
 					//dossiers
-					/*var fFocus = gui.addFolder('Focus'),
-					fTexture = gui.addFolder('Focus texture'),
-					fContexte = gui.addFolder('Contexte');
-					
-					$(fTexture.domElement).attr("hidden", true);*/
+					var fCapture = gui.addFolder('Captures d\'écran');
+					var fCam = gui.addFolder('Caméra et ombrage');
+
 
 					var coucheFond = getCoucheByName("Fond");
 					var coucheToitFocus = getCoucheByName("Toits focus");
@@ -31,26 +31,30 @@ function loadAll(){
 					
 					//paramètres dat.gui
 					params = {
-						/*opacite_mur_focus: 1.0,
-
-						texture_mur : 'wall',
-
-						arbres : ''*/
 						pos_camera : function() {resetCam(camera)},
+                        toggle_shadow : true,
+                        pos_light : light2.position.x,
 						save_config :  function() {saveConfig()},
+                        save_screenshot : function() {saveScreenshot(zip)},
+						nb_images : nbImage,
+						download : function(){downloadAll(zip)},
+						empty_zip : function() {emptyZip(zip)},
 						type_fond : coucheFond.URI,
 						h_ini : parseInt(coucheMurFocus.URI.substring(19,20)),
 						s_pente : parseFloat(coucheMurFocus.URI.substring(29,32)),
 						add_couche : function () {chargeData()},
 						suppr_couche : ''
-						//function() {supprCouche()}
-
 					};
-					//params.setAttribute("color", "#222222");
-					//params.color ="#222222" ;
-					gui.remember(params);
 
-					var pos_cam = gui.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();
+					//gui.remember(params);
+
+					var pos_cam = fCam.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();
+                    var toggle_shadow = fCam.add(params, 'toggle_shadow').name('Activer l\'ombre projetée');
+					var pos_light = fCam.add(params, 'pos_light',-800,800,1).name('x light').listen();
+                    var save_screenshot = fCapture.add(params, 'save_screenshot').name('Capture d\'écran').listen();
+					var nb_images = fCapture.add(params, 'nb_images').name('Nombre d\'images').listen();
+                    var download = fCapture.add(params, 'download').name('Télécharger les images').listen();	
+					var empty_zip = fCapture.add(params, 'empty_zip').name('Supprimer les images enregistrées').listen();
 					var save_config = gui.add(params, 'save_config').name('Sauvegarder la configuration').listen();
 					var type_fond = gui.add(params, 'type_fond', [ "./models/Parcelle.obj", "./models/Ortho.obj"]).name('Fond').listen();
 					var h_ini = gui.add(params, 'h_ini', 0,6).step(2).name("Hauteur initiale").listen();
@@ -74,6 +78,12 @@ function loadAll(){
 						clearParse(getCoucheByName(value));
 					});
 
+                    save_screenshot.onFinishChange(function(value) {params.nb_images = nbImage+1;});
+					empty_zip.onFinishChange(function(value) {params.nb_images = 0;});
+
+                    pos_light.onChange(function(value) {positionLight(value);});
+                    toggle_shadow.onChange(function(value) {light2.castShadow = !light2.castShadow;});
+
 
 					loadLayers();
 					loadParams();
@@ -94,8 +104,7 @@ function loadAll(){
         function initGUICouche (couche){
 				var folder = gui.addFolder(couche.name);
 				gui.__folders[couche.name].__ul.id = "folder"+couche.id;
-					//params["uriSource"+couche.id] = couche.URI;
-					//params["uriSource"+couche.id] = function() {chargeData()};
+
 					params["name"+couche.id] = couche.name;
 					params["typeFill"+couche.id] = couche.style.parameters.fill.type;
 					params["colorFill"+couche.id] = couche.style.parameters.fill.color;
@@ -107,8 +116,6 @@ function loadAll(){
 					params["widthStroke"+couche.id] = 50.0;
 
 
-					//folder.add( params, "uriSource"+couche.id ).name("Source de données").listen();
-					//gui.__folders[couche.name].__ul.lastChild.id = "uriSource"+couche.id;
 					folder.add( params, "name"+couche.id ).name("Nom couche").listen();
 					folder.add( params, "typeFill"+couche.id, [ "uni", "texture", "image"] ).name("Type surface").listen();
 					folder.addColor( params, "colorFill"+couche.id ).name("Couleur").listen();

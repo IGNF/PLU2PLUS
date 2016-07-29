@@ -268,11 +268,11 @@
 								transparent : (couche.style.parameters.fill.opacite < 1.0), 
 								opacity : couche.style.parameters.fill.opacite});		
 						}else if (couche.style.parameters.fill.type === 'texture') {
-							var mat = new THREE.MeshBasicMaterial( {color: couche.style.parameters.fill.color} );
+							var mat = new THREE.MeshLambertMaterial( {color: couche.style.parameters.fill.color} );
 
 						}else if (couche.style.parameters.fill.type === 'image') {
 							var textureLoader = new THREE.TextureLoader();
-							var mat = new THREE.MeshBasicMaterial( {map: null, color: 0xffffff, shading: THREE.SmoothShading} );
+							var mat = new THREE.MeshLambertMaterial( {map: null, color: 0xffffff, shading: THREE.SmoothShading} );
 							textureLoader.load( couche.style.parameters.fill.parameters.URI, function( map ) {
 								map.wrapS = THREE.RepeatWrapping;
 								map.wrapT = THREE.RepeatWrapping;

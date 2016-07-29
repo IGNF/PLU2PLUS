@@ -228,6 +228,8 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 
 							if ( child instanceof THREE.Mesh ) {
 
+									/*child.castShadow = true;
+									child.receiveShadow = true;*/
 									var geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
 
 									if (couche.style.parameters.fill.type === 'texture') {
@@ -239,6 +241,8 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 										assignUVs(geometry);
 									}
 
+								//geometry.computeVertexNormals();
+								//geometry.computeFaceNormals();
 
 									var mesh = new THREE.Mesh(geometry,mat);
 									
@@ -292,6 +296,12 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 
 									mesh.userData = {couche : couche.id};
 									line.userData = {couche : couche.id};
+
+									//mesh.geometry.computeVertexNormals();
+									//mesh.geometry.computeFaceNormals();
+
+									mesh.castShadow = true;
+									mesh.receiveShadow = true;
 
 									scene.add(mesh);
 									scene.add(line);
