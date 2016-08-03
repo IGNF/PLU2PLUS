@@ -6,6 +6,10 @@
 			"near" : 10,
 			"far" : 100000,
 			"fov" : 10
+		},
+		"fond" : "#AADFF4",
+		"light" : {
+			"position" : { "x" : -400, "y" : 100, "z": 410 }
 		}
 	},
 	"couches": [
@@ -36,7 +40,13 @@
 					"fill": {
 						"opacite": 0.99,
 						"color": "#ce7157",
-						"type": "uni"
+						"type": "shader",						
+						"parameters": {
+							"shader" : "hatching",
+							"id": "hatch_",
+							"repeat": 0.1,
+							"diffuse": 0.7
+						}
 					},
 					"stroke": {
 						"opacite": 0.5,
@@ -74,14 +84,21 @@
 					"fill": {
 						"opacite": 0.5,
 						"color": "#006e33",
-						"type": "uni"
+						"type": "shader",						
+						"parameters": {
+							"shader" : "hatching",
+							"id": "hatch_",
+							"repeat": 0.2,
+							"diffuse": 0.7
+						}
 					},
 					"stroke": {
 						"opacite": 0.5,
-						"color": "#555555",
+						"color": "#000000",
 						"type": "Sketchy",
 						"parameters": {
-							"URI": "./strokes/thick.png",
+							"shader" : "sketchy_strokes",
+							"URI": "thick",
 							"width": "60.0"
 						}
 					}
@@ -243,7 +260,8 @@
 						"color": "#15410c",
 						"type": "Sketchy",
 						"parameters": {
-							"URI": "./strokes/wavy.png",
+							"shader" : "sketchy_strokes",
+							"URI": "irregulier",
 							"width": 30
 						}
 					}
@@ -259,7 +277,7 @@
 				"displacement": {
 					"x": "0",
 					"y": "0",
-					"z": "-2"
+					"z": "-1.2"
 				},
 				"rotation": {
 					"x": "0",

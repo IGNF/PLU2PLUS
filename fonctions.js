@@ -47,9 +47,6 @@
 					//new THREE.Vector2(3* Math.round(-1+(v2[components[0]] - min[components[0]])/3.0), (v2[components[1]] - min[components[1]]) ),
 					//new THREE.Vector2(3* Math.round(-1+(v3[components[0]] - min[components[0]])/3.0), (v3[components[1]] - min[components[1]]))
 						
-						//new THREE.Vector2(v1[components[0]], v1[components[1]])
-						//new THREE.Vector2(v2[components[0]], v2[components[1]])
-						//new THREE.Vector2(v3[components[0]], v3[components[1]])
 					]);
 
 				});
@@ -138,36 +135,44 @@
 			
 			
 			//crée le material texturé associé aux arêtes sketchy
-			function createMaterial(width, value, color){
+			function createMaterial(shader, width, value, color){
 
 				//var texture = THREE.ImageUtils.loadTexture( "strokes/pencil1-tiled-136-135.png" );
-				var texture = THREE.ImageUtils.loadTexture( "strokes/small.png" );
+				var texture = THREE.ImageUtils.loadTexture( "strokes/"+value+"_small.png" );
 				//var texture2 = THREE.ImageUtils.loadTexture( "strokes/paint-brush.png" );
-				var texture2 = THREE.ImageUtils.loadTexture( value );
+				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/chalk1-155-142.png" );
-				var paper = THREE.ImageUtils.loadTexture("paper2.png");
+				//var paper = THREE.ImageUtils.loadTexture("paper2.png");
 				/*texture.wrapS = THREE.RepeatWrapping;
 				texture.repeat.set( 0.1, 0.1 );
-				texture.anisotropy = 10;
 				texture.anisotropy = 10;*/
 				//var color = new THREE.Color().setHex(params.color_aretes_focus.replace("#", "0x"));
+				var vertex = getSourceSynch("shaders/"+shader+"_vert.glsl");
+				var fragment = getSourceSynch("shaders/"+shader+"_frag.glsl");
+
+				/*loadTextFile("shaders/sketchy_strokes_vert.glsl", function(text){
+					vertex = text;	
+				});
+				loadTextFile("shaders/sketchy_strokes_frag.glsl", function(text){
+					fragment = text;	
+				})*/
 
 				//Materiel appliqué à toutes les géométries de la couche
 				var material = new THREE.ShaderMaterial( {
 
+					vertexShader: vertex,
+					fragmentShader: fragment,
 					uniforms: {
-						time: { value: 1.0 },
 						thickness : { value: width },
 						resolution: { value: new THREE.Vector2(window.innerWidth,window.innerHeight) }, // todo: vraie resolution
-						texture1: { type: "t", value: texture2 },
+						texture1: { type: "t", value: texture },
 						texture2: { type: "t", value: texture2 },
 						texture3: { type: "t", value: texture2 },
-						paper: { type: "t", value: paper },
 						color : {type: 'v3', value: [color.r,color.g,color.b]}
-					},
-					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+					}
+					//vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					//fragmentShader: document.getElementById( 'fragmentShader' ).textContent
 
 				} );
 				material.transparent = true;
@@ -277,11 +282,60 @@
 								map.wrapS = THREE.RepeatWrapping;
 								map.wrapT = THREE.RepeatWrapping;
 								map.anisotropy = 4;
-								map.repeat.set( 0.4, 0.4 );
+								map.repeat.set( couche.style.parameters.fill.parameters.repeat, couche.style.parameters.fill.parameters.repeat );
 								mat.side = THREE.DoubleSide;
 								mat.map = map;
 								mat.needsUpdate = true;
 							} );
+						}else if (couche.style.parameters.fill.type === 'shader') {
+							var id = couche.style.parameters.fill.parameters.id;
+							var vertex = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_vert.glsl");
+							var fragment = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_frag.glsl");
+
+							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
+			
+							var material = new THREE.ShaderMaterial( {
+
+								uniforms:       {
+									ambientWeight: { type: 'f', value : 0 },
+									diffuseWeight: { type: 'f', value : couche.style.parameters.fill.parameters.diffuse },
+									rimWeight: { type: 'f', value : 0.1 },
+									specularWeight: { type: 'f', value : 0 },
+									shininess: { type: 'f', value : 1 },
+									inkColor: { type: 'v4', value: new THREE.Vector3( color.r, color.g,color.b ) },
+									opacity: { type: 'f', value: couche.style.parameters.fill.opacite },
+									lightPosition: { type: 'v3', value: new THREE.Vector3( light2.position.x, light2.position.y, light2.position.z ) },
+									hatch1: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '0.jpg' ) },
+									hatch2: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '1.jpg' ) },
+									hatch3: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '2.jpg' ) },
+									hatch4: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '3.jpg' ) },
+									hatch5: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '4.jpg' ) },
+									hatch6: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '5.jpg' ) },
+									paper: {type: 't', value: THREE.ImageUtils.loadTexture( './textures/paper2.png' ) },
+									repeat: { type: 'v2', value: new THREE.Vector2( couche.style.parameters.fill.parameters.repeat, couche.style.parameters.fill.parameters.repeat ) }
+								},
+								vertexShader:   vertex,
+								fragmentShader: fragment
+
+							});
+
+							material.side = THREE.DoubleSide;
+							
+							material.uniforms.paper.value.generateMipmaps = false;
+							material.uniforms.paper.value.magFilter = THREE.LinearFilter;
+							material.uniforms.paper.value.minFilter = THREE.LinearFilter;
+					
+							material.uniforms.hatch1.value.wrapS = material.uniforms.hatch1.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch2.value.wrapS = material.uniforms.hatch2.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch3.value.wrapS = material.uniforms.hatch3.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch4.value.wrapS = material.uniforms.hatch4.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch5.value.wrapS = material.uniforms.hatch5.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;
+
+							material.depthWrite = true;
+
+							mat = material;
+
 						}
 
 
@@ -311,7 +365,7 @@
 
 			function quadMatFromLayer (couche) {
 
-				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.URI, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
+				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.URI, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
 				return quadMat;
 
 			}
@@ -370,4 +424,12 @@
 				document.getElementById("folder"+couche.id).remove();
 			}
 
+
+			function getFaces(couche, array){
+				scene.traverse ( function( child ) {
+					if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad !== true ) {
+						array.push( child );
+					}
+				} );
+			}
 

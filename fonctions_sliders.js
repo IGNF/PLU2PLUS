@@ -15,27 +15,6 @@
 
 				
 			//sauvegarde de la configuration des paramètres actuels dans un fichier
-			function saveJSON(){
-				params.arbres = JSON.stringify(positions);
-				var txt = JSON.stringify(gui.getSaveObject(), undefined, 2);
-				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
-				var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-				var fileNameToSaveAs = gui.__preset_select.value;
-
-			 
-				var downloadLink = document.createElement("a");
-				downloadLink.download = fileNameToSaveAs;
-				downloadLink.innerHTML = "Download File";
-				downloadLink.href = textToSaveAsURL;
-				downloadLink.style.display = "none";
-				document.body.appendChild(downloadLink);
-			 
-				downloadLink.click();
-				
-
-
-			}
-
 			function saveConfig() {
 				var txt = JSON.stringify(parse, undefined, '\t');
 				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
@@ -82,6 +61,7 @@
 
 			function positionLight(value){
 				light2.position.x = value;
+				//parse.parameters.light.position.x = value;
 
 			}
 			
@@ -97,6 +77,25 @@
 			}
 
 
+			function chargeData(){
+				var container = document.getElementById("container");
+				var input = document.createElement("input");
+                input.type = "file";
+                input.name = "file"+no;
+				input.style = "display:none";
+                container.appendChild(input);
+				input.addEventListener("change",function(event){
+					no++;
+					var file = this.files[0];  
+					var reader = new FileReader();
+					reader.onload = function(progressEvent){
+						var obj = this.result;
+						addCouche("./models/"+file.name);
+					};
+					reader.readAsDataURL(file);
+			  	});
+				input.click();
+			}
 
 			
 			function changeColor(couche, value) {
@@ -106,16 +105,21 @@
 
 				if (ancienne_value !== value) {
 					couche.style.parameters.fill.color = value;
+					var color = new THREE.Color().setHex(value.replace("#", "0x"));
 
-					scene.traverse ( function( child ) {
-						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id ) {
-							to_change.push( child );
+					getFaces(couche, to_change);
+
+					if (couche.style.parameters.fill.type === "shader"){
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.uniforms.inkColor.value = new THREE.Vector3( color.r, color.g,color.b );
+							
+							to_change[i].material.needsUpdate = true;
 						}
-					} );
-
-					for ( var i = 0; i < to_change.length; i++ ) {
-						to_change[i].material.color = new THREE.Color().setHex(value.replace("#", "0x"));
-						to_change[i].material.needsUpdate = true;
+					} else {
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.color = color;
+							to_change[i].material.needsUpdate = true;
+						}
 					}
 				}
 			}
@@ -133,7 +137,7 @@
 					scene.traverse ( function( child ) {
 						if ( child instanceof THREE.Line && child.userData.couche === couche.id ) {
 							to_changeLine.push( child );
-						} else if (child.userData.quad === true && child.userData.couche === couche.id) {
+						} else if (child.userData.quad === true && child.userData.couche === couche.id ) {
 							to_changeQuad.push(child);
 						}
 					} );
@@ -154,27 +158,24 @@
 				var to_change = [];
 				var ancienne_value = couche.style.parameters.fill.opacite;
 
-				//if (ancienne_value !== value) {
 					couche.style.parameters.fill.opacite = value;
 
-					scene.traverse ( function( child ) {
-						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id ) {
-							to_change.push( child );
-						}
-					} );
+					getFaces(couche, to_change);
 
-					for ( var i = 0; i < to_change.length; i++ ) {
-						to_change[i].material.opacity = value;
-						/*if (couche.style.parameters.fill.type === 'texture'){
+					if (couche.style.parameters.fill.type === "shader"){
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.uniforms.opacity.value = value;
 							to_change[i].material.transparent = true;
-						} else {*/
-							to_change[i].material.transparent = (value < 1.0);
-						//}
-							
-						to_change[i].material.needsUpdate = true;
+							to_change[i].material.needsUpdate = true;
+						}
+					} else {
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.opacity = value;
+							to_change[i].material.transparent = (value < 1.0);			
+							to_change[i].material.needsUpdate = true;
+						}
 					}
 
-				//}
 			}
 
 			function changeTypeAretes(couche, value) {
@@ -254,7 +255,7 @@
 					} );
 					//var texture = THREE.ImageUtils.loadTexture( value );
 					var color = new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x"));
-					mat = createMaterial(couche.style.parameters.stroke.parameters.width, value, couche.style.parameters.stroke.color);
+					mat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, value, couche.style.parameters.stroke.color);
 
 					for ( var i = 0; i < to_changeQuad.length; i++ ) {
 						to_changeQuad[i].material = mat;
@@ -302,40 +303,12 @@
 				}
 				loadCouche(couche);
 			}
-
-			
-
-			function chargeData(){
-				//var input = document.getElementById("file"+no);
-				var container = document.getElementById("container");
-				var input = document.createElement("input");
-                input.type = "file";
-                input.name = "file"+no;
-				input.style = "display:none";
-                container.appendChild(input);
-				input.addEventListener("change",function(event){
-					no++;
-					var file = this.files[0];  
-					var reader = new FileReader();
-					reader.onload = function(progressEvent){
-						var obj = this.result;
-						addCouche("./models/"+file.name);
-					};
-					//reader.readAsText(file.name);
-					reader.readAsDataURL(file);
-			  	});
-				input.click();
-			}
 			
 
 			function changeName(couche, value){
 				var ancienne_value = couche.name;
-				if (ancienne_value !== value && !(gui.__folders[couche.name].__controllers[0].__input === document.activeElement))
-				// && ( elem.type || elem.href ))
-				{
+				if (ancienne_value !== value && !(gui.__folders[couche.name].__controllers[0].__input === document.activeElement)){
 					couche.name = value;
-					//gui.__folders[value] = gui.__folders[ancienne_value];
-					//gui.__folders[ancienne_value].__ul.hidden = true;
 					delete gui.__folders[ancienne_value];
 					document.getElementById("folder"+couche.id).remove();
 					initGUICouche(couche);
@@ -352,20 +325,18 @@
 				if (ancienne_value !== value) {
 					couche.style.parameters.fill.type = value;
 
-					scene.traverse ( function( child ) {
-						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad !== true ) {
-							to_change.push( child );
-						}
-					} );
+					getFaces(couche, to_change);
 
 					couche.style.parameters.fill.parameters = {};
 
 
 					if (value === 'image'){
-						couche.style.parameters.fill.parameters.URI = "./textures/wall.jpg";
+						couche.style.parameters.fill.parameters.URI = "./textures/paper2.png";
 						elementVisible("imageFill"+couche.id,true);
+						elementVisible("repeatFill"+couche.id,true);
 					} else {
 						elementVisible("imageFill"+couche.id,false);
+						elementVisible("repeatFill"+couche.id,false);
 					}
 					if (couche.style.parameters.fill.type === 'texture') {
 						changeSourceCouche(couche,couche.URI);
@@ -373,9 +344,17 @@
 						clearCouche(couche);
 						loadCouche(couche);
 					}
-					var mat = matFromLayer(couche);
-					//var mat =wallMaterial;
+					if (value === 'shader'){
+						couche.style.parameters.fill.parameters.shader = "hatching";
+						couche.style.parameters.fill.parameters.id = "hatch_";
+						couche.style.parameters.fill.parameters.repeat = 0.1;
+						elementVisible("repeatFill"+couche.id,true);
+						elementVisible("diffuseFill"+couche.id,true);
+					}else{
+						elementVisible("diffuseFill"+couche.id,false);
+					}
 
+					var mat = matFromLayer(couche);
 
 					for ( var i = 0; i < to_change.length; i++ ) {
 						to_change[i].material = mat;
@@ -393,17 +372,76 @@
 				if (ancienne_value !== value) {
 					couche.style.parameters.fill.parameters.URI = value;
 
-					scene.traverse ( function( child ) {
-						if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad !== true ) {
-							to_change.push( child );
-						}
-					} );
-				}
+					getFaces(couche, to_change);
+				
 				var mat = matFromLayer(couche);
 
 				for ( var i = 0; i < to_change.length; i++ ) {
 						to_change[i].material = mat;
 						to_change[i].material.needsUpdate = true;
 					}
+				}
 
 		}
+
+
+		function changeLighting(couche, value){
+			var to_change = [];
+				var ancienne_value = parse.parameters.light.position.x;
+
+				if (ancienne_value !== value) {
+
+					getFaces(couche, to_change);
+				
+
+				for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].material.uniforms.lightPosition.value = light2.position;
+						to_change[i].material.needsUpdate = true;
+					}
+				}
+
+		}
+
+		function changeRepeat (couche, value) {
+			var to_change = [];
+				var ancienne_value = couche.style.parameters.fill.parameters.repeat;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.fill.parameters.repeat = value;
+
+					getFaces(couche, to_change);
+
+					if (couche.style.parameters.fill.type === "shader"){
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.uniforms.repeat.value = new THREE.Vector2(value, value);
+							to_change[i].material.needsUpdate = true;
+						}
+					} else {
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.map.repeat = new THREE.Vector2(value, value);
+							to_change[i].material.needsUpdate = true;
+						}
+
+					}
+				}
+
+		}
+
+		function changeDiffuse (couche, value) {
+			var to_change = [];
+				var ancienne_value = couche.style.parameters.fill.parameters.diffuse;
+
+				if (ancienne_value !== value) {
+					couche.style.parameters.fill.parameters.diffuse = value;
+					getFaces(couche, to_change);
+
+						for ( var i = 0; i < to_change.length; i++ ) {
+							to_change[i].material.uniforms.diffuseWeight.value = value;
+							to_change[i].material.needsUpdate = true;
+						}
+
+				}
+
+		}
+
+

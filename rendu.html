@@ -9,75 +9,8 @@
 		</style>
 	</head>
 	<body>		
-		<script type="x-shader/x-vertex" id="vertexShader">
-		
-			attribute vec3  position2;
-			uniform   vec2  resolution;
-			uniform   float thickness;
-			varying   vec3 v_uv;
-			varying   float choixTex;
-			void main() {
-			gl_Position = projectionMatrix *
-							modelViewMatrix *
-							vec4(position,1.0);
-
-			vec4 Position2 = projectionMatrix *
-							modelViewMatrix *
-							vec4(position2,1.0);
-
-			vec2 normal = normalize((gl_Position.xy/gl_Position.w - Position2.xy/Position2.w) * resolution); // * 0.5
-			normal = uv.x * uv.y * vec2(-normal.y, normal.x);
-
-			if (length((gl_Position.xyz+Position2.xyz)/2.0)>25.0){
-				gl_Position.xy += 25.0*(thickness/length((gl_Position.xyz+Position2.xyz)/2.0)) * gl_Position.w * normal * 2.0 / resolution;
-				}
-			else {
-				gl_Position.xy += thickness * gl_Position.w * normal * 2.0 / resolution;
-			}
-
-			if (distance(position, position2) < 3.0){
-				choixTex = 1.0;
-				
-			} else if (distance(position, position2) > 10.0){
-				choixTex = 3.0;
-			//	v_uv = vec3(2.0*(uv.x-0.5),uv.y,1.)*gl_Position.w;
-			}else {
-				choixTex = 2.0;
-			}
-
-			v_uv = vec3(uv,1.)*gl_Position.w;
-
-			}
-				
-
-
-		</script>
-		<script type="x-shader/x-fragment" id="fragmentShader">
-			varying vec3  v_uv;
-			varying float choixTex;
-			uniform sampler2D texture1;
-			uniform sampler2D texture2;
-			uniform sampler2D texture3;
-			//uniform sampler2D paper;
-			uniform vec3 color;
-			
-
-			void main() {
-			vec2 uv = v_uv.xy/v_uv.z;
-			vec4 baseColor = texture2D(texture1, (uv+1.)*0.5);
-			//vec4 paperColor = texture2D(paper, (uv+1.)*0.5 );
-
-			if (choixTex == 2.0){
-				baseColor = texture2D(texture2, (uv+1.)*0.5);   
-			} else if (choixTex == 3.0){
-				baseColor = texture2D(texture3, (uv+1.)*0.5);   
-			}
-
-			if ( baseColor.a < 0.3 ) discard;
-				gl_FragColor = baseColor+vec4(color,0.0); //0.0 si on veut la transparence des arêtes
-			}
-		
-		</script>
+		<script src="shaders/sketchy_strokes_vert.glsl" type="x-shader/x-vertex" id="vertexShader">	</script>
+		<script src="shaders/sketchy_strokes_frag.glsl" type="x-shader/x-fragment" id="fragmentShader"> </script>
 
 		<input type="file" id="file"></input>
 		<div id="container"/>
@@ -96,6 +29,25 @@
 		<script src="js/jquery.min.js"></script>
 		<script>
 
+
+			var getSourceSynch = function(url) {
+				var req = new XMLHttpRequest();
+				req.open("GET", url, false);
+				req.send(null);
+				//return (req.status == 200) ? req.responseText : null;
+				return req.responseText;
+			};
+
+
+			/*function loadTextFile(url, callback) {
+				var request = new XMLHttpRequest();
+				request.open('POST', url, true);
+				request.addEventListener('load', function() {
+					callback(request.responseText);
+				})
+				request.send();
+			}*/
+
 		var scene, camera, renderer, gui, params, light2;
 		//, plane, selection, clock;
 		/*var raycaster = new THREE.Raycaster();
@@ -106,7 +58,6 @@
 		
 		var zip = new JSZip();
 		var nbImage = 0;
-		//var nbArbres = 0;
 		var parse;
 		var no = 1;
 		var newID;
@@ -119,36 +70,28 @@
 
 				
 		function init() {
-			var couleur_fond = 0xAADFF4;
-		
+
 			scene = new THREE.Scene();
-			clock = new THREE.Clock();
+
 			var WIDTH = window.innerWidth,
 			HEIGHT = window.innerHeight;
 			renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer: true });
 			renderer.setSize(WIDTH, HEIGHT);
-			renderer.setClearColor( couleur_fond, 0.5);
+			renderer.setClearColor( parse.parameters.fond, 0.5);
 			renderer.shadowMap.enabled = true;
       		renderer.shadowMapSoft = true;
 
 			document.body.appendChild(renderer.domElement);
+
 			if (parse.parameters.camera.type === 'ortho') {
 				camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, parse.parameters.camera.near, parse.parameters.camera.far); 
 			} else {
 				camera = new THREE.PerspectiveCamera(parse.parameters.camera.fov, WIDTH / HEIGHT, parse.parameters.camera.near, parse.parameters.camera.far);
 			}
 
-			//camera = new THREE.PerspectiveCamera(parse.parameters.camera.fov, WIDTH / HEIGHT, parse.parameters.camera.near, parse.parameters.camera.far);
-			//camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, parse.parameters.camera.near, parse.parameters.camera.far); 
-			//camera.position.set(-300,425,325);
 			camera.position.set(parse.parameters.camera.position.x,parse.parameters.camera.position.y,parse.parameters.camera.position.z);
 			camera.up.set(0,0,1);
 			scene.add(camera);
-
-
-			/*plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(500, 500, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff}));
-			plane.visible = false;
-			scene.add(plane);*/
 			
 			window.addEventListener('resize', function() {		
 				var WIDTH = window.innerWidth,
@@ -157,29 +100,11 @@
 				camera.aspect = WIDTH / HEIGHT;
 				camera.updateProjectionMatrix();
 			});
+			window.addEventListener("keyup", capture);
 
-			/*document.addEventListener('mousemove', this.onDocumentMouseMove, false);
-			document.addEventListener('mousedown', this.onDocumentMouseDown, false);
-	  		document.addEventListener('mouseup', this.onDocumentMouseUp, false);*/
-			
-			//lights
-			var light = new THREE.HemisphereLight(0xffffff, 0.8);
-			light.position.set(250,100,-100);
-			/*light.castShadow = true;
-			light.shadowDarkness = 0.5;
-			light.shadowCameraFar = 1000;
 
-			light.shadow.camera.right     =  5;
-			light.shadowCameraLeft     = -5;
-			light.shadowCameraTop      =  5;
-			light.shadowCameraBottom   = -5;*/
-
-			//scene.add(light);
-			var lightbis = new THREE.HemisphereLight(0xffffff, 0.5);
-			lightbis.position.set(-50,80,-20);
-			//scene.add(lightbis);
 			light2 = new THREE.DirectionalLight(0xffffff, 1.0);
-			light2.position.set(150,100,410);
+			light2.position.set(parse.parameters.light.position.x,parse.parameters.light.position.y,parse.parameters.light.position.z);
 
 			light2.castShadow = true;
 			light2.shadowDarkness = 1.0;
@@ -194,14 +119,15 @@
 			light2.shadowMapWidth = 4096;    // power of 2
 			light2.shadowMapHeight = 4096;
     
-   
-
     		//light2.shadowCameraFov = 200;
+			//évite l'effet d'ombre du au DoubleSide des materials
     		light2.shadowBias = -0.001; 
+
 			var helper = new THREE.CameraHelper( light2.shadow.camera );
 			//scene.add( helper );
-			//light2.shadow.camera.castShadow = true;
 			scene.add(light2);
+
+
 			var ambientLight = new THREE.AmbientLight( 0xffffff, 0.8 ); // soft white light
 			scene.add( ambientLight );
 			
@@ -215,28 +141,11 @@
 			requestAnimationFrame(animate);
 			renderer.render(scene, camera);
 			controls.update();
-			for (var i in gui.__controllers) {
-				gui.__controllers[i].updateDisplay();
-			}
-			for (var j = 0; j < parse.couches.length; j++){
-				changeName(parse.couches[j], params["name"+parse.couches[j].id]);
-				changeColor(parse.couches[j], params["colorFill"+parse.couches[j].id]);
-				changeColorAretes(parse.couches[j], params["colorStroke"+parse.couches[j].id]);
-				changeOpacite(parse.couches[j], params["opaFill"+parse.couches[j].id]);
-				changeTypeAretes(parse.couches[j], params["typeStroke"+parse.couches[j].id] );
-				if (parse.couches[j].style.parameters.stroke.type === "Sketchy"){
-					changeStyleTrait(parse.couches[j], params["uriStroke"+parse.couches[j].id] );
-					changeEpaisseur(parse.couches[j], params["widthStroke"+parse.couches[j].id])
-				}
-				changeTypeSurface (parse.couches[j], params["typeFill"+parse.couches[j].id] );
-				if (parse.couches[j].style.parameters.fill.type === "image"){
-					changeTexture (parse.couches[j], params["imageFill"+parse.couches[j].id] );
-				}
-			}
+			updateGUI();
 
 		}
 		
-		window.addEventListener("keyup", capture);
+		
 
 		</script>
 	</body>
