@@ -19,7 +19,8 @@
 				var txt = JSON.stringify(parse, undefined, '\t');
 				var textToSaveAsBlob = new Blob([txt], {type:"text/json"});
 				var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-				var fileNameToSaveAs = gui.__preset_select.value;
+				var fileNameToSaveAs = 'Default';
+				//gui.__preset_select.value;
 
 			 
 				var downloadLink = document.createElement("a");
@@ -56,12 +57,12 @@
 			
 			function resetCam(camera){
 				camera.position.set(parse.parameters.camera.position.x,parse.parameters.camera.position.y,parse.parameters.camera.position.z);
-				controls.target.set( -50, 30, 0 );
+				controls.target.set(parse.parameters.camera.target.x,parse.parameters.camera.target.y,parse.parameters.camera.target.z);
 			}
 
 			function positionLight(value){
-				light2.position.x = value;
-				//parse.parameters.light.position.x = value;
+				var light = getFirstElementFromUserData('typelight','directional');
+				light.position.x = value;
 
 			}
 			
@@ -200,8 +201,9 @@
 
 					if (value === 'Sketchy'&& ancienne_value !== 'Sketchy') {
 						couche.style.parameters.stroke.parameters = {};
-						couche.style.parameters.stroke.parameters.URI = './strokes/thick.png';
+						couche.style.parameters.stroke.parameters.URI = 'thick';
 						couche.style.parameters.stroke.parameters.width = 50.0;
+						couche.style.parameters.stroke.parameters.shader = 'sketchy_strokes';
 						var quadMat = quadMatFromLayer(couche);
 		
 						for ( var i = 0; i < to_changeLine.length; i++ ) {
@@ -338,21 +340,23 @@
 						elementVisible("imageFill"+couche.id,false);
 						elementVisible("repeatFill"+couche.id,false);
 					}
+					if (value === 'shader'){
+						couche.style.parameters.fill.parameters.shader = "hatching";
+						couche.style.parameters.fill.parameters.id = "hatch_";
+						couche.style.parameters.fill.parameters.repeat = 0.1;
+						couche.style.parameters.fill.parameters.diffuse = 0.5;
+						elementVisible("repeatFill"+couche.id,true);
+						elementVisible("diffuseFill"+couche.id,true);
+					}else{
+						elementVisible("diffuseFill"+couche.id,false);
+					}
 					if (couche.style.parameters.fill.type === 'texture') {
 						changeSourceCouche(couche,couche.URI);
 					} else if (ancienne_value === 'texture') {
 						clearCouche(couche);
 						loadCouche(couche);
 					}
-					if (value === 'shader'){
-						couche.style.parameters.fill.parameters.shader = "hatching";
-						couche.style.parameters.fill.parameters.id = "hatch_";
-						couche.style.parameters.fill.parameters.repeat = 0.1;
-						elementVisible("repeatFill"+couche.id,true);
-						elementVisible("diffuseFill"+couche.id,true);
-					}else{
-						elementVisible("diffuseFill"+couche.id,false);
-					}
+
 
 					var mat = matFromLayer(couche);
 
@@ -387,7 +391,8 @@
 
 		function changeLighting(couche, value){
 			var to_change = [];
-				var ancienne_value = parse.parameters.light.position.x;
+				var dirLight = getFirstLightByType('directional');
+				var ancienne_value = dirLight.position.x;
 
 				if (ancienne_value !== value) {
 
@@ -395,7 +400,7 @@
 				
 
 				for ( var i = 0; i < to_change.length; i++ ) {
-						to_change[i].material.uniforms.lightPosition.value = light2.position;
+						to_change[i].material.uniforms.lightPosition.value.x = params.pos_light;;
 						to_change[i].material.needsUpdate = true;
 					}
 				}
@@ -418,7 +423,9 @@
 						}
 					} else {
 						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.map.repeat = new THREE.Vector2(value, value);
+							if (to_change[i].material.map !== null){
+								to_change[i].material.map.repeat = new THREE.Vector2(value, value);
+							}
 							to_change[i].material.needsUpdate = true;
 						}
 
@@ -444,4 +451,89 @@
 
 		}
 
+		function changeScale (couche,value) {
+
+			var to_change = [];
+				var ancienne_value = couche.position.scale.x;
+				
+
+				if (ancienne_value !== value) {
+
+					couche.position.scale.x = couche.position.scale.y = couche.position.scale.z = value;
+
+					scene.traverse ( function( child ) {
+						if (child.userData.couche === couche.id ) {
+							to_change.push( child );
+						}
+					} );
+
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].scale.x = to_change[i].scale.y = to_change[i].scale.z = value;   
+					}
+
+				}
+
+		}
+
+		function changeRotation (couche,value) {
+
+			var to_change = [];
+				var ancienne_value = couche.position.rotation.x;
+				
+
+				if (ancienne_value !== value) {
+					couche.position.rotation.x  = value;
+
+					scene.traverse ( function( child ) {
+						if (child.userData.couche === couche.id ) {
+							to_change.push( child );
+						}
+					} );
+
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].rotation.x  = value;   
+					}
+				}
+		}
+
+		function changePosition (couche,valueX, valueY, valueZ) {
+
+			var to_change = [];
+				var ancienne_valueX = couche.position.displacement.x;
+				var ancienne_valueY = couche.position.displacement.y;
+				var ancienne_valueZ = couche.position.displacement.z;
+				
+
+				if (ancienne_valueX !== valueX || ancienne_valueY !== valueY || ancienne_valueZ !== valueZ) {
+					couche.position.displacement.x  = valueX;
+					couche.position.displacement.y  = valueY;
+					couche.position.displacement.z  = valueZ;
+
+					scene.traverse ( function( child ) {
+						if (child.userData.couche === couche.id ) {
+							to_change.push( child );
+						}
+					} );
+
+
+					for ( var i = 0; i < to_change.length; i++ ) {
+						to_change[i].position.x  = valueX;   
+						to_change[i].position.y  = valueY;   
+						to_change[i].position.z  = valueZ;   
+					}
+				}
+		}
+
+
+	function copyCouche(couche) {
+		var newCouche = JSON.parse(JSON.stringify(couche))
+		newCouche.id = newID;
+		newCouche.name = "Default"+newID;
+		parse.couches[parse.couches.length] = newCouche;
+		loadCouche(newCouche);
+		initGUICouche(newCouche);
+		newID++;
+	}
 

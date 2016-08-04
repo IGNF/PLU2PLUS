@@ -66,17 +66,10 @@
 				
 				
 			
-			
-			/*function removeEntity(name) {
-				var selectedObject = scene.getObjectByName(name);
-				scene.remove( selectedObject );
-				animate();
-			}*/
-			
 			//capture d'écran
 			function capture(e){
-				//Listen to 'Down arrow' key
-				if(e.which !== 40) return;  
+				//Listen to 'equal sign' key
+				if(e.which !== 187) return;  
 				try {
 					window.open(renderer.domElement.toDataURL("image/png"));      
 				} 
@@ -132,31 +125,33 @@
 					scene.remove( to_remove[i] );
 				}
 			}
+
+
+
+			function getFirstElementFromUserData(key, value) {
+				var elements = [];
+
+				scene.traverse ( function( child ) {
+					if ( child.userData[key] === value) {
+						elements.push( child );
+					 }
+				} );
+
+				return elements[0];
+			}
 			
 			
 			//crée le material texturé associé aux arêtes sketchy
 			function createMaterial(shader, width, value, color){
 
-				//var texture = THREE.ImageUtils.loadTexture( "strokes/pencil1-tiled-136-135.png" );
+				//texture des petits segments
 				var texture = THREE.ImageUtils.loadTexture( "strokes/"+value+"_small.png" );
-				//var texture2 = THREE.ImageUtils.loadTexture( "strokes/paint-brush.png" );
+
+				//texture des grands segments
 				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
-				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
-				//var texture3 = THREE.ImageUtils.loadTexture( "strokes/chalk1-155-142.png" );
-				//var paper = THREE.ImageUtils.loadTexture("paper2.png");
-				/*texture.wrapS = THREE.RepeatWrapping;
-				texture.repeat.set( 0.1, 0.1 );
-				texture.anisotropy = 10;*/
-				//var color = new THREE.Color().setHex(params.color_aretes_focus.replace("#", "0x"));
+
 				var vertex = getSourceSynch("shaders/"+shader+"_vert.glsl");
 				var fragment = getSourceSynch("shaders/"+shader+"_frag.glsl");
-
-				/*loadTextFile("shaders/sketchy_strokes_vert.glsl", function(text){
-					vertex = text;	
-				});
-				loadTextFile("shaders/sketchy_strokes_frag.glsl", function(text){
-					fragment = text;	
-				})*/
 
 				//Materiel appliqué à toutes les géométries de la couche
 				var material = new THREE.ShaderMaterial( {
@@ -171,8 +166,6 @@
 						texture3: { type: "t", value: texture2 },
 						color : {type: 'v3', value: [color.r,color.g,color.b]}
 					}
-					//vertexShader: document.getElementById( 'vertexShader' ).textContent,
-					//fragmentShader: document.getElementById( 'fragmentShader' ).textContent
 
 				} );
 				material.transparent = true;
@@ -293,6 +286,12 @@
 							var fragment = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_frag.glsl");
 
 							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
+							//lampe située par défaut en dessous de la scène
+							var lightPosition = new THREE.Vector3(0,0,-500);
+							var dirLight = getFirstLightByType('directional');
+							if (dirLight !== undefined){
+								lightPosition = new THREE.Vector3( dirLight.position.x, dirLight.position.y, dirLight.position.z );
+							}
 			
 							var material = new THREE.ShaderMaterial( {
 
@@ -304,7 +303,7 @@
 									shininess: { type: 'f', value : 1 },
 									inkColor: { type: 'v4', value: new THREE.Vector3( color.r, color.g,color.b ) },
 									opacity: { type: 'f', value: couche.style.parameters.fill.opacite },
-									lightPosition: { type: 'v3', value: new THREE.Vector3( light2.position.x, light2.position.y, light2.position.z ) },
+									lightPosition: { type: 'v3', value: lightPosition },
 									hatch1: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '0.jpg' ) },
 									hatch2: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '1.jpg' ) },
 									hatch3: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '2.jpg' ) },
@@ -382,13 +381,19 @@
 							return parse.couches[j];
 						}
 				}
+			}
 
-				//return couche;
+			function getFirstLightByType (type) {
+				for (var j = 0; j < parse.parameters.lights.length; j++){
+						if (parse.parameters.lights[j].type === type){
+							return parse.parameters.lights[j];
+						}
+				}
 			}
 
 
 
-
+			//ajout d'une couche avec des paramètres par défaut
 			function addCouche (URI){
 				var maxOrder = 0;
 				for (var j = 0; j < parse.couches.length; j++){
@@ -401,7 +406,7 @@
 					id : newID,
 					name : "Default"+newID,
 					URI : URI,
-					position : {displacement : {x:0, y:0, z:0},rotation : {x:0, y:0, z:0},scale : {x:1, y:1, z:1}},
+					position : {displacement : {x:0, y:0, z:0},rotation : {x:0, y:0, z:0},scale : {x:1.0, y:1.0, z:1.0}},
 					style : {name : "Default", parameters : {fill : {opacite : 0.99, color : "#ce7157", type : "uni"}, stroke : {opacite : 1.0, color : "#ffffff", type : "Continu"}}},
 					order : maxOrder - 1
 				};
@@ -433,3 +438,10 @@
 				} );
 			}
 
+
+			var getSourceSynch = function(url) {
+				var req = new XMLHttpRequest();
+				req.open("GET", url, false);
+				req.send(null);
+				return req.responseText;
+			};

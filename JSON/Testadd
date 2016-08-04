@@ -1,12 +1,23 @@
-{
+{	
 	"parameters" : {
 		"camera" : {
 			"type" : "perspective",
-			"position" : { "x" : -300, "y" : 425, "z": 325 },
+			"position" : { "x" : -300, "y" : 425, "z": 725 },
 			"near" : 10,
 			"far" : 100000,
-			"fov" : 10
-		}
+			"fov" : 10,
+			"target" : { "x" : -50, "y" : 30, "z": 0 }
+		},
+		"fond" : "#AADFF4",
+		"lights" : [
+					{	
+				"type" : "ambient",
+				"color" : "#ffffff",
+				"intensity" : 0.8
+			}
+
+		]
+		
 	},
 	"couches": [
 		{
@@ -15,30 +26,33 @@
 			"URI": "./models/Roof_Hini_4.0_Slope_2.5.obj",
 			"position": {
 				"displacement": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"rotation": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "1",
-					"y": "1",
-					"z": "1"
+					"x": 1,
+					"y": 1,
+					"z": 1
 				}
 			},
 			"style": {
 				"name": "Discret",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#ce7157",
-						"type": "image",
+						"type": "shader",						
 						"parameters": {
-							"URI": "./textures/roof.jpg"
+							"shader" : "hatching",
+							"id": "hatch_",
+							"repeat": 0.1,
+							"diffuse": 0.7
 						}
 					},
 					"stroke": {
@@ -48,7 +62,7 @@
 					}
 				}
 			},
-			"order" : 2
+			"order": 2
 		},
 		{
 			"id": "2",
@@ -56,19 +70,19 @@
 			"URI": "./models/Wall_Hini_4.0_Slope_2.5.obj",
 			"position": {
 				"displacement": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"rotation": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "1",
-					"y": "1",
-					"z": "1"
+					"x": 1,
+					"y": 1,
+					"z": 1
 				}
 			},
 			"style": {
@@ -77,15 +91,23 @@
 					"fill": {
 						"opacite": 0.99,
 						"color": "#006e33",
-						"type": "image",
+						"type": "shader",						
 						"parameters": {
-							"URI": "./textures/wall.jpg"
+							"shader" : "hatching",
+							"id": "hatch_",
+							"repeat": 0.2,
+							"diffuse": 0.7
 						}
 					},
 					"stroke": {
 						"opacite": 0.5,
-						"color": "#555555",
-						"type": "Invisible"
+						"color": "#000000",
+						"type": "Sketchy",
+						"parameters": {
+							"shader" : "sketchy_strokes",
+							"URI": "thick",
+							"width": "60.0"
+						}
 					}
 				}
 			},
@@ -135,19 +157,19 @@
 			"URI": "./models/BDTopoToit.obj",
 			"position": {
 				"displacement": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"rotation": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "1",
-					"y": "1",
-					"z": "1"
+					"x": 1,
+					"y": 1,
+					"z": 1
 				}
 			},
 			"style": {
@@ -173,19 +195,19 @@
 			"URI": "./models/2378_obj.obj",
 			"position": {
 				"displacement": {
-					"x": "30",
-					"y": "15",
-					"z": "-15"
+					"x": 30,
+					"y": 0,
+					"z": -15
 				},
 				"rotation": {
-					"x": "1.5708",
-					"y": "0",
-					"z": "0"
+					"x": 1.5708,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "0.015",
-					"y": "0.015",
-					"z": "0.015"
+					"x": 0.01,
+					"y": 0.01,
+					"z": 0.01
 				}
 			},
 			"style": {
@@ -214,19 +236,19 @@
 			"URI": "./models/tree.obj",
 			"position": {
 				"displacement": {
-					"x": "50",
-					"y": "0",
-					"z": "-15"
+					"x": 50,
+					"y": 0,
+					"z": -15
 				},
 				"rotation": {
-					"x": "1.5708",
-					"y": "0",
-					"z": "0"
+					"x": 1.5708,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "0.05",
-					"y": "0.05",
-					"z": "0.05"
+					"x": 0.05,
+					"y": 0.05,
+					"z": 0.05
 				}
 			},
 			"style": {
@@ -241,11 +263,12 @@
 						}
 					},
 					"stroke": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#15410c",
 						"type": "Sketchy",
 						"parameters": {
-							"URI": "./strokes/wavy.png",
+							"shader" : "sketchy_strokes",
+							"URI": "irregulier",
 							"width": 30
 						}
 					}
@@ -259,26 +282,26 @@
 			"URI": "./models/Parcelle.obj",
 			"position": {
 				"displacement": {
-					"x": "0",
-					"y": "0",
-					"z": "-2"
+					"x": 0,
+					"y": 0,
+					"z": -1.2
 				},
 				"rotation": {
-					"x": "0",
-					"y": "0",
-					"z": "0"
+					"x": 0,
+					"y": 0,
+					"z": 0
 				},
 				"scale": {
-					"x": "1",
-					"y": "1",
-					"z": "1"
+					"x": 1,
+					"y": 1,
+					"z": 1
 				}
 			},
 			"style": {
 				"name": "parcelle",
 				"parameters": {
 					"fill": {
-						"opacite": 1,
+						"opacite": 0.99,
 						"color": "#cfe3ff",
 						"type": "texture",
 						"parameters": {

@@ -1,168 +1,4 @@
-function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){	
-				
-				var mtlLoader = new THREE.MTLLoader();
-				mtlLoader.load( fileMTL, function( materials ) {
-				
-					//materials.preload();
-		
-					//loader du fichier .obj
-					var objLoader = new THREE.OBJLoader();
-					//objLoader.setMaterials( materials );
-					objLoader.load( fileOBJ, function ( object ) {
-
-						object.traverse( function ( child ) {
-
-								if ( child instanceof THREE.Mesh) {
-									child.material.needsUpdate = true;
-									var cGeo = new THREE.Geometry().fromBufferGeometry(child.geometry);	
-									var mesh = new THREE.Mesh(cGeo);
-									var chId = parseInt(child.material.name);
-										
-
-									//var material = materials.materials[chId];
-									var material = matFromLayer(fileOBJ);
-									material.side = THREE.DoubleSide;
-									material.shininess = 1.0;
-									//material.color = new THREE.Color(0xffffff);
-									var mesh = new THREE.Mesh(cGeo, material);
-									if (nom === 'parcelle' || nom === 'photo'){
-										mesh.userData = {fond : true};
-										mesh.renderOrder = 4;
-									}
-									mesh.name = nom+chId;
-									mesh.visible = visible;
-									moveMesh(mesh, transX, transY, transZ);
-
-									scene.add(mesh);
-
-								}
-						} );
-					});
-				
-				});
-				
-			}
-			
-			
-				/*function loadObjFocus(fileObj, matMur, matToit, arrayMur, arrayToit, arrayAretes, arrayQuads, lineMat, quadMat){
-
-					var objLoader = new THREE.OBJLoader();
-					
-					objLoader.load(fileObj, function ( object ) {
-				
-					object.traverse( function ( child ) {
-
-							if ( child instanceof THREE.Mesh ) {
-
-								for (j = 0; j < parse.couches.length; j++){
-									if (parse.couches[j].name === fileObj){
-										var couche = parse.couches[j];
-										var matMur = matFromLayer(couche);
-										var matToit = matFromLayer(couche);
-										var lineMat = lineMatFromLayer(couche);
-									}
-								}
-
-									var geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
-									
-									assignUVs(geometry);
-
-									var mesh = new THREE.Mesh(geometry);
-									
-									var edges = new THREE.EdgesHelper(mesh);
-
-									var geom = edges.geometry;
-									var vvv = geom.getAttribute('position');
-									
-									var line = new THREE.Line( geo2line(edges.geometry), lineMat, THREE.LinePieces );
-									moveMesh(line, -40, 0, -9.4);
-									quadMat = quadMatFromLayer(fileObj);
-									
-									if (child.name.endsWith("non")){
-										child.visible = false;
-									}else if(child.name.startsWith("mur")){
-										for ( i = 0; i < vvv.length-5; i=i+6 ) {
-											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
-											var mesh = new THREE.Mesh( lineGeom, quadMat );
-                                            mesh.userData = {focus : true};
-											arrayQuads.push(mesh);
-
-											mesh.renderOrder = 1;
-                                            
-											scene.add(mesh);
-											moveMesh(mesh, -40, 0, -9.35);
-										}
-										var meshWall = new THREE.Mesh(geometry, matMur);
-										moveMesh(meshWall, -40, 0, -9.4);
-										meshWall.renderOrder = 2;
-										meshWall.userData = {focus : true};
-										line.userData = {focus : true};
-
-
-										scene.add(meshWall);
-										scene.add(line);
-										arrayAretes.push(line);
-										arrayMur.push(meshWall);
-
-
-									}else{
-										for (var k=0; k<child.geometry.attributes.normal.array.length; k++){
-											child.geometry.attributes.normal.array[k] = -child.geometry.attributes.normal.array[k];
-										}
-										var meshRoof = new THREE.Mesh(geometry, matToit);
-										for ( i = 0; i < vvv.length-5; i=i+6 ) {
-											var lineGeom = createQuad(new THREE.Vector3( vvv.array[i], vvv.array[i+1],  vvv.array[i+2] ),new THREE.Vector3( vvv.array[i+3], vvv.array[i+4],  vvv.array[i+5] ));
-											var mesh = new THREE.Mesh( lineGeom, quadMat );
-                                            mesh.userData = {focus : true};
-											mesh.renderOrder = 3;
-											arrayQuads.push(mesh);
-											scene.add(mesh);
-											moveMesh(mesh, -40, 0, -9.35);
-										}
-										moveMesh(meshRoof, -40, 0, -9.4);
-										meshRoof.renderOrder = 3;
-										meshRoof.userData = {focus : true};
-										line.userData = {focus : true};
-										//line.renderOrder = 1;
-										scene.add(meshRoof);
-										arrayAretes.push(line);
-										arrayToit.push(meshRoof);
-										scene.add(line);
-
-									}
-									
-							}
-
-					} );
-				
-				});
-			}*/
-
-			/*function loadObj(fileObj, arrayLine, arrayMesh, visible){
-					var objLoader = new THREE.OBJLoader();
-					for (j = 0; j < parse.couches.length; j++){
-						if (parse.couches[j].name === fileObj){
-							var couche = parse.couches[j];
-							var mat = matFromLayer(couche);
-							var lineMat = lineMatFromLayer(couche);
-						}
-					}
-					if (couche.style.parameters.fill.type === 'texture') {
-						var mtlLoader = new THREE.MTLLoader();
-													
-						mtlLoader.load( couche.style.parameters.fill.parameters.URI, function( materials ) {
-							materials.preload();
-
-							objLoader.setMaterials( materials );
-							loading( arrayLine, arrayMesh, visible, objLoader, mat, lineMat, couche );
-						})
-					}
-					else {
-						loading( arrayLine, arrayMesh, visible, objLoader,  mat, lineMat, couche );
-					}
-
-			}*/
-
+			//chargement d'une couche unique
 			function loadCouche(couche){
 				var objLoader = new THREE.OBJLoader();
 				var mtlLoader = new THREE.MTLLoader();
@@ -196,6 +32,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 				}
 			}
 
+			//chargement de l'ensemble des couches au démarrage
 			function loadLayers() {
 				var objLoader = new THREE.OBJLoader();
 				
@@ -220,7 +57,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 
 
 
-
+			//chargement et initialisation d'une couche
 			function loading(objLoader, mat, lineMat, couche, couchesTex) {
 				objLoader.load(couche.URI, function ( object ) {
 				
@@ -228,15 +65,11 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 
 							if ( child instanceof THREE.Mesh ) {
 
-									/*child.castShadow = true;
-									child.receiveShadow = true;*/
 									var geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
 
 									if (couche.style.parameters.fill.type === 'texture') {
 										mat = child.material;
 										mat.side = THREE.DoubleSide;
-										//mat.color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
-										//mat.transparent = true;
 									} else {
 										assignUVs(geometry);
 									}
@@ -259,7 +92,6 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 											var quad = new THREE.Mesh( lineGeom, quadMat);
 											quad.userData = {couche : couche.id, quad : true };
 
-											//quad.renderOrder = couche.order;
 	
 											moveMesh(quad, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
 											quad.rotation.set(couche.position.rotation.x,couche.position.rotation.y,couche.position.rotation.z);
@@ -267,22 +99,7 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 											scene.add(quad);
 										}
 									}
-									
-									/*if (couche.name.indexOf('Mur') !== -1){
-										mesh.renderOrder = 1;
-										line.renderOrder = 1;
-									}else{
-										mesh.renderOrder = 2;
-										line.renderOrder = 2;
-									}
-									if (couche.name.indexOf('Arbre') !== -1){
-										mesh.renderOrder = 3;
-										line.renderOrder = 3;
-									}
-									if (couche.name.indexOf('Fond') !== -1){
-										mesh.renderOrder = 1;
-										line.renderOrder = 1;
-									}*/
+
 
 									mesh.renderOrder = couche.order;
 									line.renderOrder = couche.order;
@@ -296,9 +113,6 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 
 									mesh.userData = {couche : couche.id};
 									line.userData = {couche : couche.id};
-
-									//mesh.geometry.computeVertexNormals();
-									//mesh.geometry.computeFaceNormals();
 
 									mesh.castShadow = true;
 									mesh.receiveShadow = true;
@@ -319,61 +133,57 @@ function loadObjMtl(fileMTL, fileOBJ, transX, transY, transZ, nom, visible){
 				
 			}
 
-
+			//chargement des paramètres dat.GUI des couches
 			function loadParams() {
 				for (j = 0; j < parse.couches.length; j++){
 					initGUICouche (parse.couches[j]);
 				}
 			}
 
+			//chargement de l'éclairage
+			function loadLights() {
+				for (var j = 0; j < parse.parameters.lights.length; j++){
+					var light = parse.parameters.lights[j];
+					var lightToAdd;
+					if (light.type === 'directional'){
+						lightToAdd = new THREE.DirectionalLight(light.color, light.intensity);
+						lightToAdd.position.set(light.position.x,light.position.y,light.position.z);
+						lightToAdd.castShadow = true;
+						lightToAdd.shadowDarkness = light.shadow.darkness;
+						lightToAdd.shadow.camera.far = light.shadow.far;
+						lightToAdd.shadow.camera.near = light.shadow.near;	
 
+						lightToAdd.shadow.camera.top = lightToAdd.shadow.camera.right = light.shadow.camera_size;
+						lightToAdd.shadow.camera.left = lightToAdd.shadow.camera.bottom  = -light.shadow.camera_size;
 
-			/*function loadArbre(fileMTL,fileOBJ,pos){
-
-
-				var mtlLoader = new THREE.MTLLoader();
-				mtlLoader.load( fileMTL, function( materials ) {
+						lightToAdd.shadowMapHeight = lightToAdd.shadowMapWidth = light.shadow.map;    // power of 2
 				
-					materials.preload();
-		
-					//loader du fichier .obj
-					var objLoader = new THREE.OBJLoader();
-					//objLoader.setMaterials( materials );
-					objLoader.load( fileOBJ, function ( object ) {
-						var arrMesh = [];
-
-						object.traverse( function ( child ) {
-
-								if ( child instanceof THREE.Mesh) {
-									//child.material.needsUpdate = true;
-									//child.material.side = THREE.DoubleSide;
-									material = matFromLayer(fileOBJ);
-									var cGeo = new THREE.Geometry().fromBufferGeometry(child.geometry);	
-		
-									var mesh = new THREE.Mesh(cGeo, material);
-
-									arrMesh.push(mesh);
+						//évite l'effet d'ombre du au DoubleSide des materials
+						lightToAdd.shadowBias =  light.shadow.bias; 
+					} else if (light.type === 'ambient'){
+						lightToAdd = new THREE.AmbientLight(light.color, light.intensity);
+					}
+					lightToAdd.userData = {typelight : light.type, light : j};
+					scene.add(lightToAdd);
+				}
+			}
 
 
+			//chargement de la caméra et des contrôles
+			function loadCam(WIDTH, HEIGHT) {
+				if (parse.parameters.camera.type === 'ortho') {
+					camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, parse.parameters.camera.near, parse.parameters.camera.far); 
+				} else {
+					camera = new THREE.PerspectiveCamera(parse.parameters.camera.fov, WIDTH / HEIGHT, parse.parameters.camera.near, parse.parameters.camera.far);
+				}
 
-								}
-						} );
-						
-						meshGeo = mergeMeshes(arrMesh);
-						moveMesh(meshGeo, pos.x,pos.y,pos.z);
-						var scale = 0.04;
-						meshGeo.scale.set(scale,scale,scale);
-						meshGeo.rotation.set(Math.PI/2,0,0);
-						meshGeo.userData = {arbre : true};
-						objects.push(meshGeo);
-						positions.push(meshGeo.position);
-						scene.add(meshGeo);
+				camera.position.set(parse.parameters.camera.position.x,parse.parameters.camera.position.y,parse.parameters.camera.position.z);
+				camera.up.set(0,0,1);
+				scene.add(camera);
 
-					});
-				
-				});
-
-				
-			}*/
+				//controls
+				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				controls.target.set(parse.parameters.camera.target.x,parse.parameters.camera.target.y,parse.parameters.camera.target.z);
+			}
 
 
