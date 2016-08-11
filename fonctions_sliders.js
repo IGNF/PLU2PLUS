@@ -110,9 +110,13 @@
 
 					getFaces(couche, to_change);
 
-					if (couche.style.parameters.fill.type === "shader"){
+					var matFaces = to_change[0].material;
+
+					if (matFaces.uniforms !== undefined && matFaces.uniforms.color !== undefined){
+
+					//if (couche.style.parameters.fill.type === "shader"){
 						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.uniforms.inkColor.value = new THREE.Vector3( color.r, color.g,color.b );
+							to_change[i].material.uniforms.color.value = new THREE.Vector3( color.r, color.g,color.b );
 							
 							to_change[i].material.needsUpdate = true;
 						}
@@ -159,11 +163,15 @@
 				var to_change = [];
 				var ancienne_value = couche.style.parameters.fill.opacite;
 
+				if (ancienne_value !== value) {
 					couche.style.parameters.fill.opacite = value;
 
 					getFaces(couche, to_change);
 
-					if (couche.style.parameters.fill.type === "shader"){
+					var matFaces = to_change[0].material;
+
+					if (matFaces.uniforms !== undefined && matFaces.uniforms.opacity !== undefined){
+					//if (couche.style.parameters.fill.type === "shader"){
 						for ( var i = 0; i < to_change.length; i++ ) {
 							to_change[i].material.uniforms.opacity.value = value;
 							to_change[i].material.transparent = true;
@@ -176,6 +184,7 @@
 							to_change[i].material.needsUpdate = true;
 						}
 					}
+				}
 
 			}
 
@@ -187,40 +196,63 @@
 				if (ancienne_value !== value) {
 					couche.style.parameters.stroke.type = value;
 
+					if (couche.style.parameters.stroke['parameters'] === undefined){
+						couche.style.parameters.stroke.parameters = {};
+					}
+
 					scene.traverse ( function( child ) {
 						if ( child instanceof THREE.Line && child.userData.couche === couche.id ) {
 							to_changeLine.push( child );
 						}
 					} );
 
-					if (value !== 'Sketchy' && ancienne_value === 'Sketchy'){
+					//on retire tous les sliders propres au shader utilisé précédemment
+					if (ancienne_value === 'Sketchy'){
 						clearQuads(couche);
-						elementVisible("uriStroke"+couche.id, false);
-						elementVisible("widthStroke"+couche.id,false);
-					}
+						var method = getMethod(couche.style.parameters.stroke.parameters.shader);
+						for (var j in method.parameters){
+							elementVisible(method.parameters[j].name+"Stroke"+couche.id,false);
+						}
+					} else if (value === 'Sketchy'){
+						couche.style.parameters.stroke.parameters.shader = defaults.shaderStroke;
 
-					if (value === 'Sketchy'&& ancienne_value !== 'Sketchy') {
-						couche.style.parameters.stroke.parameters = {};
-						couche.style.parameters.stroke.parameters.URI = 'thick';
-						couche.style.parameters.stroke.parameters.width = 50.0;
-						couche.style.parameters.stroke.parameters.shader = 'sketchy_strokes';
-						var quadMat = quadMatFromLayer(couche);
+						var method = getMethod(couche.style.parameters.stroke.parameters.shader);
+						for (var j in method.parameters){
+							var parameter = method.parameters[j];
+							if (couche.style.parameters.stroke.parameters[parameter.name] === undefined){
+								couche.style.parameters.stroke.parameters[parameter.name] = parameter.default;
+							}	
+
+							var quadMat = quadMatFromLayer(couche);
 		
-						for ( var i = 0; i < to_changeLine.length; i++ ) {
-							var vertices = to_changeLine[i].geometry.vertices;
-							for (var j = 0; j < vertices.length-1; j=j+2 ) {
-								var lineGeom = createQuad(vertices[j], vertices[j+1]);
-								var quad = new THREE.Mesh( lineGeom, quadMat);
-								quad.userData = {couche : couche.id, quad : true };
-								moveMesh(quad, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
-								quad.rotation.set(couche.position.rotation.x,couche.position.rotation.y,couche.position.rotation.z);
-								quad.scale.set(couche.position.scale.x,couche.position.scale.y,couche.position.scale.z);
-								scene.add(quad);
+							for ( var i in to_changeLine ) {
+								var vertices = to_changeLine[i].geometry.vertices;
+								for (var j = 0; j < vertices.length-1; j=j+2 ) {
+									var lineGeom = createQuad(vertices[j], vertices[j+1]);
+									var quad = new THREE.Mesh( lineGeom, quadMat);
+									quad.userData = {couche : couche.id, quad : true };
+									moveMesh(quad, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z);
+									quad.rotation.set(couche.position.rotation.x,couche.position.rotation.y,couche.position.rotation.z);
+									quad.scale.set(couche.position.scale.x,couche.position.scale.y,couche.position.scale.z);
+									scene.add(quad);
+								}
+							}		
+
+							if (parameter.GUI.visible === true){
+								params[parameter.name+"Stroke"+couche.id] = couche.style.parameters.stroke.parameters[parameter.name];
+								if (document.getElementById(parameter.name+"Stroke"+couche.id) === null){
+									if (parameter.type === 'float'){
+										gui.__folders[couche.name].add( params, parameter.name+"Stroke"+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
+									} else if (parameter.type === 'string'){
+										gui.__folders[couche.name].add( params, parameter.name+"Stroke"+couche.id, parameter.GUI.list ).name(parameter.name).listen();
+									}
+									gui.__folders[couche.name].__ul.lastChild.id = parameter.name+"Stroke"+couche.id;
+								} else {
+									elementVisible(parameter.name+"Stroke"+couche.id,true);
+								}			
 							}
-						}					
-						elementVisible("uriStroke"+couche.id, true);
-						elementVisible("widthStroke"+couche.id,true);
-					}
+						}
+					} 
 
 					if (value === 'Invisible'){
 						elementVisible("colorStroke"+couche.id, false);
@@ -243,12 +275,12 @@
 
 			function changeStyleTrait(couche,value) {
 				var to_changeQuad = [];
-				var ancienne_value = couche.style.parameters.stroke.parameters.URI;
+				var ancienne_value = couche.style.parameters.stroke.parameters.image;
 				
 
 				if (ancienne_value !== value) {
 
-					couche.style.parameters.stroke.parameters.URI = value;
+					couche.style.parameters.stroke.parameters.image = value;
 
 					scene.traverse ( function( child ) {
 						if ( child.userData.quad === true && child.userData.couche === couche.id ) {
@@ -266,32 +298,6 @@
 					}
 
 				}
-
-			}
-
-			function changeEpaisseur(couche, value) {
-				var to_changeQuad = [];
-				var ancienne_value = couche.style.parameters.stroke.parameters.width;
-				
-
-				if (ancienne_value !== value) {
-
-					couche.style.parameters.stroke.parameters.width = value;
-
-					scene.traverse ( function( child ) {
-						if ( child.userData.quad === true && child.userData.couche === couche.id ) {
-							to_changeQuad.push( child );
-						}
-					} );
-
-
-					for ( var i = 0; i < to_changeQuad.length; i++ ) {
-						to_changeQuad[i].material.uniforms.thickness.value = value;   
-						to_changeQuad[i].material.needsUpdate = true;
-					}
-
-				}
-
 
 			}
 
@@ -325,32 +331,52 @@
 				var ancienne_value = couche.style.parameters.fill.type;
 
 				if (ancienne_value !== value) {
-					couche.style.parameters.fill.type = value;
 
+					couche.style.parameters.fill.type = value;
 					getFaces(couche, to_change);
 
-					couche.style.parameters.fill.parameters = {};
+					if (couche.style.parameters.fill['parameters'] === undefined){
+						couche.style.parameters.fill.parameters = {};
+					}
+
+					//on retire tous les sliders propres au shader utilisé précédemment
+					if (ancienne_value === 'shader'){
+						var method = getMethod(couche.style.parameters.fill.parameters.shader);
+						for (var j in method.parameters){
+							elementVisible(method.parameters[j].name+"Fill"+couche.id,false);
+						}
+					}  
 
 
 					if (value === 'image'){
-						couche.style.parameters.fill.parameters.URI = "./textures/paper2.png";
+						
+						couche.style.parameters.fill.parameters.URI = defaults.image;
 						elementVisible("imageFill"+couche.id,true);
-						elementVisible("repeatFill"+couche.id,true);
+
+						if (document.getElementById("repeatFill"+couche.id) === null){
+								gui.__folders[couche.name].add( params, "repeatFill"+couche.id, 0.01,1,0.01 ).name("Repeat").listen();
+								gui.__folders[couche.name].__ul.lastChild.id = "repeatFill"+couche.id;
+						} else {
+							elementVisible("repeatFill"+couche.id,true);
+						}
 					} else {
 						elementVisible("imageFill"+couche.id,false);
 						elementVisible("repeatFill"+couche.id,false);
 					}
+
+					//on ajoute les sliders nécéssaire au shader et on initialise les valeurs par défaut
 					if (value === 'shader'){
-						couche.style.parameters.fill.parameters.shader = "hatching";
-						couche.style.parameters.fill.parameters.id = "hatch_";
-						couche.style.parameters.fill.parameters.repeat = 0.1;
-						couche.style.parameters.fill.parameters.diffuse = 0.5;
-						elementVisible("repeatFill"+couche.id,true);
-						elementVisible("diffuseFill"+couche.id,true);
-					}else{
-						elementVisible("diffuseFill"+couche.id,false);
-					}
-					if (couche.style.parameters.fill.type === 'texture') {
+						if (couche.style.parameters.fill.parameters.shader === undefined){
+							couche.style.parameters.fill.parameters.shader = defaults.shaderFill;
+						}
+						
+
+						slidersShader(couche,couche.style.parameters.fill.parameters.shader);
+					} 
+
+
+
+					if (value === 'texture') {
 						changeSourceCouche(couche,couche.URI);
 					} else if (ancienne_value === 'texture') {
 						clearCouche(couche);
@@ -418,13 +444,13 @@
 
 					if (couche.style.parameters.fill.type === "shader"){
 						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.uniforms.repeat.value = new THREE.Vector2(value, value);
+							to_change[i].material.uniforms.repeat.value =value;
 							to_change[i].material.needsUpdate = true;
 						}
 					} else {
 						for ( var i = 0; i < to_change.length; i++ ) {
 							if (to_change[i].material.map !== null){
-								to_change[i].material.map.repeat = new THREE.Vector2(value, value);
+								to_change[i].material.map.repeat.set(value, value);
 							}
 							to_change[i].material.needsUpdate = true;
 						}
@@ -443,7 +469,45 @@
 					getFaces(couche, to_change);
 
 						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.uniforms.diffuseWeight.value = value;
+							to_change[i].material.uniforms.diffuse.value = value;
+							to_change[i].material.needsUpdate = true;
+						}
+
+				}
+
+		}
+
+		function changeUniform (couche,key,value,type){
+				var to_change = [];
+				var ancienne_value = couche.style.parameters[type].parameters[key];
+
+				if (ancienne_value !== value && value !== undefined) {
+					couche.style.parameters[type].parameters[key] = value;
+					if (type === 'fill'){
+						getFaces(couche, to_change);
+					} else if (type === 'stroke'){
+						getQuads(couche, to_change);
+					}			
+						for ( var i = 0; i < to_change.length; i++ ) {
+							
+							//todo : generalisation
+							if (key === 'shader'){
+								var ancienne_method = getMethod(ancienne_value);
+								for (var j in ancienne_method.parameters){
+									elementVisible(ancienne_method.parameters[j].name+"Fill"+couche.id,false);
+								}
+								slidersShader(couche,value);
+								to_change[i].material = matFromLayer(couche);
+							} else{
+
+								if (to_change[i].material.uniforms[key].type === 't'){
+									to_change[i].material.uniforms["texture1"].value = THREE.ImageUtils.loadTexture( "strokes/"+value+"_small.png" );
+									to_change[i].material.uniforms[key].value = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
+								} else if (to_change[i].material.uniforms[key].type === 'f') {
+									to_change[i].material.uniforms[key].value = value;
+								}
+								
+							}
 							to_change[i].material.needsUpdate = true;
 						}
 

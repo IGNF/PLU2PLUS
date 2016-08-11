@@ -2,9 +2,7 @@
 Code for the experiments of the PLU++ project
 
 1. Ouvrir le fichier rendu.html avec un navigateur (de préférence Firefox).
-
 Si vous utilisez Chrome, il faudra sans doute ajouter --allow-file-access-from-files dans le champ "cible" du raccourci (accessible depuis les propriétés). Cela permet au navigateur d'accéder aux fichiers locaux nécessaires (ici les photos de texture des bâtiments), ce qui n'est pas possible par défaut pour des raisons de sécurité.
-
 
 2. Cliquer sur « Choisissez un fichier » et sélectionnez n'importe lequel des fichiers dans le dossier JSON. Une configuration de bâtiments est chargée (cela peut prendre un peu de temps).
 

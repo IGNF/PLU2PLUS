@@ -11,6 +11,8 @@ function loadAll(){
 					var json = this.result;
 					parse = JSON.parse(json);
 
+					defaults = JSON.parse(getSourceSynch('./defaults.json'));
+
                     init();
 
 					newID = parse.couches.length+1;
@@ -134,57 +136,91 @@ function loadAll(){
 					params["z"+couche.id] = couche.position.displacement.z;
 
 					var fPos = folder.addFolder("Position");
+					
+					//paramètres position
+					fPos.add(params, "scale"+couche.id, defaults.scale.min,defaults.scale.max,defaults.scale.step).name("Dimension").listen();
+					fPos.add(params, "rotation"+couche.id, defaults.rotationX.min,defaults.rotationX.max,defaults.rotationX.step).name("Rotation axe X").listen();
+					fPos.add(params, "x"+couche.id, defaults.positionX.min,defaults.positionX.max,defaults.positionX.step).name("x").listen();
+					fPos.add(params, "y"+couche.id, defaults.positionY.min,defaults.positionY.max,defaults.positionY.step).name("y").listen();
+					fPos.add(params, "z"+couche.id, defaults.positionZ.min,defaults.positionZ.max,defaults.positionZ.step).name("z").listen();
 
 
+					//paramètres Fill
 					folder.add( params, "name"+couche.id ).name("Nom couche").listen();
-					folder.add( params, "typeFill"+couche.id, [ "uni", "texture", "image", "shader"] ).name("Type surface").listen();
+					folder.add( params, "typeFill"+couche.id, [ "uni", "texture", "image", "shader", "bump"] ).name("Type surface").listen();
 					folder.addColor( params, "colorFill"+couche.id ).name("Couleur").listen();
 					folder.add( params, "opaFill"+couche.id, 0,0.9999,0.1 ).name("Opacité").listen();
-					folder.add( params, "repeatFill"+couche.id, 0.01,1,0.01 ).name("Repeat").listen();
-					gui.__folders[couche.name].__ul.lastChild.id = "repeatFill"+couche.id;
-					folder.add( params, "diffuseFill"+couche.id, 0.01,1,0.01 ).name("Diffuse").listen();
-					gui.__folders[couche.name].__ul.lastChild.id = "diffuseFill"+couche.id;
+
                     folder.add( params, "imageFill"+couche.id, [ "./textures/wall.jpg", "./textures/roof.jpg", "./textures/stone-wall.jpg", "./textures/wall_green.jpg", "./textures/hatch.jpg", , "./textures/hatch_3.jpg"] ).name("Image source").listen();
 					gui.__folders[couche.name].__ul.lastChild.id = "imageFill"+couche.id;
-					folder.add( params, "typeStroke"+couche.id, [ "Continu", "Tirets", "Invisible", "Sketchy"] ).name("Type arêtes").listen();
-				 	folder.addColor( params, "colorStroke"+couche.id ).name("Couleur arêtes").listen();
-					gui.__folders[couche.name].__ul.lastChild.id = "colorStroke"+couche.id;
-					folder.add( params, "uriStroke"+couche.id, [ "irregulier", "two", "thick", "brush", "tirets"] ).name("Style trait").listen();
-					gui.__folders[couche.name].__ul.lastChild.id = "uriStroke"+couche.id;
-					folder.add( params, "widthStroke"+couche.id, 10, 100, 1 ).name("Epaisseur").listen();
-					gui.__folders[couche.name].__ul.lastChild.id = "widthStroke"+couche.id;
-					elementVisible("uriStroke"+couche.id,false);
-					elementVisible("widthStroke"+couche.id,false);
+
+
+
+					//elementVisible("widthStroke"+couche.id,false);
                     elementVisible("imageFill"+couche.id,false);
                     elementVisible("repeatFill"+couche.id,false);
-                    elementVisible("diffuseFill"+couche.id,false);
-					if (couche.style.parameters.stroke.type === "Sketchy"){
-						params["uriStroke"+couche.id] = couche.style.parameters.stroke.parameters.URI;
-						params["widthStroke"+couche.id] = couche.style.parameters.stroke.parameters.width;
-						elementVisible("widthStroke"+couche.id,true);
-						elementVisible("uriStroke"+couche.id,true);
-					}
-					if (couche.style.parameters.stroke.type === "Invisible"){
-						elementVisible("colorStroke"+couche.id,false);
-					}
+
+
                     if (couche.style.parameters.fill.type === "image"){
+						folder.add( params, "repeatFill"+couche.id, 0.01,1,0.01 ).name("Repeat").listen();
+						gui.__folders[couche.name].__ul.lastChild.id = "repeatFill"+couche.id;
                         params["imageFill"+couche.id] = couche.style.parameters.fill.parameters.URI;
 						elementVisible("imageFill"+couche.id,true);
 						params["repeatFill"+couche.id] = couche.style.parameters.fill.parameters.repeat;
 						elementVisible("repeatFill"+couche.id,true);
 					}
                     if (couche.style.parameters.fill.type === "shader"){
-                        params["repeatFill"+couche.id] = couche.style.parameters.fill.parameters.repeat;
-						elementVisible("repeatFill"+couche.id,true);
-                        params["diffuseFill"+couche.id] = couche.style.parameters.fill.parameters.diffuse;
-						elementVisible("diffuseFill"+couche.id,true);
+
+						var method = getMethod(couche.style.parameters.fill.parameters.shader);
+
+						for (var j in method.parameters){
+							var parameter = method.parameters[j];
+							if (parameter.GUI.visible === true){
+								params[parameter.name+"Fill"+couche.id] = couche.style.parameters.fill.parameters[parameter.name];
+								if (parameter.type === 'float'){
+									folder.add( params, parameter.name+"Fill"+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
+								} else if (parameter.type === 'string'){
+									folder.add( params, parameter.name+"Fill"+couche.id, eval(parameter.GUI.list) ).name(parameter.name).listen();
+								}
+								gui.__folders[couche.name].__ul.lastChild.id = parameter.name+"Fill"+couche.id;
+								elementVisible(parameter.name+"Fill"+couche.id,true);
+							}
+						}
+
+
 					}
 
-					fPos.add(params, "scale"+couche.id, 0,1,0.01).name("Dimension").listen();
-					fPos.add(params, "rotation"+couche.id, 0,2*Math.PI,0.01).name("Rotation axe X").listen();
-					fPos.add(params, "x"+couche.id, -100,100,0.01).name("x").listen();
-					fPos.add(params, "y"+couche.id, -100,100,0.01).name("y").listen();
-					fPos.add(params, "z"+couche.id, -20,20,0.01).name("z").listen();
+
+					//paramètres Stroke
+					folder.add( params, "typeStroke"+couche.id, [ "Continu", "Tirets", "Invisible", "Sketchy"] ).name("Type arêtes").listen();
+				 	folder.addColor( params, "colorStroke"+couche.id ).name("Couleur arêtes").listen();
+					gui.__folders[couche.name].__ul.lastChild.id = "colorStroke"+couche.id;
+
+					if (couche.style.parameters.stroke.type === "Invisible"){
+						elementVisible("colorStroke"+couche.id,false);
+					}
+
+					if (couche.style.parameters.stroke.type === "Sketchy"){
+
+						var method = getMethod(couche.style.parameters.stroke.parameters.shader);
+
+						for (var j in method.parameters){
+							var parameter = method.parameters[j];
+							if (parameter.GUI.visible === true){
+								params[parameter.name+"Stroke"+couche.id] = couche.style.parameters.stroke.parameters[parameter.name];
+								if (parameter.type === 'float'){
+									folder.add( params, parameter.name+"Stroke"+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
+								} else if (parameter.type === 'string'){
+									folder.add( params, parameter.name+"Stroke"+couche.id, eval(parameter.GUI.list) ).name(parameter.name).listen();
+								}
+								gui.__folders[couche.name].__ul.lastChild.id = parameter.name+"Stroke"+couche.id;
+								elementVisible(parameter.name+"Stroke"+couche.id,true);
+							}
+						}
+
+
+					}
+
 
 			}
 
@@ -194,15 +230,18 @@ function loadAll(){
 			for (var i in gui.__controllers) {
 				gui.__controllers[i].updateDisplay();
 			}
-			for (var j = 0; j < parse.couches.length; j++){
+			for (var j in parse.couches){
+				
+
 				changeName(parse.couches[j], params["name"+parse.couches[j].id]);
 				changeColor(parse.couches[j], params["colorFill"+parse.couches[j].id]);
 				changeColorAretes(parse.couches[j], params["colorStroke"+parse.couches[j].id]);
 				changeOpacite(parse.couches[j], params["opaFill"+parse.couches[j].id]);
 				changeTypeAretes(parse.couches[j], params["typeStroke"+parse.couches[j].id] );
 				if (parse.couches[j].style.parameters.stroke.type === "Sketchy"){
-					changeStyleTrait(parse.couches[j], params["uriStroke"+parse.couches[j].id] );
-					changeEpaisseur(parse.couches[j], params["widthStroke"+parse.couches[j].id]);
+					for (var k in parse.couches[j].style.parameters.stroke.parameters){
+						changeUniform (parse.couches[j], k, params[k+"Stroke"+parse.couches[j].id], "stroke" );
+					}
 				}
 				changeTypeSurface (parse.couches[j], params["typeFill"+parse.couches[j].id] );
 				if (parse.couches[j].style.parameters.fill.type === "image"){
@@ -210,11 +249,14 @@ function loadAll(){
 					changeRepeat (parse.couches[j], params["repeatFill"+parse.couches[j].id] );
 				}
 				if (parse.couches[j].style.parameters.fill.type === "shader"){
-					if (dirLight !== undefined){
+					var method = getMethod(parse.couches[j].style.parameters.fill.parameters.shader);
+					if (dirLight !== undefined && method.uniforms["lightPosition"] !== undefined){
 						changeLighting (parse.couches[j], params.pos_light);
 					}
-					changeRepeat (parse.couches[j], params["repeatFill"+parse.couches[j].id] );
-					changeDiffuse (parse.couches[j], params["diffuseFill"+parse.couches[j].id] );
+					for (var k in parse.couches[j].style.parameters.fill.parameters){
+						changeUniform (parse.couches[j], k, params[k+"Fill"+parse.couches[j].id], "fill" );
+					}
+
 				}
 				changeScale(parse.couches[j], params["scale"+parse.couches[j].id]);
 				changeRotation(parse.couches[j], params["rotation"+parse.couches[j].id]);

@@ -31,7 +31,7 @@
 
 
 
-		var scene, camera, renderer, gui, params, parse;
+		var scene, camera, renderer, gui, params, parse, defaults;
 		var zip = new JSZip();
 		var nbImage = 0;
 		var no = 1;
@@ -54,7 +54,7 @@
       		renderer.shadowMapSoft = true;
 
 			document.body.appendChild(renderer.domElement);
-			
+
 			loadCam(WIDTH, HEIGHT);
 			
 			

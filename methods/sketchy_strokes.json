@@ -1,0 +1,33 @@
+{
+    "name" : "sketchy_strokes",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "sketchy_strokes",
+        "GUI" : {
+            "visible" : false
+            }
+        },
+        {
+        "name" : "image",
+        "type" : "string",
+        "default" : "thick",
+        "GUI" : {
+            "visible" : true,
+            "list" : [ "irregulier", "two", "thick", "brush", "tirets"]
+            }
+        },
+        {
+        "name" : "width",
+        "type" : "float",
+        "default" : 50.0,
+        "GUI" : {
+            "visible" : true,
+            "min" : 10,
+            "max" : 100,
+            "step" : 1
+            }
+        }
+    ]
+}

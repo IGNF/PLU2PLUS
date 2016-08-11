@@ -5,9 +5,11 @@
             varying float nDotVP;
             varying vec3 pos;
 
-            uniform vec2 repeat;
+            uniform float repeat;
             uniform vec3 lightPosition;
             uniform float showOutline;
+
+            //#chunk(shadowmap_pars_vertex);
 
             void main() {
 
@@ -15,7 +17,7 @@
                 vec3 posInc = vec3( 0. );
                 if( showOutline == 1. ) posInc = w * normal;
 
-                vUv = repeat * uv;
+                vUv = vec2 (repeat, repeat) * uv;
 
                 vec4 mvPosition = modelViewMatrix * vec4( position + posInc, 1.0 );
                 vPosition = mvPosition.xyz;
@@ -31,5 +33,7 @@
                 depth = .5 + .5 * depth;
 
                 nDotVP = max( 0., dot( vNormal, normalize( vec3( vlPosition - vPosition) ) ) );
+
+                //#chunk(shadowmap_vertex);
 
             }

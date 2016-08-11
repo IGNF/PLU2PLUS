@@ -37,7 +37,7 @@
 				var objLoader = new THREE.OBJLoader();
 				
 				var couchesTex = [];
-					for (j = 0; j < parse.couches.length; j++){
+					for (j in parse.couches){
 						var couche = parse.couches[j];
 						var mat = matFromLayer(couche);
 						var lineMat = lineMatFromLayer(couche);
@@ -135,7 +135,7 @@
 
 			//chargement des paramètres dat.GUI des couches
 			function loadParams() {
-				for (j = 0; j < parse.couches.length; j++){
+				for (j in parse.couches){
 					initGUICouche (parse.couches[j]);
 				}
 			}
@@ -162,6 +162,14 @@
 						lightToAdd.shadowBias =  light.shadow.bias; 
 					} else if (light.type === 'ambient'){
 						lightToAdd = new THREE.AmbientLight(light.color, light.intensity);
+					} else if (light.type === 'point'){
+						lightToAdd = new THREE.PointLight(light.color, light.intensity, light.distance);
+					} else if (light.type === 'spot'){
+						lightToAdd = new THREE.SpotLight(light.color);
+					} else if (light.type === 'hemisphere'){
+						lightToAdd = new THREE.HemisphereLight(light.color, light.groundColor, light.intensity);
+					} else {
+						console.log(light.type+" n\'est pas un type valide de THREE.Light")
 					}
 					lightToAdd.userData = {typelight : light.type, light : j};
 					scene.add(lightToAdd);

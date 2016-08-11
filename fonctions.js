@@ -145,10 +145,10 @@
 			function createMaterial(shader, width, value, color){
 
 				//texture des petits segments
-				var texture = THREE.ImageUtils.loadTexture( "strokes/"+value+"_small.png" );
+				var texture1 = THREE.ImageUtils.loadTexture( "strokes/"+value+"_small.png" );
 
 				//texture des grands segments
-				var texture2 = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
+				var texture = THREE.ImageUtils.loadTexture( "strokes/"+value+".png" );
 
 				var vertex = getSourceSynch("shaders/"+shader+"_vert.glsl");
 				var fragment = getSourceSynch("shaders/"+shader+"_frag.glsl");
@@ -156,18 +156,22 @@
 				//Materiel appliqué à toutes les géométries de la couche
 				var material = new THREE.ShaderMaterial( {
 
-					vertexShader: vertex,
-					fragmentShader: fragment,
-					uniforms: {
-						thickness : { value: width },
+					vertexShader : vertex,
+					fragmentShader : fragment,
+					uniforms: 
+						{
+						width : { type: "f", value: width },
 						resolution: { value: new THREE.Vector2(window.innerWidth,window.innerHeight) }, // todo: vraie resolution
-						texture1: { type: "t", value: texture },
-						texture2: { type: "t", value: texture2 },
-						texture3: { type: "t", value: texture2 },
+						texture1: { type: "t", value: texture1 },
+						image: { type: "t", value: texture },
+						//texture3: { type: "t", value: texture2 },
 						color : {type: 'v3', value: [color.r,color.g,color.b]}
 					}
 
 				} );
+
+
+				
 				material.transparent = true;
 				material.polygonOffset = true;
 				material.polygonOffsetUnits = -150.0
@@ -234,30 +238,6 @@
 			}
 
 
-			function mergeMeshes (meshArr) {
-				var geometry = new THREE.Geometry(),
-					materials = [],
-					m,
-					materialPointer = 0,
-					reindex = 0;
-
-				for (var i = 0; i < meshArr.length; i++) {
-					m = meshArr[i];
-
-					if (m.material.materials) {
-						for (var j = 0; j < m.material.materials.length; j++) {
-							materials[materialPointer++] = m.material.materials[j];
-						}
-					} else if (m.material) {
-						materials[materialPointer++] = m.material;
-					}
-					geometry.merge(m.geometry, m.matrix, reindex);
-					reindex = materialPointer;
-				}
-				return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-			}
-
-
 			function matFromLayer (couche) {
 						if (couche.style.parameters.fill.type === 'uni') {
 							var mat = new THREE.MeshLambertMaterial({
@@ -270,7 +250,7 @@
 
 						}else if (couche.style.parameters.fill.type === 'image') {
 							var textureLoader = new THREE.TextureLoader();
-							var mat = new THREE.MeshLambertMaterial( {map: null, color: 0xffffff, shading: THREE.SmoothShading} );
+							var mat = new THREE.MeshLambertMaterial( {map: null, color: couche.style.parameters.fill.color, shading: THREE.SmoothShading} );
 							textureLoader.load( couche.style.parameters.fill.parameters.URI, function( map ) {
 								map.wrapS = THREE.RepeatWrapping;
 								map.wrapT = THREE.RepeatWrapping;
@@ -284,24 +264,36 @@
 							var id = couche.style.parameters.fill.parameters.id;
 							var vertex = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_vert.glsl");
 							var fragment = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_frag.glsl");
+							var method = getMethod(couche.style.parameters.fill.parameters.shader);
 
 							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
 							//lampe située par défaut en dessous de la scène
-							var lightPosition = new THREE.Vector3(0,0,-500);
+							var lightPosition = new THREE.Vector3(defaults.lightPosition.x,defaults.lightPosition.y,defaults.lightPosition.z);
 							var dirLight = getFirstLightByType('directional');
 							if (dirLight !== undefined){
 								lightPosition = new THREE.Vector3( dirLight.position.x, dirLight.position.y, dirLight.position.z );
 							}
+
+							var uniforms = {ambient: { type: 'f', value : 0 }};
+
+							for (param in method.uniforms){
+								uniforms[param] = method.uniforms[param];
+								uniforms[param].value = eval(method.uniforms[param].value);
+							}
 			
 							var material = new THREE.ShaderMaterial( {
 
-								uniforms:       {
-									ambientWeight: { type: 'f', value : 0 },
-									diffuseWeight: { type: 'f', value : couche.style.parameters.fill.parameters.diffuse },
-									rimWeight: { type: 'f', value : 0.1 },
-									specularWeight: { type: 'f', value : 0 },
+								uniforms: uniforms,
+								//method.uniforms,  
+								/*THREE.UniformsUtils.merge( [
+									//THREE.UniformsLib[ "shadowmap" ],
+									{
+									ambient: { type: 'f', value : 0 },
+									diffuse: { type: 'f', value : couche.style.parameters.fill.parameters.diffuse },
+									rim: { type: 'f', value : 0.1 },
+									specular: { type: 'f', value : 0 },
 									shininess: { type: 'f', value : 1 },
-									inkColor: { type: 'v4', value: new THREE.Vector3( color.r, color.g,color.b ) },
+									color: { type: 'v4', value: new THREE.Vector3( color.r, color.g,color.b ) },
 									opacity: { type: 'f', value: couche.style.parameters.fill.opacite },
 									lightPosition: { type: 'v3', value: lightPosition },
 									hatch1: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '0.jpg' ) },
@@ -311,16 +303,21 @@
 									hatch5: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '4.jpg' ) },
 									hatch6: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '5.jpg' ) },
 									paper: {type: 't', value: THREE.ImageUtils.loadTexture( './textures/paper2.png' ) },
-									repeat: { type: 'v2', value: new THREE.Vector2( couche.style.parameters.fill.parameters.repeat, couche.style.parameters.fill.parameters.repeat ) }
-								},
+									repeat: { type: 'f', value: couche.style.parameters.fill.parameters.repeat }
+									//lights : true
+								}
+								])*/
+								
 								vertexShader:   vertex,
 								fragmentShader: fragment
 
 							});
 
 							material.side = THREE.DoubleSide;
+
+							if (couche.style.parameters.fill.parameters.shader === "hatching")
 							
-							material.uniforms.paper.value.generateMipmaps = false;
+							{material.uniforms.paper.value.generateMipmaps = false;
 							material.uniforms.paper.value.magFilter = THREE.LinearFilter;
 							material.uniforms.paper.value.minFilter = THREE.LinearFilter;
 					
@@ -331,10 +328,49 @@
 							material.uniforms.hatch5.value.wrapS = material.uniforms.hatch5.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;
 
-							material.depthWrite = true;
+							material.depthWrite = true;} /*else {
+								material.uniforms.bmap.value.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
+								material.uniforms.smap.value.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
+								material.uniforms.bmap.value.wrapS = material.uniforms.bmap.value.wrapT = THREE.RepeatWrapping;
+								material.uniforms.smap.value.wrapS = material.uniforms.smap.value.wrapT = THREE.RepeatWrapping;
+								var phongShader = THREE.ShaderLib.phong;
+								material.uniforms = THREE.UniformsUtils.merge( [THREE.UniformsUtils.clone(phongShader.uniforms),material.uniforms]);
+							}*/
 
 							mat = material;
 
+						} else if (couche.style.parameters.fill.type === 'bump'){
+
+							if (couche.style.parameters.fill.parameters.bmap === undefined){
+								couche.style.parameters.fill.parameters.bmap = "./textures/brick_bump.jpg";
+							}
+							if (couche.style.parameters.fill.parameters.smap === undefined){
+								couche.style.parameters.fill.parameters.smap = "./textures/brick_diffuse.jpg";
+							}
+							if (couche.style.parameters.fill.parameters.repeat === undefined){
+								couche.style.parameters.fill.parameters.repeat = 0.1;
+							}
+
+							var bmap =  THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.bmap, {}, function(){});
+							var smap =  THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.smap, {}, function(){});
+							bmap.wrapS = bmap.wrapT = THREE.RepeatWrapping;
+							smap.wrapS = smap.wrapT = THREE.RepeatWrapping;
+							//var repeat = 0.1;
+							bmap.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
+							smap.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
+							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
+
+							mat = new THREE.MeshPhongMaterial({
+								color : color,
+								shininess  :  20,
+								bumpMap    :  bmap,
+								map        :  smap,
+								bumpScale  :  0.45,
+								side 	   :  THREE.DoubleSide
+							});
+
+						} else {
+							console.log("Le type "+couche.style.parameters.fill.type+" n\'est pas valide pour une surface")
 						}
 
 
@@ -356,7 +392,9 @@
 							var lineMat = new THREE.LineBasicMaterial({color: color, visible : false } );
 						}else if(couche.style.parameters.stroke.type === 'Sketchy'){ 
 							var lineMat = new THREE.LineBasicMaterial({color: color, opacity: 0.0 ,transparent: true, visible : false } );
-						}	
+						}else {
+							console.log("Le type "+couche.style.parameters.stroke.type+" n\'est pas valide pour une arête")
+						}
 
 				return lineMat;
 
@@ -364,7 +402,7 @@
 
 			function quadMatFromLayer (couche) {
 
-				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.URI, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
+				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.image, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
 				return quadMat;
 
 			}
@@ -437,11 +475,51 @@
 					}
 				} );
 			}
+			function getQuads(couche, array){
+				scene.traverse ( function( child ) {
+					if ( child instanceof THREE.Mesh && child.userData.couche === couche.id && child.userData.quad === true ) {
+						array.push( child );
+					}
+				} );
+			}
 
 
-			var getSourceSynch = function(url) {
+			function getSourceSynch(url) {
 				var req = new XMLHttpRequest();
 				req.open("GET", url, false);
 				req.send(null);
 				return req.responseText;
 			};
+
+			function getMethod(shader){
+
+				var text = getSourceSynch('./methods/'+shader+'.json');
+				var method = JSON.parse(text);
+				return method;
+			}
+
+
+			//création ou activation des sliders dat.gui pour les surfaces en shader
+			function slidersShader(couche,shader){
+						var method = getMethod(shader);
+						for (var j in method.parameters){
+							var parameter = method.parameters[j];
+							if (couche.style.parameters.fill.parameters[parameter.name] === undefined){
+								couche.style.parameters.fill.parameters[parameter.name] = parameter.default;
+							}	
+							if (parameter.GUI.visible === true){
+								params[parameter.name+"Fill"+couche.id] = couche.style.parameters.fill.parameters[parameter.name];
+								if (document.getElementById(parameter.name+"Fill"+couche.id) === null){
+									if (parameter.type === 'float'){
+										gui.__folders[couche.name].add( params, parameter.name+"Fill"+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
+									} else if (parameter.type === 'string'){
+										gui.__folders[couche.name].add( params, parameter.name+"Fill"+couche.id, parameter.GUI.list ).name(parameter.name).listen();
+									}
+									gui.__folders[couche.name].__ul.lastChild.id = parameter.name+"Fill"+couche.id;
+								} else {
+									elementVisible(parameter.name+"Fill"+couche.id,true);
+								}			
+							}
+						}
+			}
+

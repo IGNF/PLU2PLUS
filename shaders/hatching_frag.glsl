@@ -8,7 +8,7 @@
             uniform vec3 lightPosition;
             uniform float opacity;
 
-            vec3 color = vec3( 1., 0., 1. );
+            //vec3 color = vec3( 1., 0., 1. );
             vec3 lightColor = vec3( 1. );
 
             varying vec2 vUv;
@@ -18,19 +18,23 @@
             varying float nDotVP;
             varying vec3 pos;
 
-            uniform float ambientWeight;
-            uniform float diffuseWeight;
-            uniform float rimWeight;
-            uniform float specularWeight;
+            uniform float ambient;
+            uniform float diffuse;
+            uniform float rim;
+            uniform float specular;
             uniform float shininess;
             uniform int solidRender;
-            uniform vec4 inkColor;
+            uniform vec4 color;
+
+            //#chunk(common);
+            //#chunk(lights_pars);
+            //#chunk(shadowmap_pars_fragment);
 
             vec4 shade() {
                 
-                float diffuse = nDotVP;
-                float specular = 0.;
-                float ambient = 1.;
+                float diffuseF = nDotVP;
+                float specularF = 0.;
+                float ambientF = 1.;
 
                 vec3 n = normalize( vNormal );
 
@@ -40,10 +44,10 @@
                 v = normalize(v);
                 float nDotHV = max( 0., dot( r, v ) );
 
-                if( nDotVP != 0. ) specular = pow ( nDotHV, shininess );
-                float rim = max( 0., abs( dot( n, normalize( -vPosition.xyz ) ) ) );
+                if( nDotVP != 0. ) specularF = pow ( nDotHV, shininess );
+                float rimF = max( 0., abs( dot( n, normalize( -vPosition.xyz ) ) ) );
 
-                float shading = ambientWeight * ambient + diffuseWeight * diffuse + rimWeight * rim + specularWeight * specular;
+                float shading = ambient * ambientF + diffuse * diffuseF + rim * rimF + specular * specularF;
 
                 if( solidRender == 1 ) return vec4( shading );
 
@@ -68,7 +72,7 @@
                     c = mix( texture2D( hatch1, vUv ), vec4( 1. ), 6. * ( shading - 5. * step ) );
                 }
 
-                vec4 src = mix( mix( inkColor, vec4( 1. ), c.r ), c, .5 );
+                vec4 src = mix( mix( color, vec4( 1. ), c.r ), c, .5 );
 
 
                 return src;
@@ -81,7 +85,7 @@
                 vec4 src;
 
 
-                src = ( .5 * inkColor ) + vec4( 1.  ) * shade();
+                src = ( .5 * color ) + vec4( 1.  ) * shade();
 
                 vec4 c = src * dst;
 

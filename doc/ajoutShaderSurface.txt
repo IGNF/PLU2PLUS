@@ -1,0 +1,43 @@
+Pour ajouter un nouveau shader de surface :
+
+1.Créer deux fichiers [nom_shader]_vert.glsl et [nom_shader]_frag.glsl et les placer dans le dossier "shader".
+
+2.Créer un fichier [nom_shader].json et le placer dans le dossier "methods".
+
+Le fichier [nom_shader].json doit avoir une structure comme dans l'exemple suivant. Les "parameters" sont les paramètres pour lesquels créer des sliders dat.gui.
+Les "uniforms" sont ceux des fichiers glsl.
+
+{
+    "name" : "[nom_shader]",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "[nom_shader]",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersFill"
+            }
+        },
+        {
+        "name" : "repeat",
+        "type" : "float",
+        "default" : 0.1,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        }
+    ],
+    "uniforms" : {
+									"time": { "type": "f", "value" : 1.0 },
+					                "resolution": { "type" : "v2", "value": "new THREE.Vector2( window.innerWidth,  window.innerHeight)" },
+									"repeat": { "type": "f", "value": "couche.style.parameters.fill.parameters.repeat" },
+                                    "color": { "type": "v3", "value": "new THREE.Vector3( color.r, color.g,color.b )" }
+				}
+}
+
+3. Dans le fichier defaults.json, ajouter le nom du nouveau shader dans la liste "listShadersFill" :
+"listShadersFill" : [ "test", "hatching", "[nom_shader]"]

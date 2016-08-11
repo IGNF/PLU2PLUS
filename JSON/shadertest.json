@@ -105,11 +105,10 @@
 					"fill": {
 						"opacite": 0.99,
 						"color": "#006e33",
-						"type": "bump",						
+						"type": "shader",						
 						"parameters": {
-							"bmap" : "./textures/brick_bump.jpg",
-							"smap": "./textures/brick_diffuse.jpg",
-							"repeat": 0.1
+							"shader" : "test",
+							"repeat" : 0.1
 						}
 					},
 					"stroke": {
