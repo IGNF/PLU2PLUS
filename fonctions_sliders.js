@@ -306,7 +306,7 @@
 				clearCouche(couche);
 				couche.URI = URI;
 				if (couche.style.parameters.fill.type === 'texture') {
-					var mtl = URI.replace("obj", "mtl");
+					var mtl = URI.replace(".obj", ".mtl");
 					couche.style.parameters.fill.parameters.URI = mtl;
 				}
 				loadCouche(couche);
@@ -350,7 +350,10 @@
 
 					if (value === 'image'){
 						
-						couche.style.parameters.fill.parameters.URI = defaults.image;
+						if (couche.style.parameters.fill.parameters.image === undefined){
+							couche.style.parameters.fill.parameters.image = defaults.image;
+						}
+
 						elementVisible("imageFill"+couche.id,true);
 
 						if (document.getElementById("repeatFill"+couche.id) === null){
@@ -359,6 +362,8 @@
 						} else {
 							elementVisible("repeatFill"+couche.id,true);
 						}
+
+					
 					} else {
 						elementVisible("imageFill"+couche.id,false);
 						elementVisible("repeatFill"+couche.id,false);
@@ -397,10 +402,16 @@
 
 		function changeTexture (couche, value) {
 			var to_change = [];
-				var ancienne_value = couche.style.parameters.fill.parameters.URI;
+				var ancienne_value = couche.style.parameters.fill.parameters.image;
 
 				if (ancienne_value !== value) {
-					couche.style.parameters.fill.parameters.URI = value;
+					couche.style.parameters.fill.parameters.image = value;
+					if (checkSourceSynch("./textures/bump_"+couche.style.parameters.fill.parameters.image)){
+						couche.style.parameters.fill.parameters.bmap = "./textures/bump_"+couche.style.parameters.fill.parameters.image;
+					}else{
+						//couche.style.parameters.fill.parameters.bmap = undefined;
+						couche.style.parameters.fill.parameters.bmap = "./textures/paper2.png";
+					}
 
 					getFaces(couche, to_change);
 				
@@ -442,12 +453,6 @@
 
 					getFaces(couche, to_change);
 
-					if (couche.style.parameters.fill.type === "shader"){
-						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.uniforms.repeat.value =value;
-							to_change[i].material.needsUpdate = true;
-						}
-					} else {
 						for ( var i = 0; i < to_change.length; i++ ) {
 							if (to_change[i].material.map !== null){
 								to_change[i].material.map.repeat.set(value, value);
@@ -455,27 +460,11 @@
 							to_change[i].material.needsUpdate = true;
 						}
 
-					}
-				}
-
-		}
-
-		function changeDiffuse (couche, value) {
-			var to_change = [];
-				var ancienne_value = couche.style.parameters.fill.parameters.diffuse;
-
-				if (ancienne_value !== value) {
-					couche.style.parameters.fill.parameters.diffuse = value;
-					getFaces(couche, to_change);
-
-						for ( var i = 0; i < to_change.length; i++ ) {
-							to_change[i].material.uniforms.diffuse.value = value;
-							to_change[i].material.needsUpdate = true;
-						}
 
 				}
 
 		}
+
 
 		function changeUniform (couche,key,value,type){
 				var to_change = [];
@@ -494,10 +483,14 @@
 							if (key === 'shader'){
 								var ancienne_method = getMethod(ancienne_value);
 								for (var j in ancienne_method.parameters){
-									elementVisible(ancienne_method.parameters[j].name+"Fill"+couche.id,false);
+									elementVisible(ancienne_method.parameters[j].name+capitalizeFirstLetter(type)+couche.id,false);
 								}
-								slidersShader(couche,value);
-								to_change[i].material = matFromLayer(couche);
+								slidersShader(couche,value,type);
+								if (type === 'fill'){
+										to_change[i].material = matFromLayer(couche);
+								} else if (type === 'stroke'){
+									to_change[i].material = quadMatFromLayer(couche);
+								}
 							} else{
 
 								if (to_change[i].material.uniforms[key].type === 't'){

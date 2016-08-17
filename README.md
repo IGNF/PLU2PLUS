@@ -13,6 +13,7 @@ Si vous utilisez Chrome, il faudra sans doute ajouter --allow-file-access-from-f
     - couleur  
     - type d'arête (et ses paramètres)
     - type de surface (et ses paramètres)
+
 Vous pouvez également basculer entre le cadastre et l'orthophoto.
 
 

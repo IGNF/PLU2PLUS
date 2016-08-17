@@ -204,7 +204,7 @@
 		{
 			"id": "5",
 			"name": "Arbre 1",
-			"URI": "./models/2378_obj.obj",
+			"URI": "./models/2378_tree.obj",
 			"position": {
 				"displacement": {
 					"x": 30,
@@ -230,7 +230,7 @@
 						"color": "#ffffff",
 						"type": "texture",
 						"parameters": {
-							"URI": "./models/2378_obj.mtl"
+							"URI": "./models/2378_tree.mtl"
 						}
 					},
 					"stroke": {

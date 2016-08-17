@@ -1,37 +1,47 @@
-{	
-	"parameters" : {
-		"camera" : {
-			"type" : "perspective",
-			"position" : { "x" : -300, "y" : 425, "z": 725 },
-			"near" : 10,
-			"far" : 100000,
-			"fov" : 10,
-			"target" : { "x" : -50, "y" : 30, "z": 0 }
-		},
-		"fond" : "#AADFF4",
-		"lights" : [
-					{	
-				"type" : "ambient",
-				"color" : "#ffffff",
-				"intensity" : 0.8
+{
+	"parameters": {
+		"camera": {
+			"type": "perspective",
+			"position": {
+				"x": -300,
+				"y": 425,
+				"z": 725
 			},
-			{	
-				"type" : "directional",
-				"position" : { "x" : -400, "y" : 100, "z": 410 },
-				"color" : "#ffffff",
-				"intensity" : 1.0,
-				"shadow" : {
-					"darkness" : 1.0,
-					"near" : 100,
-					"far" : 1500,
-					"map" : 4096,
-					"camera_size" : 550,
-					"bias" : -0.001
+			"near": 10,
+			"far": 100000,
+			"fov": 10,
+			"target": {
+				"x": -50,
+				"y": 30,
+				"z": 0
+			}
+		},
+		"fond": "#AADFF4",
+		"lights": [
+			{
+				"type": "ambient",
+				"color": "#ffffff",
+				"intensity": 0.8
+			},
+			{
+				"type": "directional",
+				"position": {
+					"x": -400,
+					"y": 100,
+					"z": 410
+				},
+				"color": "#ffffff",
+				"intensity": 1,
+				"shadow": {
+					"darkness": 1,
+					"near": 100,
+					"far": 1500,
+					"map": 8192,
+					"camera_size": 550,
+					"bias": -0.001
 				}
 			}
-
 		]
-		
 	},
 	"couches": [
 		{
@@ -61,9 +71,9 @@
 					"fill": {
 						"opacite": 0.99,
 						"color": "#ce7157",
-						"type": "shader",						
+						"type": "shader",
 						"parameters": {
-							"shader" : "hatching",
+							"shader": "hatching",
 							"id": "hatch_",
 							"repeat": 0.1,
 							"diffuse": 0.7
@@ -104,11 +114,11 @@
 				"parameters": {
 					"fill": {
 						"opacite": 0.99,
-						"color": "#006e33",
-						"type": "bump",						
+						"color": "#ffffff",
+						"type": "image",
 						"parameters": {
-							"bmap" : "./textures/brick_bump.jpg",
-							"smap": "./textures/brick_diffuse.jpg",
+							"bmap": "./textures/bump_brick.jpg",
+							"image": "brick.jpg",
 							"repeat": 0.1
 						}
 					},
@@ -117,9 +127,9 @@
 						"color": "#000000",
 						"type": "Sketchy",
 						"parameters": {
-							"shader" : "sketchy_strokes",
+							"shader": "sketchy_strokes",
 							"image": "thick",
-							"width": 60.0
+							"width": 60
 						}
 					}
 				}
@@ -205,7 +215,7 @@
 		{
 			"id": "5",
 			"name": "Arbre 1",
-			"URI": "./models/2378_obj.obj",
+			"URI": "./models/2378_tree.obj",
 			"position": {
 				"displacement": {
 					"x": 30,
@@ -231,7 +241,7 @@
 						"color": "#ffffff",
 						"type": "texture",
 						"parameters": {
-							"URI": "./models/2378_obj.mtl"
+							"URI": "./models/2378_tree.mtl"
 						}
 					},
 					"stroke": {
@@ -280,7 +290,7 @@
 						"color": "#15410c",
 						"type": "Sketchy",
 						"parameters": {
-							"shader" : "sketchy_strokes",
+							"shader": "sketchy_strokes",
 							"image": "irregulier",
 							"width": 30
 						}

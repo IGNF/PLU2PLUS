@@ -47,9 +47,8 @@ function loadAll(){
 						suppr_couche : '',
 						copy_couche : ''
 					};
+					//addText("hauteur initiale : "+params.h_ini, coucheToitFocus);
 
-
-					//gui.remember(params);
 
 					var pos_cam = fCam.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();
 
@@ -71,6 +70,7 @@ function loadAll(){
 					h_ini.onFinishChange(function(value) {
 						changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj");
 						changeSourceCouche(coucheToitFocus, "./models/Roof_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj")
+						//changeText("hauteur initiale : "+value.toString(),"hauteur", coucheToitFocus);
 					});
 					s_pente.onFinishChange(function(value) {
 						changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj");
@@ -122,7 +122,7 @@ function loadAll(){
 					params["opaFill"+couche.id] = couche.style.parameters.fill.opacite;
 					params["repeatFill"+couche.id] = 0.1;
 					params["diffuseFill"+couche.id] = 0.7;
-					params["imageFill"+couche.id] = "./textures/paper2.png";
+					params["imageFill"+couche.id] = "paper2.png";
 
 					params["colorStroke"+couche.id] = couche.style.parameters.stroke.color;
 					params["typeStroke"+couche.id] = couche.style.parameters.stroke.type;
@@ -147,11 +147,11 @@ function loadAll(){
 
 					//paramètres Fill
 					folder.add( params, "name"+couche.id ).name("Nom couche").listen();
-					folder.add( params, "typeFill"+couche.id, [ "uni", "texture", "image", "shader", "bump"] ).name("Type surface").listen();
+					folder.add( params, "typeFill"+couche.id, [ "uni", "texture", "image", "shader"] ).name("Type surface").listen();
 					folder.addColor( params, "colorFill"+couche.id ).name("Couleur").listen();
 					folder.add( params, "opaFill"+couche.id, 0,0.9999,0.1 ).name("Opacité").listen();
 
-                    folder.add( params, "imageFill"+couche.id, [ "./textures/wall.jpg", "./textures/roof.jpg", "./textures/stone-wall.jpg", "./textures/wall_green.jpg", "./textures/hatch.jpg", , "./textures/hatch_3.jpg"] ).name("Image source").listen();
+                    folder.add( params, "imageFill"+couche.id, [ "brick.jpg", "wall.jpg", "roof.jpg", "stone-wall.jpg", "wall_green.jpg", "hatch.jpg", , "hatch_3.jpg", "paper2.png"] ).name("Image source").listen();
 					gui.__folders[couche.name].__ul.lastChild.id = "imageFill"+couche.id;
 
 
@@ -164,11 +164,12 @@ function loadAll(){
                     if (couche.style.parameters.fill.type === "image"){
 						folder.add( params, "repeatFill"+couche.id, 0.01,1,0.01 ).name("Repeat").listen();
 						gui.__folders[couche.name].__ul.lastChild.id = "repeatFill"+couche.id;
-                        params["imageFill"+couche.id] = couche.style.parameters.fill.parameters.URI;
+                        params["imageFill"+couche.id] = couche.style.parameters.fill.parameters.image;
 						elementVisible("imageFill"+couche.id,true);
 						params["repeatFill"+couche.id] = couche.style.parameters.fill.parameters.repeat;
 						elementVisible("repeatFill"+couche.id,true);
 					}
+
                     if (couche.style.parameters.fill.type === "shader"){
 
 						var method = getMethod(couche.style.parameters.fill.parameters.shader);
@@ -248,6 +249,7 @@ function loadAll(){
 					changeTexture (parse.couches[j], params["imageFill"+parse.couches[j].id] );
 					changeRepeat (parse.couches[j], params["repeatFill"+parse.couches[j].id] );
 				}
+
 				if (parse.couches[j].style.parameters.fill.type === "shader"){
 					var method = getMethod(parse.couches[j].style.parameters.fill.parameters.shader);
 					if (dirLight !== undefined && method.uniforms["lightPosition"] !== undefined){

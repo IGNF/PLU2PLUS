@@ -42,6 +42,7 @@
         }
     ],
     "uniforms" : {
+                                    "ambient": { "type": "f", "value" : 0 },
 									"diffuse": { "type": "f", "value" : "couche.style.parameters.fill.parameters.diffuse" },
 									"rim": { "type": "f", "value" : 0.1 },
 									"specular": { "type": "f", "value" : 0 },

@@ -239,19 +239,28 @@
 
 
 			function matFromLayer (couche) {
+				var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
 						if (couche.style.parameters.fill.type === 'uni') {
 							var mat = new THREE.MeshLambertMaterial({
-								color: couche.style.parameters.fill.color, 
+								color: color, 
+								//color: couche.style.parameters.fill.color, 
 								side: THREE.DoubleSide, 
 								transparent : (couche.style.parameters.fill.opacite < 1.0), 
 								opacity : couche.style.parameters.fill.opacite});		
 						}else if (couche.style.parameters.fill.type === 'texture') {
-							var mat = new THREE.MeshLambertMaterial( {color: couche.style.parameters.fill.color} );
+							var mat = new THREE.MeshLambertMaterial( {color: color} );
+							//var mat = new THREE.MeshLambertMaterial( {color: couche.style.parameters.fill.color} );
 
 						}else if (couche.style.parameters.fill.type === 'image') {
 							var textureLoader = new THREE.TextureLoader();
-							var mat = new THREE.MeshLambertMaterial( {map: null, color: couche.style.parameters.fill.color, shading: THREE.SmoothShading} );
-							textureLoader.load( couche.style.parameters.fill.parameters.URI, function( map ) {
+							if (couche.style.parameters.fill.parameters.bmap !== undefined){
+								var bmap =  THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.bmap, {}, function(){});
+								bmap.wrapS = bmap.wrapT = THREE.RepeatWrapping;
+							} /*else {
+								var bmap = null;
+							}*/
+							var mat = new THREE.MeshPhongMaterial( {map: null, bumpMap : bmap, color: couche.style.parameters.fill.color, shading: THREE.SmoothShading} );
+							textureLoader.load( "./textures/"+couche.style.parameters.fill.parameters.image, function( map ) {
 								map.wrapS = THREE.RepeatWrapping;
 								map.wrapT = THREE.RepeatWrapping;
 								map.anisotropy = 4;
@@ -266,7 +275,7 @@
 							var fragment = getSourceSynch("shaders/"+couche.style.parameters.fill.parameters.shader+"_frag.glsl");
 							var method = getMethod(couche.style.parameters.fill.parameters.shader);
 
-							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
+							//var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
 							//lampe située par défaut en dessous de la scène
 							var lightPosition = new THREE.Vector3(defaults.lightPosition.x,defaults.lightPosition.y,defaults.lightPosition.z);
 							var dirLight = getFirstLightByType('directional');
@@ -274,40 +283,19 @@
 								lightPosition = new THREE.Vector3( dirLight.position.x, dirLight.position.y, dirLight.position.z );
 							}
 
-							var uniforms = {ambient: { type: 'f', value : 0 }};
+							var uniforms = {};
 
 							for (param in method.uniforms){
 								uniforms[param] = method.uniforms[param];
 								uniforms[param].value = eval(method.uniforms[param].value);
+								if (uniforms[param].type ==='t'){
+									uniforms[param].value.wrapS = uniforms[param].value.wrapT = THREE.RepeatWrapping;
+								}
 							}
 			
 							var material = new THREE.ShaderMaterial( {
 
-								uniforms: uniforms,
-								//method.uniforms,  
-								/*THREE.UniformsUtils.merge( [
-									//THREE.UniformsLib[ "shadowmap" ],
-									{
-									ambient: { type: 'f', value : 0 },
-									diffuse: { type: 'f', value : couche.style.parameters.fill.parameters.diffuse },
-									rim: { type: 'f', value : 0.1 },
-									specular: { type: 'f', value : 0 },
-									shininess: { type: 'f', value : 1 },
-									color: { type: 'v4', value: new THREE.Vector3( color.r, color.g,color.b ) },
-									opacity: { type: 'f', value: couche.style.parameters.fill.opacite },
-									lightPosition: { type: 'v3', value: lightPosition },
-									hatch1: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '0.jpg' ) },
-									hatch2: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '1.jpg' ) },
-									hatch3: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '2.jpg' ) },
-									hatch4: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '3.jpg' ) },
-									hatch5: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '4.jpg' ) },
-									hatch6: { type: 't', value: THREE.ImageUtils.loadTexture( './textures/'+id + '5.jpg' ) },
-									paper: {type: 't', value: THREE.ImageUtils.loadTexture( './textures/paper2.png' ) },
-									repeat: { type: 'f', value: couche.style.parameters.fill.parameters.repeat }
-									//lights : true
-								}
-								])*/
-								
+								uniforms: uniforms,	
 								vertexShader:   vertex,
 								fragmentShader: fragment
 
@@ -315,59 +303,23 @@
 
 							material.side = THREE.DoubleSide;
 
+							//todo : généralisation
 							if (couche.style.parameters.fill.parameters.shader === "hatching")
 							
 							{material.uniforms.paper.value.generateMipmaps = false;
 							material.uniforms.paper.value.magFilter = THREE.LinearFilter;
 							material.uniforms.paper.value.minFilter = THREE.LinearFilter;
 					
-							material.uniforms.hatch1.value.wrapS = material.uniforms.hatch1.value.wrapT = THREE.RepeatWrapping;
+							/*material.uniforms.hatch1.value.wrapS = material.uniforms.hatch1.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch2.value.wrapS = material.uniforms.hatch2.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch3.value.wrapS = material.uniforms.hatch3.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch4.value.wrapS = material.uniforms.hatch4.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch5.value.wrapS = material.uniforms.hatch5.value.wrapT = THREE.RepeatWrapping;
-							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;*/
 
-							material.depthWrite = true;} /*else {
-								material.uniforms.bmap.value.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
-								material.uniforms.smap.value.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
-								material.uniforms.bmap.value.wrapS = material.uniforms.bmap.value.wrapT = THREE.RepeatWrapping;
-								material.uniforms.smap.value.wrapS = material.uniforms.smap.value.wrapT = THREE.RepeatWrapping;
-								var phongShader = THREE.ShaderLib.phong;
-								material.uniforms = THREE.UniformsUtils.merge( [THREE.UniformsUtils.clone(phongShader.uniforms),material.uniforms]);
-							}*/
+							material.depthWrite = true;}
 
 							mat = material;
-
-						} else if (couche.style.parameters.fill.type === 'bump'){
-
-							if (couche.style.parameters.fill.parameters.bmap === undefined){
-								couche.style.parameters.fill.parameters.bmap = "./textures/brick_bump.jpg";
-							}
-							if (couche.style.parameters.fill.parameters.smap === undefined){
-								couche.style.parameters.fill.parameters.smap = "./textures/brick_diffuse.jpg";
-							}
-							if (couche.style.parameters.fill.parameters.repeat === undefined){
-								couche.style.parameters.fill.parameters.repeat = 0.1;
-							}
-
-							var bmap =  THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.bmap, {}, function(){});
-							var smap =  THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.smap, {}, function(){});
-							bmap.wrapS = bmap.wrapT = THREE.RepeatWrapping;
-							smap.wrapS = smap.wrapT = THREE.RepeatWrapping;
-							//var repeat = 0.1;
-							bmap.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
-							smap.repeat.set(couche.style.parameters.fill.parameters.repeat,couche.style.parameters.fill.parameters.repeat);
-							var color = new THREE.Color().setHex(couche.style.parameters.fill.color.replace("#", "0x"));
-
-							mat = new THREE.MeshPhongMaterial({
-								color : color,
-								shininess  :  20,
-								bumpMap    :  bmap,
-								map        :  smap,
-								bumpScale  :  0.45,
-								side 	   :  THREE.DoubleSide
-							});
 
 						} else {
 							console.log("Le type "+couche.style.parameters.fill.type+" n\'est pas valide pour une surface")
@@ -401,8 +353,54 @@
 			}
 
 			function quadMatFromLayer (couche) {
+				var color = new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x"));
 
-				var quadMat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.image, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
+				//var vertex = getSourceSynch("shaders/testsub_vert.glsl");
+				var vertex = getSourceSynch("shaders/"+couche.style.parameters.stroke.parameters.shader+"_vert.glsl");
+				var headVertex = getSourceSynch("shaders/"+couche.style.parameters.stroke.parameters.shader+"_pars_vert.glsl");
+				var fragment = getSourceSynch("shaders/"+couche.style.parameters.stroke.parameters.shader+"_frag.glsl");
+				var method = getMethod(couche.style.parameters.stroke.parameters.shader);
+
+				var uniforms = {};
+
+				for (param in method.uniforms){
+					uniforms[param] = method.uniforms[param];
+					uniforms[param].value = eval(method.uniforms[param].value);
+				}
+
+				var material = new THREE.ShaderMaterial( {
+
+					uniforms: uniforms,	
+					vertexShader:   [
+									"attribute vec3  position2;",
+									"uniform   vec2  resolution;"
+									
+									+headVertex+
+
+									"void main()",
+									"{",
+									"gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);",
+									"vec4 Position2 = projectionMatrix *modelViewMatrix *vec4(position2,1.0);",
+
+										"vec2 normal = normalize((gl_Position.xy/gl_Position.w - Position2.xy/Position2.w) * resolution); // * 0.5",
+										"normal = uv.x * uv.y * vec2(-normal.y, normal.x);",
+
+										"if (length((gl_Position.xyz+Position2.xyz)/2.0)>25.0){gl_Position.xy += 25.0*(width/length((gl_Position.xyz+Position2.xyz)/2.0)) * gl_Position.w * normal * 2.0 / resolution;}",
+										"else {gl_Position.xy += width * gl_Position.w * normal * 2.0 / resolution;}"
+										+ vertex +
+									"}"
+						].join("\n"),
+					fragmentShader: fragment
+
+				});
+
+				material.side = THREE.DoubleSide;
+
+				var quadMat = material;
+				
+				/*if (couche.style.parameters.stroke.parameters.shader === 'sketchy_strokes'){
+					var quadMat = createMaterial(couche.style.parameters.stroke.parameters.shader, couche.style.parameters.stroke.parameters.width, couche.style.parameters.stroke.parameters.image, new THREE.Color().setHex(couche.style.parameters.stroke.color.replace("#", "0x")));
+				}*/
 				return quadMat;
 
 			}
@@ -486,10 +484,28 @@
 
 			function getSourceSynch(url) {
 				var req = new XMLHttpRequest();
-				req.open("GET", url, false);
-				req.send(null);
-				return req.responseText;
+
+					req.open("GET", url, false);
+					req.send();
+					return req.responseText;
+				
+				
 			};
+
+			function checkSourceSynch(url){
+				var req = new XMLHttpRequest();
+				req.open("HEAD", url, false);
+
+					try{
+						req.send();
+						return true;
+					} catch(e) {
+						return false;
+					}
+
+
+
+			}
 
 			function getMethod(shader){
 
@@ -500,26 +516,79 @@
 
 
 			//création ou activation des sliders dat.gui pour les surfaces en shader
-			function slidersShader(couche,shader){
+			function slidersShader(couche,shader,type){
 						var method = getMethod(shader);
 						for (var j in method.parameters){
 							var parameter = method.parameters[j];
-							if (couche.style.parameters.fill.parameters[parameter.name] === undefined){
-								couche.style.parameters.fill.parameters[parameter.name] = parameter.default;
+							if (couche.style.parameters[type].parameters[parameter.name] === undefined){
+								couche.style.parameters[type].parameters[parameter.name] = parameter.default;
 							}	
 							if (parameter.GUI.visible === true){
-								params[parameter.name+"Fill"+couche.id] = couche.style.parameters.fill.parameters[parameter.name];
-								if (document.getElementById(parameter.name+"Fill"+couche.id) === null){
+								params[parameter.name+capitalizeFirstLetter(type)+couche.id] = couche.style.parameters[type].parameters[parameter.name];
+								if (document.getElementById(parameter.name+capitalizeFirstLetter(type)+couche.id) === null){
 									if (parameter.type === 'float'){
-										gui.__folders[couche.name].add( params, parameter.name+"Fill"+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
+										gui.__folders[couche.name].add( params, parameter.name+capitalizeFirstLetter(type)+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
 									} else if (parameter.type === 'string'){
-										gui.__folders[couche.name].add( params, parameter.name+"Fill"+couche.id, parameter.GUI.list ).name(parameter.name).listen();
+										gui.__folders[couche.name].add( params, parameter.name+capitalizeFirstLetter(type)+couche.id, parameter.GUI.list ).name(parameter.name).listen();
 									}
-									gui.__folders[couche.name].__ul.lastChild.id = parameter.name+"Fill"+couche.id;
+									gui.__folders[couche.name].__ul.lastChild.id = parameter.name+capitalizeFirstLetter(type)+couche.id;
 								} else {
-									elementVisible(parameter.name+"Fill"+couche.id,true);
+									elementVisible(parameter.name+capitalizeFirstLetter(type)+couche.id,true);
 								}			
 							}
 						}
 			}
 
+
+			function addText(text, couche){
+
+				var loader = new THREE.FontLoader();
+				loader.load( 'helvetiker_regular.typeface.js', function ( font ) {
+
+				var textGeometry = new THREE.TextGeometry( text, {
+
+					font: font,
+
+					size: 10,
+					height: 2,
+					curveSegments: 12,
+
+					bevelThickness: 1,
+					bevelSize: 1,
+					bevelEnabled: true
+
+				});
+
+				var textMaterial = new THREE.MeshPhongMaterial( 
+					{ color: 0xff0000, specular: 0xffffff }
+				);
+
+				var mesh = new THREE.Mesh( textGeometry, textMaterial );
+				mesh.userData = {caption : "hauteur"};
+				moveMesh(mesh, couche.position.displacement.x, couche.position.displacement.y, couche.position.displacement.z)
+
+				scene.add( mesh );
+
+				});
+
+			}
+
+
+			function changeText(newText,caption,couche) {
+				var text = [];
+				scene.traverse ( function( child ) {
+					if ( child instanceof THREE.Mesh && child.userData.caption === caption ) {
+						text.push( child );
+					}
+				} );
+				for ( var i = 0; i < text.length; i++ ) {
+					scene.remove(text[i]);
+					addText(newText,couche);
+				}
+
+			}
+
+
+			function capitalizeFirstLetter(string) {
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			}

@@ -70,12 +70,11 @@
 									if (couche.style.parameters.fill.type === 'texture') {
 										mat = child.material;
 										mat.side = THREE.DoubleSide;
+										//mat.opacity = couche.style.parameters.fill.parameters.opacite;
 									} else {
 										assignUVs(geometry);
 									}
 
-								//geometry.computeVertexNormals();
-								//geometry.computeFaceNormals();
 
 									var mesh = new THREE.Mesh(geometry,mat);
 									
@@ -192,6 +191,8 @@
 				//controls
 				controls = new THREE.OrbitControls(camera, renderer.domElement);
 				controls.target.set(parse.parameters.camera.target.x,parse.parameters.camera.target.y,parse.parameters.camera.target.z);
+
+
 			}
 
 

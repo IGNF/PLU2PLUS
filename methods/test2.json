@@ -1,0 +1,32 @@
+{
+    "name" : "test2",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "test2",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersStroke"
+            }
+        },
+                {
+        "name" : "repeat",
+        "type" : "float",
+        "default" : 0.1,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        }
+    ],
+    "uniforms" : {
+									"time": { "type": "f", "value" : 1.0 },
+					                "resolution": { "type" : "v2", "value": "new THREE.Vector2( window.innerWidth,  window.innerHeight)" },
+
+									"repeat": { "type": "f", "value": "couche.style.parameters.stroke.parameters.repeat" },
+                                    "color": { "type": "v3", "value": "new THREE.Vector3( color.r, color.g,color.b )" }
+				}
+}

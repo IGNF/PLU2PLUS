@@ -1,4 +1,4 @@
-varying vec3  v_uv;
+varying vec3  vUv;
 varying float choixTex;
 uniform sampler2D texture1;
 uniform sampler2D image;
@@ -9,7 +9,8 @@ uniform vec3 color;
 
 
 void main() {
-    vec2 uv = v_uv.xy/v_uv.z;
+    //vec2 uv = vUv.xy;
+    vec2 uv = vUv.xy/vUv.z;
     vec4 baseColor = texture2D(texture1, (uv+1.)*0.5);
     //vec4 paperColor = texture2D(paper, (uv+1.)*0.5 );
 
