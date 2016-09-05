@@ -27,6 +27,9 @@
 		<script src="js/FileSaver.min.js"></script>
 		<script src="js/Stuk-jszip-4cbaf0e/dist/jszip.min.js"></script>
 		<script src="js/jquery.min.js"></script>
+		
+		<script src="js/threeGeoJSON.js"></script>
+
 		<script>
 
 
@@ -44,6 +47,7 @@
 		function init() {
 
 			scene = new THREE.Scene();
+			
 
 			var WIDTH = window.innerWidth,
 			HEIGHT = window.innerHeight;
@@ -68,6 +72,8 @@
 			window.addEventListener("keyup", capture);
 
 			loadLights();
+
+			//initMap();
 			
 
 

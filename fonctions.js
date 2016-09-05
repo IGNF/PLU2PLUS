@@ -259,7 +259,9 @@
 							} /*else {
 								var bmap = null;
 							}*/
-							var mat = new THREE.MeshPhongMaterial( {map: null, bumpMap : bmap, color: couche.style.parameters.fill.color, shading: THREE.SmoothShading} );
+							var mat = new THREE.MeshPhongMaterial( {map: null, bumpMap : bmap, 
+								color: couche.style.parameters.fill.color, 
+								opacity : couche.style.parameters.fill.opacite, transparent : (couche.style.parameters.fill.opacite < 1.0),  shading: THREE.SmoothShading} );
 							textureLoader.load( "./textures/"+couche.style.parameters.fill.parameters.image, function( map ) {
 								map.wrapS = THREE.RepeatWrapping;
 								map.wrapT = THREE.RepeatWrapping;
@@ -293,7 +295,7 @@
 								}
 							}
 			
-							var material = new THREE.ShaderMaterial( {
+							var mat = new THREE.ShaderMaterial( {
 
 								uniforms: uniforms,	
 								vertexShader:   vertex,
@@ -301,25 +303,26 @@
 
 							});
 
-							material.side = THREE.DoubleSide;
+							mat.side = THREE.DoubleSide;
+							mat.transparent = true;
 
 							//todo : généralisation
-							if (couche.style.parameters.fill.parameters.shader === "hatching")
+							/*if (couche.style.parameters.fill.parameters.shader === "hatching")
 							
 							{material.uniforms.paper.value.generateMipmaps = false;
 							material.uniforms.paper.value.magFilter = THREE.LinearFilter;
 							material.uniforms.paper.value.minFilter = THREE.LinearFilter;
 					
-							/*material.uniforms.hatch1.value.wrapS = material.uniforms.hatch1.value.wrapT = THREE.RepeatWrapping;
+							material.uniforms.hatch1.value.wrapS = material.uniforms.hatch1.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch2.value.wrapS = material.uniforms.hatch2.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch3.value.wrapS = material.uniforms.hatch3.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch4.value.wrapS = material.uniforms.hatch4.value.wrapT = THREE.RepeatWrapping;
 							material.uniforms.hatch5.value.wrapS = material.uniforms.hatch5.value.wrapT = THREE.RepeatWrapping;
-							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;*/
+							material.uniforms.hatch6.value.wrapS = material.uniforms.hatch6.value.wrapT = THREE.RepeatWrapping;
 
-							material.depthWrite = true;}
+							material.depthWrite = true;}*/
 
-							mat = material;
+							//mat = material;
 
 						} else {
 							console.log("Le type "+couche.style.parameters.fill.type+" n\'est pas valide pour une surface")
@@ -529,7 +532,7 @@
 									if (parameter.type === 'float'){
 										gui.__folders[couche.name].add( params, parameter.name+capitalizeFirstLetter(type)+couche.id, parameter.GUI.min,parameter.GUI.max,parameter.GUI.step ).name(parameter.name).listen();
 									} else if (parameter.type === 'string'){
-										gui.__folders[couche.name].add( params, parameter.name+capitalizeFirstLetter(type)+couche.id, parameter.GUI.list ).name(parameter.name).listen();
+										gui.__folders[couche.name].add( params, parameter.name+capitalizeFirstLetter(type)+couche.id, eval(parameter.GUI.list) ).name(parameter.name).listen();
 									}
 									gui.__folders[couche.name].__ul.lastChild.id = parameter.name+capitalizeFirstLetter(type)+couche.id;
 								} else {

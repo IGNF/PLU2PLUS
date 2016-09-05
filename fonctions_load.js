@@ -41,15 +41,27 @@
 						var couche = parse.couches[j];
 						var mat = matFromLayer(couche);
 						var lineMat = lineMatFromLayer(couche);
+
+						if (couche.URI.endsWith(".obj")){
 				
-						if (couche.style.parameters.fill.type === 'texture') {
-								couchesTex.push(couche);
-						} 
-						else {
-							loading(objLoader, mat, lineMat, couche, couchesTex);
-						}	
+							if (couche.style.parameters.fill.type === 'texture') {
+									couchesTex.push(couche);
+							} 
+							else {
+								loading(objLoader, mat, lineMat, couche, couchesTex);
+							}	
+						} else if (couche.URI.endsWith(".json")){
+							   loading2D(lineMat, mat, couche);
+						}
+
 					}
 					loadTex(couchesTex, objLoader);
+			}
+
+			function loading2D (lineMat, mat, couche){
+				$.getJSON(couche.URI, function (data) { 
+					drawThreeGeo(data, 10, 'plane', lineMat, mat, couche) ;
+				});
 			}
 			
 

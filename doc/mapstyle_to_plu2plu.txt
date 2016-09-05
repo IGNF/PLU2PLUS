@@ -1,0 +1,5 @@
+Conversion en float
+
+passer en const les uniforms définis
+
+passer les out/in en varying et les layout en attributs uniforms ou varying

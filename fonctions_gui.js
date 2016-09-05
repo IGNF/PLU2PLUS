@@ -151,7 +151,7 @@ function loadAll(){
 					folder.addColor( params, "colorFill"+couche.id ).name("Couleur").listen();
 					folder.add( params, "opaFill"+couche.id, 0,0.9999,0.1 ).name("Opacité").listen();
 
-                    folder.add( params, "imageFill"+couche.id, [ "brick.jpg", "wall.jpg", "roof.jpg", "stone-wall.jpg", "wall_green.jpg", "hatch.jpg", , "hatch_3.jpg", "paper2.png"] ).name("Image source").listen();
+                    folder.add( params, "imageFill"+couche.id, eval(defaults.listTexturesFill) ).name("Image source").listen();
 					gui.__folders[couche.name].__ul.lastChild.id = "imageFill"+couche.id;
 
 

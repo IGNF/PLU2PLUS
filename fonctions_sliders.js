@@ -376,7 +376,7 @@
 						}
 						
 
-						slidersShader(couche,couche.style.parameters.fill.parameters.shader);
+						slidersShader(couche,couche.style.parameters.fill.parameters.shader,'fill');
 					} 
 
 

@@ -339,6 +339,44 @@
 				}
 			},
 			"order": 1
+		},
+		{
+			"id": "8",
+			"name": "Commune",
+			"URI": "./2D/commune.json",
+			"position": {
+				"displacement": {
+					"x": -106680.0,
+					"y": -234698.0,
+					"z": -1.2
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "commune",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#7f7f7f",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 1.0,
+						"color": "#fccfa2",
+						"type": "Continu"
+					}
+				}
+			},
+			"order": 1
 		}
 	]
 }

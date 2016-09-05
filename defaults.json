@@ -1,7 +1,8 @@
 {
 "shaderFill" : "hatching",
-"listShadersFill" : [ "test", "hatching", "shadertoy"],
+"listShadersFill" : [ "test", "hatching", "shadertoy", "gradient"],
 "listShadersStroke" : [ "test2", "sketchy_strokes"],
+"listTexturesFill" : "[ 'brick.jpg', 'wall.jpg', 'roof.jpg', 'stone-wall.jpg', 'wall_green.jpg', 'hatch.jpg', , 'hatch_3.jpg', 'paper2.png', 'bricks.jpg']",
 "shaderStroke" : "sketchy_strokes",
 "image" : "paper2.png",
 "lightPosition" : {"x": 0,"y": 0,"z": -500},
