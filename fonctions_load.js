@@ -82,7 +82,7 @@
 									if (couche.style.parameters.fill.type === 'texture') {
 										mat = child.material;
 										mat.side = THREE.DoubleSide;
-										//mat.opacity = couche.style.parameters.fill.parameters.opacite;
+										mat.shininess = 1.0;
 									} else {
 										assignUVs(geometry);
 									}

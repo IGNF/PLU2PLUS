@@ -40,14 +40,35 @@ function loadAll(){
 						nb_images : nbImage,
 						download : function(){downloadAll(zip)},
 						empty_zip : function() {emptyZip(zip)},
-						type_fond : coucheFond.URI,
-						h_ini : parseInt(coucheMurFocus.URI.substring(19,20)),
-						s_pente : parseFloat(coucheMurFocus.URI.substring(29,32)),
+						//h_ini : parseInt(coucheMurFocus.URI.substring(19,20)),
+						//s_pente : parseFloat(coucheMurFocus.URI.substring(29,32)),
 						add_couche : function () {chargeData()},
 						suppr_couche : '',
 						copy_couche : ''
 					};
 					//addText("hauteur initiale : "+params.h_ini, coucheToitFocus);
+
+					if (coucheFond !== undefined){
+						params.type_fond = coucheFond.URI;
+						var type_fond = gui.add(params, 'type_fond', [ "./models/Parcelle.obj", "./models/Ortho.obj"]).name('Fond').listen();
+						type_fond.onChange(function(value) { changeSourceCouche(coucheFond, value); });
+					}
+
+					if (coucheMurFocus !== undefined && coucheToitFocus !== undefined){
+						params.h_ini = parseInt(coucheMurFocus.URI.substring(19,20));
+						params.s_pente = parseFloat(coucheMurFocus.URI.substring(29,32));
+						var h_ini = gui.add(params, 'h_ini', 0,6).step(2).name("Hauteur initiale").listen();
+						var s_pente = gui.add(params, 's_pente', 0,3.0).step(0.5).name("Pente").listen();
+						h_ini.onFinishChange(function(value) {
+						changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj");
+						changeSourceCouche(coucheToitFocus, "./models/Roof_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj")
+						//changeText("hauteur initiale : "+value.toString(),"hauteur", coucheToitFocus);
+						});
+						s_pente.onFinishChange(function(value) {
+							changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj");
+							changeSourceCouche(coucheToitFocus, "./models/Roof_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj")
+						});
+					}
 
 
 					var pos_cam = fCam.add(params, 'pos_camera').name('Réinitialiser la caméra').listen();
@@ -57,17 +78,17 @@ function loadAll(){
                     var download = fCapture.add(params, 'download').name('Télécharger les images').listen();	
 					var empty_zip = fCapture.add(params, 'empty_zip').name('Supprimer les images enregistrées').listen();
 					var save_config = gui.add(params, 'save_config').name('Sauvegarder la configuration').listen();
-					var type_fond = gui.add(params, 'type_fond', [ "./models/Parcelle.obj", "./models/Ortho.obj"]).name('Fond').listen();
-					var h_ini = gui.add(params, 'h_ini', 0,6).step(2).name("Hauteur initiale").listen();
-					var s_pente = gui.add(params, 's_pente', 0,3.0).step(0.5).name("Pente").listen();
+					//var type_fond = gui.add(params, 'type_fond', [ "./models/Parcelle.obj", "./models/Ortho.obj"]).name('Fond').listen();
+					//var h_ini = gui.add(params, 'h_ini', 0,6).step(2).name("Hauteur initiale").listen();
+					//var s_pente = gui.add(params, 's_pente', 0,3.0).step(0.5).name("Pente").listen();
 					var add_couche = fCouche.add(params, 'add_couche').name("Nouvelle couche").listen();
 					var suppr_couche = fCouche.add(params, 'suppr_couche').name("Supprimer couche").listen();
 					var copy_couche = fCouche.add(params, 'copy_couche').name("Dupliquer couche").listen();
 
 
 					
-					type_fond.onChange(function(value) { changeSourceCouche(coucheFond, value); });
-					h_ini.onFinishChange(function(value) {
+					//type_fond.onChange(function(value) { changeSourceCouche(coucheFond, value); });
+					/*h_ini.onFinishChange(function(value) {
 						changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj");
 						changeSourceCouche(coucheToitFocus, "./models/Roof_Hini_"+value.toString()+".0_Slope_"+params.s_pente.toPrecision(2).toString().substring(0, 3)+".obj")
 						//changeText("hauteur initiale : "+value.toString(),"hauteur", coucheToitFocus);
@@ -75,7 +96,7 @@ function loadAll(){
 					s_pente.onFinishChange(function(value) {
 						changeSourceCouche(coucheMurFocus, "./models/Wall_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj");
 						changeSourceCouche(coucheToitFocus, "./models/Roof_Hini_"+params.h_ini.toString()+".0_Slope_"+value.toPrecision(2).toString().substring(0, 3)+".obj")
-					});
+					});*/
 					suppr_couche.onFinishChange(function(value) {
 						clearCouche(getCoucheByName(value));
 						clearParse(getCoucheByName(value));
