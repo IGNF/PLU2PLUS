@@ -1,0 +1,25 @@
+newmtl trunk_col_0_0
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 1
+map_Kd /spschors.png
+
+newmtl leaf_col_0_1
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+d 0.000000
+illum 1
+map_Kd /spar1.png
+
+newmtl leaf_col_0_2
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+d 0.000000
+map_Kd /spar1.png
+
+newmtl leaf_col_0_3
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+d 0.000000
+map_Kd /spar1.png

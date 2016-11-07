@@ -1,0 +1,62 @@
+{
+    "name" : "hatching",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "hatching",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersFill"
+            }
+        },
+        {
+        "name" : "id",
+        "type" : "string",
+        "default" : "hatch_",
+        "GUI" : {
+            "visible" : false
+            }
+        },
+        {
+        "name" : "repeat",
+        "type" : "float",
+        "default" : 0.1,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        },
+        {
+        "name" : "diffuse",
+        "type" : "float",
+        "default" : 0.7,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        }
+    ],
+    "uniforms" : {
+                                    "ambient": { "type": "f", "value" : 0 },
+									"diffuse": { "type": "f", "value" : "couche.style.parameters.fill.parameters.diffuse" },
+									"rim": { "type": "f", "value" : 0.1 },
+									"specular": { "type": "f", "value" : 0 },
+									"shininess": { "type": "f", "value" : 1 },
+									"color": { "type": "v4", "value": "new THREE.Vector3( color.r, color.g,color.b )" },
+									"opacity": { "type": "f", "value": "couche.style.parameters.fill.opacite" },
+									"lightPosition": { "type": "v3", "value": "lightPosition" },
+									"hatch1": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '0.jpg' )" },
+									"hatch2": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '1.jpg' )" },
+									"hatch3": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '2.jpg' )" },
+									"hatch4": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '3.jpg' )" },
+									"hatch5": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '4.jpg' )" },
+									"hatch6": { "type": "t", "value": "THREE.ImageUtils.loadTexture( './textures/'+id + '5.jpg' )" },
+									"paper": {"type":"t", "value": "THREE.ImageUtils.loadTexture( './textures/paper2.png' )" },
+									"repeat": { "type": "f", "value": "couche.style.parameters.fill.parameters.repeat" }
+								}
+}

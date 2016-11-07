@@ -1,0 +1,43 @@
+{
+    "name" : "sketchy_strokes",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "sketchy_strokes",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersStroke"
+            }
+        },
+        {
+        "name" : "image",
+        "type" : "string",
+        "default" : "thick",
+        "GUI" : {
+            "visible" : true,
+            "list" : [ "irregulier", "two", "thick", "brush", "tirets"]
+            }
+        },
+        {
+        "name" : "width",
+        "type" : "float",
+        "default" : 50.0,
+        "GUI" : {
+            "visible" : true,
+            "min" : 10,
+            "max" : 100,
+            "step" : 1
+            }
+        }
+    ],
+    "uniforms" : {
+									"width": { "type": "f", "value" : "couche.style.parameters.stroke.parameters.width" },
+					                "resolution": { "type" : "v2", "value": "new THREE.Vector2( window.innerWidth,  window.innerHeight)" },
+
+									"texture1": { "type": "t", "value": "THREE.ImageUtils.loadTexture( 'strokes/'+couche.style.parameters.stroke.parameters.image+'_small.png' )" },
+						            "image": { "type": "t", "value": "THREE.ImageUtils.loadTexture( 'strokes/'+couche.style.parameters.stroke.parameters.image+'.png' )" },
+
+                                    "color": { "type": "v3", "value": "new THREE.Vector3( color.r, color.g,color.b )" }
+				}
+}

@@ -1,0 +1,263 @@
+{
+	"parameters": {
+		"camera": {
+			"type": "perspective",
+			"position": {
+				"x": -300,
+				"y": 425,
+				"z": 725
+			},
+			"near": 10,
+			"far": 100000,
+			"fov": 10,
+			"target": {
+				"x": -50,
+				"y": 30,
+				"z": 0
+			}
+		},
+		"fond": "#AADFF4",
+		"lights": [
+			{
+				"type": "ambient",
+				"color": "#ffffff",
+				"intensity": 0.8
+			},
+			{
+				"type": "directional",
+				"position": {
+					"x": -800,
+					"y": 100,
+					"z": 410
+				},
+				"color": "#ffffff",
+				"intensity": 1,
+				"shadow": {
+					"darkness": 1,
+					"near": 100,
+					"far": 1500,
+					"map": 8192,
+					"camera_size": 550,
+					"bias": -0.001
+				}
+			}
+		]
+	},
+	"couches": [
+		{
+			"id": 1,
+			"name": "MursContexte",
+			"URI": "./models/BDTopoMurs.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Default",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#2d2d2d",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Continu"
+					}
+				}
+			},
+			"order": -1
+		},
+		{
+			"id": 2,
+			"name": "ToitContexte",
+			"URI": "./models/BDTopoToit.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Default",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#820f0f",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Continu"
+					}
+				}
+			},
+			"order": -1
+		},
+		{
+			"id": 4,
+			"name": "ToitFocus",
+			"URI": "./models/Roof_Hini_4.0_Slope_3.0.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Default",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#848281",
+						"type": "uni",
+						"parameters": {
+							"shader": "hatching",
+							"id": "hatch_",
+							"repeat": 0.1,
+							"diffuse": 0.7
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Invisible",
+						"parameters": {
+							"shader": "sketchy_strokes",
+							"image": "brush",
+							"width": 52.61756001315358
+						}
+					}
+				}
+			},
+			"order": -1
+		},
+		{
+			"id": 5,
+			"name": "MursFocus",
+			"URI": "./models/Wall_Hini_4.0_Slope_3.0.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Default",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#8e4747",
+						"type": "shader",
+						"parameters": {
+							"shader": "hatching",
+							"id": "hatch_",
+							"repeat": 0.1,
+							"diffuse": 0.7
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#000000",
+						"type": "Sketchy",
+						"parameters": {
+							"shader": "sketchy_strokes",
+							"image": "brush",
+							"width": 100
+						}
+					}
+				}
+			},
+			"order": -1
+		},
+		{
+			"id": 6,
+			"name": "Background",
+			"URI": "./models/Parcelle.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Default",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#ce7157",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/Parcelle.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Continu"
+					}
+				}
+			},
+			"order": -1
+		}
+	]
+}

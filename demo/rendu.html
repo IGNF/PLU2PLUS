@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Rendu</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>		
+		<script src="shaders/sketchy_strokes_vert.glsl" type="x-shader/x-vertex" id="vertexShader">	</script>
+		<script src="shaders/sketchy_strokes_frag.glsl" type="x-shader/x-fragment" id="fragmentShader"> </script>
+
+		<input type="file" id="file"></input>
+		<div id="container"/>
+
+		<script src="js/three.js"></script>
+		<script src="js/dat.gui.min.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		<script src="js/MTLLoader.js"></script>
+		<script src="fonctions.js"></script>
+		<script src="fonctions_sliders.js"></script>
+		<script src="fonctions_load.js"></script>
+		<script src="fonctions_gui.js"></script>
+		<script src="js/FileSaver.min.js"></script>
+		<script src="js/Stuk-jszip-4cbaf0e/dist/jszip.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		
+		<script src="js/threeGeoJSON.js"></script>
+
+		<script>
+
+
+
+		var scene, camera, renderer, gui, params, parse, defaults;
+		var zip = new JSZip();
+		var nbImage = 0;
+		var no = 1;
+		var newID;
+
+			
+		loadAll();
+			
+				
+		function init() {
+
+			scene = new THREE.Scene();
+			
+
+			var WIDTH = window.innerWidth,
+			HEIGHT = window.innerHeight;
+			renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer: true });
+			renderer.setSize(WIDTH, HEIGHT);
+			renderer.setClearColor( parse.parameters.fond, 0.5);
+			renderer.shadowMap.enabled = true;
+      		renderer.shadowMapSoft = true;
+
+			document.body.appendChild(renderer.domElement);
+
+			loadCam(WIDTH, HEIGHT);
+			
+			
+			window.addEventListener('resize', function() {		
+				var WIDTH = window.innerWidth,
+				HEIGHT = window.innerHeight;
+				renderer.setSize(WIDTH, HEIGHT);
+				camera.aspect = WIDTH / HEIGHT;
+				camera.updateProjectionMatrix();
+			});
+			window.addEventListener("keyup", capture);
+
+			loadLights();
+
+			//initMap();
+			
+
+
+		}	
+			
+		function animate() {
+			requestAnimationFrame(animate);
+			renderer.render(scene, camera);
+			controls.update();
+			updateGUI();
+
+		}
+		
+		
+
+		</script>
+	</body>
+</html>

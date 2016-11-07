@@ -1,0 +1,23 @@
+{
+    "name" : "test",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "gradient",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersFill"
+            }
+        }
+    ],
+    "uniforms" : {
+
+									"screenWidth": { "type": "f", "value": "window.innerWidth" },
+                                    "screenHeight": { "type": "f", "value": "window.innerHeight" },
+                                    "uvMinGradientTexture": { "type": "v2", "value": "new THREE.Vector2(9000,0)" },
+                                    "uvRangeGradientTexture": { "type": "v2", "value": "new THREE.Vector2(8000,4000)" },
+                                    "gradientTexture":  { "type": "t", "value": "THREE.ImageUtils.loadTexture( 'textures/sea1.png')" },
+                                    "vertexColor": { "type": "v3", "value": "new THREE.Vector3( color.r, color.g, color.b )" }
+				}
+}

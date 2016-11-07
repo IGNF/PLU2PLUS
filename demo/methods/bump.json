@@ -1,0 +1,49 @@
+{
+    "name" : "bump",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "bump",
+        "GUI" : {
+            "visible" : false
+            }
+        },
+                {
+        "name" : "repeat",
+        "type" : "float",
+        "default" : 0.1,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        },
+        {
+        "name" : "bmap",
+        "type" : "string",
+        "default" : "./textures/brick_bump.jpg",
+        "GUI" : {
+            "visible" : true,
+            "list" : [ "./textures/brick_bump.jpg"]
+            }
+        },
+                {
+        "name" : "smap",
+        "type" : "string",
+        "default" : "./textures/brick_diffuse.jpg",
+        "GUI" : {
+            "visible" : true,
+            "list" : [ "./textures/brick_diffuse.jpg"]
+            }
+        }
+    ],
+    "uniforms" : {
+									"bmap": { "type": "t", "value" : "THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.bmap, {}, function(){});" },
+									"bumpScale": { "type": "f", "value" : 0.45 },
+									"smap": { "type": "t", "value" : "THREE.ImageUtils.loadTexture(couche.style.parameters.fill.parameters.smap, {}, function(){});" },
+									"shininess": { "type": "f", "value" : 20 },
+                                    "opacity": { "type": "f", "value": "couche.style.parameters.fill.opacite" }
+								}
+}

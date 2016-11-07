@@ -1,0 +1,47 @@
+{
+	"parameters": {
+		"camera": {
+			"type": "perspective",
+			"position": {
+				"x": -300,
+				"y": 425,
+				"z": 725
+			},
+			"near": 10,
+			"far": 100000,
+			"fov": 10,
+			"target": {
+				"x": -50,
+				"y": 30,
+				"z": 0
+			}
+		},
+		"fond": "#AADFF4",
+		"lights": [
+			{
+				"type": "ambient",
+				"color": "#ffffff",
+				"intensity": 0.8
+			},
+			{
+				"type": "directional",
+				"position": {
+					"x": -400,
+					"y": 100,
+					"z": 410
+				},
+				"color": "#ffffff",
+				"intensity": 1,
+				"shadow": {
+					"darkness": 1,
+					"near": 100,
+					"far": 1500,
+					"map": 8192,
+					"camera_size": 550,
+					"bias": -0.001
+				}
+			}
+		]
+	},
+	"couches": []
+}

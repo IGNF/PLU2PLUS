@@ -1,0 +1,67 @@
+Pour ajouter un nouveau shader de trait :
+
+1.Créer trois fichiers [nom_shader]_vert.glsl, [nom_shader]_pars_vert.glsl et [nom_shader]_frag.glsl et les placer dans le dossier "shader".
+
+Le fichier [nom_shader]_frag.glsl contient le fragment shader.
+Le fichier [nom_shader]_vert.glsl contient le potentiel complément au vertex shader ci-dessous, qui sera placé à l'endroit du +vertex+
+
+                                "void main()",
+									"{",
+									"gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);",
+									"vec4 Position2 = projectionMatrix *modelViewMatrix *vec4(position2,1.0);",
+
+										"vec2 normal = normalize((gl_Position.xy/gl_Position.w - Position2.xy/Position2.w) * resolution); // * 0.5",
+										"normal = uv.x * uv.y * vec2(-normal.y, normal.x);",
+
+										"if (length((gl_Position.xyz+Position2.xyz)/2.0)>25.0){gl_Position.xy += 25.0*(width/length((gl_Position.xyz+Position2.xyz)/2.0)) * gl_Position.w * normal * 2.0 / resolution;}",
+										"else {gl_Position.xy += width * gl_Position.w * normal * 2.0 / resolution;}"
+										+ vertex +
+									"}"
+
+Le fichier [nom_shader]_pars_vert.glsl contient le potentiel complément au variables déclarées ci-dessous, qui sera placé à l'endroit du +headVertex+
+
+									"attribute vec3  position2;",
+									"uniform   vec2  resolution;"
+									+headVertex+
+
+Il doit contenir un uniform width ou une constante de type "const float width = 40.0;"
+
+2.Créer un fichier [nom_shader].json et le placer dans le dossier "methods".
+
+Le fichier [nom_shader].json doit avoir une structure comme dans l'exemple suivant. Les "parameters" sont les paramètres pour lesquels créer des sliders dat.gui.
+Les "uniforms" sont ceux des fichiers glsl.
+
+{
+    "name" : "[nom_shader]",
+    "parameters" : [ 
+        {
+        "name" : "shader",
+        "type" : "string",
+        "default" : "[nom_shader]",
+        "GUI" : {
+            "visible" : true,
+            "list" : "defaults.listShadersStroke"
+            }
+        },
+        {
+        "name" : "repeat",
+        "type" : "float",
+        "default" : 0.1,
+        "GUI" : {
+            "visible" : true,
+            "min" : 0.01,
+            "max" : 1,
+            "step" : 0.01
+            }
+        }
+    ],
+    "uniforms" : {
+									"time": { "type": "f", "value" : 1.0 },
+					                "resolution": { "type" : "v2", "value": "new THREE.Vector2( window.innerWidth,  window.innerHeight)" },
+									"repeat": { "type": "f", "value": "couche.style.parameters.fill.parameters.repeat" },
+                                    "color": { "type": "v3", "value": "new THREE.Vector3( color.r, color.g,color.b )" }
+				}
+}
+
+3. Dans le fichier defaults.json, ajouter le nom du nouveau shader dans la liste "listShadersStroke" :
+"listShadersFill" : [ "test2", "sketchy_strokes", "[nom_shader]"]

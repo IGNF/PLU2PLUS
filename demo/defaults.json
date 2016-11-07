@@ -1,0 +1,14 @@
+{
+"shaderFill" : "hatching",
+"listShadersFill" : [ "test", "hatching", "shadertoy", "gradient"],
+"listShadersStroke" : [ "test2", "sketchy_strokes"],
+"listTexturesFill" : "[ 'brick.jpg', 'wall.jpg', 'roof.jpg', 'stone-wall.jpg', 'wall_green.jpg', 'hatch.jpg', , 'hatch_3.jpg', 'paper2.png', 'bricks.jpg']",
+"shaderStroke" : "sketchy_strokes",
+"image" : "paper2.png",
+"lightPosition" : {"x": 0,"y": 0,"z": -500},
+"scale" : {"min" : 0, "max" : 1, "step" : 0.01},
+"rotationX" : {"min" : 0, "max" : 6.28, "step" : 0.01},
+"positionX" : {"min" : -100, "max" : 100, "step" : 0.01},
+"positionY" : {"min" : -100, "max" : 100, "step" : 0.01},
+"positionZ" : {"min" : -20, "max" : 20, "step" : 0.01}
+}

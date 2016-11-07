@@ -1,0 +1,333 @@
+{	
+	"parameters" : {
+		"camera" : {
+			"type" : "perspective",
+			"position" : { "x" : -300, "y" : 425, "z": 725 },
+			"near" : 10,
+			"far" : 100000,
+			"fov" : 10,
+			"target" : { "x" : -50, "y" : 30, "z": 0 }
+		},
+		"fond" : "#AADFF4",
+		"lights" : [
+					{	
+				"type" : "ambient",
+				"color" : "#ffffff",
+				"intensity" : 0.8
+			},
+			{	
+				"type" : "directional",
+				"position" : { "x" : -400, "y" : 100, "z": 410 },
+				"color" : "#ffffff",
+				"intensity" : 1.0,
+				"shadow" : {
+					"darkness" : 1.0,
+					"near" : 100,
+					"far" : 1500,
+					"map" : 4096,
+					"camera_size" : 550,
+					"bias" : -0.001
+				}
+			}
+
+		]
+		
+	},
+	"couches": [
+		{
+			"id": "1",
+			"name": "Toits focus",
+			"URI": "./models/Roof_Hini_4.0_Slope_2.5.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Discret",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#ce7157",
+						"type": "shader",						
+						"parameters": {
+							"shader" : "hatching",
+							"id": "hatch_",
+							"repeat": 0.1,
+							"diffuse": 0.7
+						}
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#000000",
+						"type": "Invisible"
+					}
+				}
+			},
+			"order": 2
+		},
+		{
+			"id": "2",
+			"name": "Murs focus",
+			"URI": "./models/Wall_Hini_4.0_Slope_2.5.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Discret",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#006e33",
+						"type": "shader",						
+						"parameters": {
+							"shader" : "test",
+							"repeat" : 0.1
+						}
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#000000",
+						"type": "Sketchy",
+						"parameters": {
+							"shader" : "sketchy_strokes",
+							"image": "thick",
+							"width": 60.0
+						}
+					}
+				}
+			},
+			"order": 1
+		},
+		{
+			"id": "3",
+			"name": "Murs contexte",
+			"URI": "./models/BDTopoMurs.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Test",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#585887",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Tirets"
+					}
+				}
+			},
+			"order": 1
+		},
+		{
+			"id": "4",
+			"name": "Toits contexte",
+			"URI": "./models/BDTopoToit.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "Test2",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#9db679",
+						"type": "uni"
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			},
+			"order": 2
+		},
+		{
+			"id": "5",
+			"name": "Arbre 1",
+			"URI": "./models/2378_tree.obj",
+			"position": {
+				"displacement": {
+					"x": 30,
+					"y": -40,
+					"z": -15
+				},
+				"rotation": {
+					"x": 1.5708,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 0.01,
+					"y": 0.01,
+					"z": 0.01
+				}
+			},
+			"style": {
+				"name": "vegetation",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#ffffff",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/2378_tree.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 1,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			},
+			"order": 3
+		},
+		{
+			"id": "6",
+			"name": "Arbre 2",
+			"URI": "./models/tree.obj",
+			"position": {
+				"displacement": {
+					"x": 50,
+					"y": 0,
+					"z": -15
+				},
+				"rotation": {
+					"x": 1.5708,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 0.05,
+					"y": 0.05,
+					"z": 0.05
+				}
+			},
+			"style": {
+				"name": "vegetation",
+				"parameters": {
+					"fill": {
+						"opacite": 0.6708451991818318,
+						"color": "#247a1f",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/tree.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 0.99,
+						"color": "#15410c",
+						"type": "Sketchy",
+						"parameters": {
+							"shader" : "sketchy_strokes",
+							"image": "irregulier",
+							"width": 30
+						}
+					}
+				}
+			},
+			"order": 3
+		},
+		{
+			"id": "7",
+			"name": "Fond",
+			"URI": "./models/Parcelle.obj",
+			"position": {
+				"displacement": {
+					"x": 0,
+					"y": 0,
+					"z": -1.2
+				},
+				"rotation": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				},
+				"scale": {
+					"x": 1,
+					"y": 1,
+					"z": 1
+				}
+			},
+			"style": {
+				"name": "parcelle",
+				"parameters": {
+					"fill": {
+						"opacite": 0.99,
+						"color": "#7f7f7f",
+						"type": "texture",
+						"parameters": {
+							"URI": "./models/Parcelle.mtl"
+						}
+					},
+					"stroke": {
+						"opacite": 0.5,
+						"color": "#ffffff",
+						"type": "Invisible"
+					}
+				}
+			},
+			"order": 1
+		}
+	]
+}

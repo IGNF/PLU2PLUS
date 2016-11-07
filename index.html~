@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Sidonie Christophe">
+    <meta name="author" content="Mickaël Brasebin">
+    <link rel="shortcut icon" type="image/x-icon" href="img/logos/favicon.png" />
+
+    <title>Projet PLU++</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/languages.min.css" rel="stylesheet">
+    <link href="css/plu2-plus.css" rel="stylesheet">
+	<link href="css/animate.css" rel="stylesheet">
+	<link href="js/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </head>
+  <body>
+
+	<section  id="accueil">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+     
+		<div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand languageFr" href="#" style="margin-left: 7px;margin-right: 7px;">Projet PLU++</a>
+		  <a class="navbar-brand languageEn" href="#" style="margin-left: 7px;">PLU++ Project</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="languageFr" href="#accueil">Accueil</a></li>
+			<li><a class="languageFr" href="#presentation">Objectifs</a></li>
+            <li><a class="languageFr" href="#about">Partenaires</a></li>
+			<li><a class="languageFr" href="#galerie">Galerie</a></li>
+			<li><a class="languageFr" href="#publis">Publications</a></li>
+            <li><a class="languageFr" href="#contact">Contact</a></li>
+			<li><a class="languageEn" href="#accueil">Home</a></li>
+			<li><a class="languageEn" href="#presentation">Objectives</a></li>
+            <li><a class="languageEn" href="#about">Team</a></li>			
+			<li><a class="languageEn" href="#galerie">Gallery</a></li>
+			<li><a class="languageEn" href="#publis">Publications</a></li>
+            <li><a class="languageEn" href="#contact">Contact</a></li>			
+          </ul>
+		  <form class="navbar-form pull-left hidden-sm">
+          <input type="text" style="width:150px" class="input-small languageFr" placeholder="Recherche">
+		  <input type="text" style="width:150px" class="input-small languageEn" placeholder="Research">
+          <button type="submit" class="btn btn-primary btn-xs languageFr"><span class="glyphicon glyphicon-search"></span> Chercher</button>
+		  <button type="submit" class="btn btn-primary btn-xs languageEn"><span class="glyphicon glyphicon-search"></span> Search</button>
+		  </form>
+            
+          <button type="button" class="pull-right btn btn-primary btn-xs languageEn changeLangFr">
+            <span class="lang-xs lang-lbl" lang="fr"></span>
+          </button>
+          <button type="button" class=" pull-right btn btn-primary btn-xs languageFr changeLangEn">
+            <span class="lang-xs lang-lbl" lang="en"></span>
+          </button>
+          <!--<a href="#" class="languageEn changeLangFr"><span class="lang-sm lang-lbl" lang="fr">TOTO</span></a>
+		  <a href="#" class="languageFr changeLangEn">
+          <img src  ="http://flags.redpixart.com/img/united_kingdom_preview.gif" alt="" style="float: right;padding-top: 15px;" /><span class="lang-sm lang-lbl" lang="fr">TOTO</span></a>-->
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+	</section>
+    
+<div class="jumbotron">
+	<!-- LOGOS -->
+<div class="container">   
+   <div class="row">
+		<div class="col-md-12">
+		<div class="col-xs-4 col-md-1" id="logo-main"><img class="center-block" src="img/logos/logo_plu2plus.png" alt="logo"></div>
+		<!--<div class="col-xs-4 col-md-3" id="IMY"><img class="center-block" src="img/logos/IMY.png"></div>-->
+		<div class="col-xs-4 col-md-6" id="logo-ANR-funded"><img class="center-block" src="img/logos/log-Paris-est.png"></div>
+		</div>
+	</div>
+	</div>
+		<!--</div>-->
+		<!-- ACTUS -->
+        <div class="container">
+			<p class="languageFr">6-9/12/2016: <strong>Présentation d'un poster <a href="#"> Projet PLU++ : vers un Plan Local d’Urbanisme plus intelligible et plus participatif </a> à la conférence <a href="https://sageo2016.sciencesconf.org/">Sagéo 2016 </a> à Nice. </p>
+			<p class="languageEn">6-9/12/2016: <strong>Presentation of a poster <a href="#"> Projet PLU++ : vers un Plan Local d’Urbanisme plus intelligible et plus participatif </a> during  <a href="https://sageo2016.sciencesconf.org/">Sagéo 2016 </a> inNice. </p>
+			<p class="languageFr">20/10/2016: <strong>Présentation <a href="http://www.slideshare.net/MBrasebin/schristophe3dgeoinfo2016"> 3D geovisualization & stylization to manage comprehensive and participative local urban plans </a> à la conférence <a href="http://3dathens2016.gr/site/">10e conférence 3D GeoInfo </a> à Athènes. </p>
+			<p class="languageEn">20/10/2016: <strong>Presentation <a href="http://www.slideshare.net/MBrasebin/schristophe3dgeoinfo2016"> 3D geovisualization & stylization to manage comprehensive and participative local urban plans</a> during the <a href="http://3dathens2016.gr/site/">10th 3D GeoInfo conference</a> in Athens. </p>
+			<p class="languageFr">20/10/2015: <strong>Présentation <a href="http://fr.slideshare.net/MBrasebin/projet-plu"> du projet PLU++</a> aux <a href="http://www.fnau.org/reseau-agences/manifestations-rencontres.asp?annee=2015">36e rencontres des agences d'urbanisme</a> à Lyon. </p>
+			<p class="languageEn">20/10/2015: <strong>Presentation of <a href="http://fr.slideshare.net/MBrasebin/projet-plu"> PLU++ project</a> during the <a href="http://www.fnau.org/reseau-agences/manifestations-rencontres.asp?annee=2015">36th French urban planners meeting</a> in Lyon. </p>
+		</div> <!-- fin container -->
+    
+		<div class="container">
+	
+		</div> <!-- fin container -->
+
+		<div class="container">
+            <div class="row">
+                <div class="portfolio-items isotopeWrapper clearfix" id="3">
+
+				<!-- MAPS -->
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR_poster_continuum_CMJN.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Continuum entre une carte et une photographie aérienne</a></h5>
+											<h5 class="languageEn"><a href="#">Continuum between a map and an aerial photograph</a></h5>
+											<a href="img/galerie/capture_JR_poster_continuum_CMJN.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+							
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR16_aiguille_moine_A1-CMYK.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Carte de l'aiguille du Moine</a></h5>
+											<h5 class="languageEn"><a href="#">Aiguille du Moine map</a></h5>
+											<a href="img/galerie/capture_JR16_aiguille_moine_A1-CMYK.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+															
+										</div>
+									</div>
+								</div>
+                            </article>							
+							
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR16_cassini-CMYK.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Carte Cassini</a></h5>
+											<h5 class="languageEn"><a href="#">Cassini map</a></h5>
+											<a href="img/galerie/capture_JR16_cassini-CMYK.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+							
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR16_carte_geoviz_littoral-CMYK.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Géovisualisations du littoral</a></h5>
+											<h5 class="languageEn"><a href="#">Geovisualizations of coastal area</a></h5>
+											<a href="img/galerie/capture_JR16_carte_geoviz_littoral-CMYK.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+							
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR2016_topostyle.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Le style topographique, voyage dans le temps et dans l'espace</a></h5>
+											<h5 class="languageEn"><a href="#">Topographic style, travel in time and space</a></h5>
+											<a href="img/galerie/capture_JR2016_topostyle.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+							
+							<article class="col-md-4 isotopeItem cartes">
+								<div class="portfolio-item">
+									<img src="img/galerie/capture_JR2016_aquarelle_CMYK.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="#">Carte aquarelle</a></h5>
+											<h5 class="languageEn"><a href="#">Watercolor map</a></h5>
+											<a href="img/galerie/capture_JR2016_aquarelle_CMYK.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+						</div>
+					</div>
+				</div>
+		<p class="languageFr"><strong>PLU++ est un projet collaboratif de recherche visant à faciliter la concertation autour des Plans Locaux d'Urbansime en menant une réflexion sur l'utilisation d'outils de géo-visualisation 3D adaptés au contexte et aux usagers. Le projet est mené par l'équipe COGIT de l'IGN et l'équipe SUN de l'EIVP et est financé  par la COMUE Paris-Est et le CNRS dans le cadre de l'appel conjoint à Projets Exploratoires Premier Soutien (PEPS) Interdisciplinaires 2015.
+</strong> <br>
+		<p class="languageEn"><strong>PLU++ is a collaborative project that aims to ease public participation about Local Urban Plans by proposing adapted 3D geo-vizualisation. The projet is led by the COGIT team from IGN France and by the SUN team from EIVP. It is funded by the COMUE Paris-Est and the CNRS in the context of the call for project PEPS.
+</strong> <br>
+			<!--	<div class="row mar-bot50  languageFr">
+		  <a href="pdf/Mapstyle_Dumenieu_JR2016.pdf" class="fancybox"> Présentation <i>Extension des standards de symbolisation pour le rendu cartographique expressif</i>, B. Duménieu, Journées de la Recherche IGN 2016</a><br>
+		  <a href="pdf/Mapstyle_Christophe_JR2015.pdf" class="fancybox">Présentation du projet ANR MapStyle (2012 - 2016), Rendus stylisés en cartographie, S. Christophe, Journées de la Recherche IGN 2015</a>
+		</div>
+        <p class="languageFr"><a class="btn btn-primary btn-lg" href="#presentation">En savoir plus</a></p>
+
+		<p class="languageEn"><strong>MapStyle is a collaborative research project aiming at improving cartographic renderings, based on computer graphics, art and map design knowledge. The project is leaded by IGN France (COGIT and MATIS Labs) with INRIA (Maverick team) and IRIT (Vortex team). The project is funded by the French national research agency (ANR-12-CORD-0025) for 36 months (2012-2016).</strong></p>    
+    	<div class="row mar-bot50 languageEn">
+            <a href="pdf/Mapstyle_Dumenieu_JR2016.pdf" class="fancybox"> Slides <i>Extension des standards de symbolisation pour le rendu cartographique expressif</i>, B. Duménieu, Research Days IGN 2016</a><br>
+		  <a href="pdf/Mapstyle_Christophe_JR2015.pdf" class="fancybox">Slides ANR project MapStyle (2012 - 2016), Stylized maps in cartography, S. Christophe, Research Days IGN 2015</a>
+		</div>
+    
+		<p class="languageEn"><a class="btn btn-primary btn-lg" href="#presentation">More</a></p>-->
+		
+		
+		<!--</div>-->
+
+    </div><!-- /.container -->
+</div><!-- /.jumbotron -->
+
+	<!-- spacer section:logos -->
+	<section id="logos" class="section mar-top40 mar-bot40" data-stellar-background-ratio="0.8">
+	<div class="container">
+		<div class="row">
+            <ul class="list-inline">
+                   <li><a href="http://recherche.ign.fr/labos/cogit/accueilCOGIT.php"><img class="img_logo img-responsive" src="img/logos/logo_cogit.png" alt="COGIT"></a></li>
+                <li><a href="http://www.eivp-paris.fr/"><img class="img_logo img-responsive" src="img/logos/logo_eivp.png" alt="EIVP"></a></li>
+                <li><a href="http://www.ign.fr/"><img class="img_logo img-responsive" src="img/logos/LOGO_IGN_p.png" alt="IGN"></a></li>
+                <li><a href="http://www.univ-paris-est.fr/fr"><img class="img_logo img-responsive" src="img/logos/log-Paris-est.png" alt="Paris-Est"></a></li>
+            </ul>
+	</div>
+	</section>
+	<section class="section mar-top50 mar-bot50"></section>
+
+	<!-- section presentation -->
+	<section id="presentation" class="section appear clearfix">
+		<div class="container" style="text-align:justify;">
+			<div class="row mar-bot50">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="section-header">
+						<h2 class="section-heading animated languageFr" data-animation="bounceInUp">Présentation du projet</h2>
+						<h2 class="section-heading animated languageEn" data-animation="bounceInUp">Project description</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row mar-bot50 languageFr">
+Les Plans Locaux d’Urbanisme (PLU), qui font également l’objet de concertations publiques obligatoires, sont des documents d’urbanisme peu aisés à comprendre de prime abord. La difficulté d’appréhension de ces documents par des non-experts a tendance à inhiber les échanges lors de la concertation car les participants n’ont pas tous les connaissances et compétences nécessaires pour comprendre l’implication de ces règlements pour un territoire donné. Si quelques rares outils numériques (cartographie et visualisation 3D) existent, ils ne permettent pas d’accompagner efficacement les débats car n’offrent pas une visualisation systématique de leurs implications, ne donnent pas la possibilité de naviguer entre plusieurs propositions notamment émises durant la concertation et ne sont pas toujours conçus en lien avec des praticiens et des expérimentations terrains. Dans ce contexte, l’objectif de ce projet est de proposer des méthodes et des outils permettant de visualiser de manière efficace et pédagogique sur un territoire l’implication d’un règlement et à termes de motiver la participation citoyenne. <br /><br />
+
+
+Pour parvenir à ce résultat, nous proposons de simuler des implantations de bâtiments respectant le règlement et de les visualiser. Cette représentation visuelle explicite de manière plus intelligible et plus pédagogique le règlement. Des capacités d’interaction avec cette représentation seront également expérimentées de manière à faciliter les contre-propositions et à mettre en avant les incidences des scénarios proposés. Pour atteindre ces objectifs, des chercheurs des différentes disciplines s’impliquent dans des expérimentations pour confronter leurs résultats entre eux, avec des praticiens et avec d’autres chercheurs, mais également avec les citoyens en situation pour ainsi enrichir la démarche globale du projet.
+
+<br /><br /><br /><br />
+Projets connexes :<br /><br />
+- <a href="https://github.com/IGNF/simplu3D/">SimPLU3D</a> pour la simulation de configuration bâties. <br /><br />
+- <a href="http://http://mapstyle.ign.fr/">Projet ANR MapStyle</a> sur les méthodes de rendus expressives pour styliser des objets cartographiques.
+
+
+
+			</div>
+			<div class="row mar-bot50 languageEn">
+Local Urban Plans (PLU in French) are urban documents that are difficult to understand. As for public participation is mandatory for the elaboration of such documents, it is difficult for non-expert people to participate as it is difficult for them to assess the influence of PLU on a given territory. If some tools to ease participation exist (cartography and 3D geo-visualisation), they do not allow to efficiently support the discussions as they do not show a systematic assessment of this influence, they do not offer the possibility to navigate between different discussed scenarios and they are not always co-constructed with the practionners by terrain expriments. In this context, the aim of this project is to propose methods and tools to efficiently visualize the influence of a PLU in order to motivate public participation. <br /><br />
+
+
+In order to reach this objective, we propose to simulate built configurations that respect these rules and to visualize them. This type of representation explicits the influence of the regulation. Some methods of interaction with this representation will be tested in order to offer the possibility to create counterproposal and to highlight the influence of evaluated scenarios. Researchers from different domains work together to lead experiments in order to confront their results, with practitionners and other researchers. The global aim is to propose some good practices to enrich geo-visualization based public participation.
+
+<br /><br /><br /><br />
+Related projects :<br /><br />
+- <a href="https://github.com/IGNF/simplu3D/">SimPLU3D</a> library for the simulation of 3D built configurations. <br /><br />
+- <a href="http://http://mapstyle.ign.fr/">MapStyle project</a> for rendering methods to stylize geographic features.
+
+
+			</div>			
+		</div>
+	</section>
+
+	<!-- spacer section:mix -->
+	<section id="mix" class="section mar-top40 mar-bot40" data-stellar-background-ratio="0.8"></section>
+	<section class="section mar-top40 mar-bot40"></section>
+
+	<!-- section about -->
+	<section id="about" class="section appear clearfix">
+		<div class="container" style="text-align:justify;">
+			<div class="row mar-bot50">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="section-header">
+						<h2 class="section-heading animated languageFr" data-animation="bounceInUp">Consortium</h2>
+						<h2 class="section-heading animated languageEn" data-animation="bounceInUp">About</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h3 class="panel-title">IGN - Equipe COGIT</h3>
+						</div>
+						<div class="panel-body" >
+							<p class="languageFr" >Le laboratoire <a href="http://recherche.ign.fr/labos/cogit/accueilCOGIT.php">COGIT</a> effectue des recherches sur l’intégration, la visualisation et l’analyse des données géographiques vectorielles. Un de ses axes de recherche concerne particulièrement les représentations cartographiques 
+							réalisées à partir de ces données.</p>
+							
+							<p class="languageEn"><a href="http://recherche.ign.fr/labos/cogit/english/accueilCOGIT.php">COGIT</a> Laboratory leads research related to integration, diffusion, representation, and analysis 
+							of geographic information, and particularly vector data. </p>
+						
+							<ul>
+								<li class="languageFr"><a href="http://recherche.ign.fr/labos/cogit/cv.php?prenom=Mickael&nom=Brasebin" class="list-group-item">Mickaël Brasebin</a></li>
+								<li class="languageEn"><a href="http://recherche.ign.fr/labos/cogit/english/cv.php?prenom=Mickael&nom=Brasebin" class="list-group-item">SMickaël Brasebin</a></li>
+								<li class="languageFr"><a href="http://recherche.ign.fr/labos/cogit/cv.php?prenom=Sidonie&nom=Christophe" class="list-group-item">Sidonie Christophe</a></li>
+								<li class="languageEn"><a href="http://recherche.ign.fr/labos/cogit/english/cv.php?prenom=Sidonie&nom=Christophe" class="list-group-item">Sidonie Christophe</a></li>
+								<li class="languageFr"><a href="http://recherche.ign.fr/labos/cogit/"  class="list-group-item">Anouk Vinesse, stagiaire PLU++</a></li>
+								<li class="languageEn"><a href="http://recherche.ign.fr/labos/cogit/english/" class="list-group-item">Anouk Vinesse, stagiaire PLU++</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-danger">
+						<div class="panel-heading">
+							<h3 class="panel-title">EIVP - Équipe Sun</h3>
+						</div>
+						<div class="panel-body">
+							<p class="languageFr"><a href="http://www.eivp-paris.fr/index.php/La_recherche?idpage=6">L'EIVP</a> met en place une recherche appliquée autour de la ville et des enjeux techniques et environnementaux liés à l'aménagement urbain et à l'utilisation des techniques urbaines, dans le cadre de projets multi-partenaires. Ils s'inscrivent dans les projets de recherche nationaux ou dans le cadre de partenariat avec des sociétés de services urbains et des laboratoires de recherche en France ou à l'étranger...</p>
+							<p class="languageFr">Les participants au projet sont :</p>
+							<p class="languageEn"> The <a href="http://www.eivp-paris.fr/index.php/La_recherche?idpage=6">EIVP</a>  implements applied research around the city and the technical and environmental issues related to urban development and use of urban techniques, as part of multi-partner projects. They are part of the national research projects or in the framework of partnership with urban services companies and research laboratories in France or abroad. </p>
+							<p class="languageEn">Project members:</p>
+							<ul>
+								<li><a href="http://www.jacquinod.fr/dokuwiki/doku.php?id=start/" class="list-group-item">Florence Jacquinod</a></li>
+								<li><a href="http://www.eivp-paris.fr/index.php/La_recherche?idpage=6" class="list-group-item">Hortense Mahon, stagiaire PLU++</a></li>
+
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+	
+			</div>
+		</div>
+	</section>
+
+	<!-- spacer section:styletopo -->
+	<section id="styletopo" class="section mar-top40 mar-bot40" data-stellar-background-ratio="0.8"></section>
+	<section class="section mar-top40 mar-bot40"></section>
+
+	<!-- section galerie -->
+	<section id="galerie" class="section appear clearfix">
+		<div class="container">
+			<div class="row mar-bot50">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="section-header languageFr">
+						<h2 class="section-heading animated" data-animation="bounceInUp">Galeries</h2>
+						<p>Galerie de cartes, d'images, de vidéos et de présentations illustrant les résultats du projet.</p>
+					</div>
+					<div class="section-header languageEn">
+						<h2 class="section-heading animated" data-animation="bounceInUp">Galleries</h2>
+						<p>Gallery of maps, pictures, videos and presentations illustrating project results.</p>
+					</div>
+				</div>
+			</div>
+
+            <div class="row">
+                <nav id="filter" class="col-md-12 text-center">
+                    <div class="btn-group">
+						<!--<a href="#cartes" class="btn btn-default btn-sm languageFr" data-filter=".cartes">Cartes</a></li>-->
+                        <a href="#images" class="btn btn-default current btn-sm languageFr" data-filter=".images">Images</a></li>
+                        <a href="#videos"  class="btn btn-default btn-sm languageFr" data-filter=".videos" >Vidéos</a></li>
+			<a href="#presentations"  class="btn btn-default btn-sm languageFr" data-filter=".presentations" >Présentations</a></li>
+						
+						<!--<a href="#cartes" class="btn btn-default btn-sm languageEn" data-filter=".cartes">Maps</a></li>-->
+						<a href="#images" class="btn btn-default current btn-sm languageEn" data-filter=".images">Pictures</a></li>
+                        <a href="#videos"  class="btn btn-default btn-sm languageEn" data-filter=".videos" >Videos</a></li>
+						<a href="#presentations"  class="btn btn-default btn-sm languageEn" data-filter=".presentations" >Slides</a></li>
+                    </div>
+                </nav>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="portfolio-items isotopeWrapper clearfix" id="3">
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/discret_pr_opaque_sans_aretes.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Rendu 3D avec contexte photo-réaliste et simulations discrètes</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">3D rendering with photo-realistic context and discreet styled simulations</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/arbres.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Ajout d'arbres et rendu crayonné pour les toits des bâtiments</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Addition of tree models and pencil rendering for roof surfaces</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/Aretes_sketchy.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Arêtes sketchy</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Sketchy edges</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/contexte_BDTopoblanc.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Contexte discret</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">White context</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/hatching.PNG" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Rendu crayonné pour un bâtiment</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Pencil rendering for a building</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/red.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Bâtiment transparent avec arêts sketcy</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Transparent building with sketchy edges</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/red.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Délimitation des étages par la symbologie</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Symbologie-based floors representation</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+
+					<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/violet.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+											<h5 class="languageFr"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Rendu sketchy violet</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/discret_pr_opaque_sans_aretes.png">Purple sketchy rendering</a></h5>
+											<a href="img/gallerie/discret_pr_opaque_sans_aretes.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+										</div>
+									</div>
+								</div>
+                            </article>
+							
+							<article class="col-md-4 isotopeItem images">
+								<div class="portfolio-item">
+									<img src="img/gallerie/typique_pr_toit_tuiles_sans_aretes_fonce.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+
+											<h5 class="languageFr"><a href="img/gallerie/typique_pr_toit_tuiles_sans_aretes_fonce.png">Représentation de simulations texturées avec un contexte texturé</a></h5>
+											<h5 class="languageEn"><a href="img/gallerie/typique_pr_toit_tuiles_sans_aretes_fonce.png">3D rendering with textured simluations in a textured context</a></h5>
+
+											<a href="img/gallerie/typique_pr_toit_tuiles_sans_aretes_fonce.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+															
+										</div>
+									</div>
+								</div>
+                            </article>							
+							
+		
+
+	
+							<!-- VIDEOS-->
+							<article class="media hidden col-md-4 isotopeItem videos">
+								<div class="flex-video widescreen">
+									<iframe name="Génération d'un bâtiment avec SimPLU3D" width="100%" height="100%" src="https://www.youtube.com/embed/dH9woKexsVw"" frameborder="0" allowfullscreen></iframe>
+								</div>
+							</article>
+						<article class="media hidden col-md-4 isotopeItem videos">
+								<div class="flex-video widescreen">
+									<iframe name="Génération d'un set de bâtiments sur une parcelle avec SimPLU3D" width="100%" height="100%" src="https://www.youtube.com/embed/LwsPW0rcB44" frameborder="0" allowfullscreen></iframe>
+								</div>
+							</article>
+
+							
+							<!-- SLIDES -->
+							<article class="media hidden col-md-4 isotopeItem presentations">
+								<div class="flex-video widescreen">
+				<iframe src="http://fr.slideshare.net/slideshow/embed_code/key/xwV0Ki6GdNJeM9" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+								</div>
+							</article>
+
+						<article class="media hidden col-md-4 isotopeItem presentations">
+								<div class="flex-video widescreen">
+				<iframe src="http://www.slideshare.net/slideshow/embed_code/key/o9y7y5B1bpqhl9" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+								</div>
+							</article>
+
+					
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+	<!-- spacer section:style -->
+	<section id="style" class="section mar-top40 mar-bot40" data-stellar-background-ratio="0.8"></section>
+	<section class="section mar-top40 mar-bot40"></section>
+
+	<!-- section publications  -->
+	<section id="publis" class="section appear clearfix">
+
+
+
+		<div class="container" style="text-align:justify;">
+		<div class="row mar-bot50">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="section-header">
+						<h2 class="section-heading animated" data-animation="bounceInUp">Publications</h2>
+						<p class="languageFr">Liste des publications du projet.</p>
+						<p class="languageEn">List of publications of the project.</p>
+					</div>
+				</div>
+
+<div class="row">
+				<div class="col-md-12">
+		
+	
+						<div class="panel-body">
+							<ul>
+								<li class="bib">
+<em>M. Brasebin, S. Christophe, F. Jacquinod, A. Vinesse, and H. Mahon</em>, 2016, <a href="http://www.isprs-ann-photogramm-remote-sens-spatial-inf-sci.net/IV-2-W1/83/2016/">3D geovisualization & stylization to manage comprehensive and participative local urban plans</a>, ISPRS Ann. Photogramm. Remote Sens. Spatial Inf. Sci., IV-2-W1, 83-91, doi:10.5194/isprs-annals-IV-2-W1-83-2016.						
+								</li>
+								<li class="bib">
+<em>M. Brasebin, S. Christophe, F. Jacquinod, A. Vinesse, and H. Mahon</em>, 2016, Projet PLU++ : vers un Plan Local d’Urbanisme plus intelligible et plus participatif, Actes du Colloque International de Géomatique et d'Analyse Spatiale (SAGEO 2016),  6 - 9 décembre 2016, Nice, France
+								</li>
+							</ul>
+						</div>
+
+			</div>
+</div>
+			<!-- 		<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3  class="panel-title languageFr">Articles de revue</h3>
+							<h3  class="panel-title languageEn">Journal articles</h3>
+						</div>
+						<div class="panel-body">
+							<ul>
+								<li class="bib">Masse A., Christophe S. (2016) Améliorer la perception du réalisme dans la géovisualisation du littoral - utilisation de données spatio-temporelles hétérogènes. <em>Revue Internationale de Géomatique (RIG), revue spécial Conférence SAGEO 2015 (accepté)</em>
+								
+								</li>
+								
+								<li class="bib">Ory  J., Christophe S., Fabrikant S.I., Bucher B. (2015) <a class="bib" href="http://www.tandfonline.com/doi/abs/10.1080/00087041.2015.1119459">How do map readers recognize a topographic mapping style?</a> <em>The Cartographic Journal</em>, 52(2). pp.193-203. DOI:10.1080/00087041.2015.1119459
+									<div class="pubLink">
+										<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/Ory_etal_2015.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+										<a href="http://fr.slideshare.net/jrmieo123/oryetaliccrio2015" class="imgLink"> Slides</a>
+									</div>
+								</li>
+								
+								<li class="bib">Christophe S., Hoarau C. (2013) <a class="bib" href="http://www.cartographicperspectives.org/index.php/journal/article/view/cp73-christophehoarau">Expressive Map Design Based on Pop Art: Revisit of Semiology of Graphics?</a>, <em>Cartographic Perspectives</em>, Volume 73, 2013
+									<div class="pubLink">
+										<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/christopheHoarau13.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+										<a href="http://www.cartographicperspectives.org/index.php/journal/article/view/cp73-christophehoarau" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title languageFr">Actes de conférence</h3>
+							<h3 class="panel-title languageEn">Conference papers</h3>
+						</div>
+						<div class="panel-body" id="pub-confpapers">
+							<ul>         
+								<li class="bib"> Christophe S., Dumenieu B., Turbet J., Hoarau C., Mellado N., Ory J., Loi H., Masse A., Arbelot B., Vergne R., Brédif M., Hurtut T., Thollot J., Vanderhaeghe D. (2016) (Accepted). <a class="bib" href="#">Map Style Formalization: rendering techniques extension for map design</a>, NPAR '16: Proceedings of the 14th International Symposium on Non-Photorealistic Animation and Rendering, 7–9 May 2016, Lisbon, Portugal.
+									<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/ChristopheEtAl2016.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span> 
+									<a href="https://hal.archives-ouvertes.fr/hal-01317403/document"> <img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									</div>
+								</li>
+                                
+								<li class="bib"> Hoarau, C. and Christophe, S. (2015) <a class="bib" href="http://www.isprs-ann-photogramm-remote-sens-spatial-inf-sci.net/II-3-W5/507/2015/isprsannals-II-3-W5-507-2015.pdf">Color and Texture Interpolation Between Orthoimagery and Vector Data</a>, ISPRS Ann. Photogramm. Remote Sens. Spatial Inf. Sci., II-3/W5, 507-514, doi:10.5194/isprsannals-II-3-W5-507-2015, 2015.
+									<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/HoarauChristophe2015.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+								
+									<a href="https://www.youtube.com/watch?v=OzlMcKwFRRs"><img src="img/icons/youtube.png" height="16" alt="Full Access" title="Full Access"></a>
+									<a href="http://www.isprs-ann-photogramm-remote-sens-spatial-inf-sci.net/II-3-W5/507/2015/isprsannals-II-3-W5-507-2015.pdf"> <img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									<a href="http://www.slideshare.net/GeoVIS15/color-and-textures-interpolation-for-homogeneous-sliding-between-orthoimagery-and-vector-data-charlotte-hoarau"> <img src="img/icons/slideshare.png" height="16" alt="Full Access" title="Full Access"></a>
+									</div>
+								</li>
+								<li class="bib"> Masse, A. and Christophe, S. (2015) <a class="bib" href="http://www.int-arch-photogramm-remote-sens-spatial-inf-sci.net/XL-3-W3/509/2015/isprsarchives-XL-3-W3-509-2015.pdf">Homogeneous geovisualization of costal areas from heterogeneous spatio-temporal data</a>, Int. Arch. Photogramm. Remote Sens. Spatial Inf. Sci., XL-3/W3, 509-516, doi:10.5194/isprsarchives-XL-3-W3-509-2015, 2015.
+									<div class="pubLink">
+										<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/MasseChristophe2015.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+										
+										<a href="https://youtu.be/DhZP6XjCukk"><img src="img/icons/youtube.png" height="16" alt="Full Access" title="Full Access"></a>
+										<a href="http://www.int-arch-photogramm-remote-sens-spatial-inf-sci.net/XL-3-W3/509/2015/isprsarchives-XL-3-W3-509-2015.pdf"> <img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+										<a href="http://www.slideshare.net/GeoVIS15/geovisualization-of-coastal-areas-from-heterogeneous-spatiotemporal-data-antoine-masse"> <img src="img/icons/slideshare.png" height="16" alt="Full Access" title="Full Access"></a>
+									</div>
+								</li>
+								<li	id="geovis" class="bib"> Masse, A., et S. Christophe. (2015) <a class="bib" href="http://ceur-ws.org/Vol-1535/paper-11.pdf">Visualisation homogène du littoral à partir de données géographiques hétérogènes spatio-temporelles</a>, <em>Actes du Colloque International de Géomatique et d'Analyse Spatiale (SAGEO 2015).</em>
+									<div class="pubLink">
+										<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/MasseChristophe2015b.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+										<a href="http://ceur-ws.org/Vol-1535/paper-11.pdf" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>									
+									</div>
+								 
+								<li id="cassini" class="bib"> Christophe S., Hoarau C., Boulanger L., Turbet J., Vanderhaeghe D. (2015) <a class="bib" href="http://icaci.org/files/documents/ICC_proceedings/ICC2015/papers/10/1012.html">Automatic rendering of a Cassini style</a>, 
+								<em>27th International Cartographic Conference (ICC'15), Rio de Janeiro, Brasil</em>. (abstract)
+								<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/christophecassini15.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="http://icaci.org/files/documents/ICC_proceedings/ICC2015/papers/10/1012.html" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									<a href="http://fr.slideshare.net/mamywata/mapstyle-automatic-rendering-of-a-cassini-style" class="imgLink"> Slides</a>
+								</div>
+								</li>
+								<li class="bib"> Ory J., Christophe S., Fabrikant S.I., Bucher B. (2014) <a class="bib" href=" ">Caractérisation visuelle d'un style topographique</a>, <em>Actes du Colloque International de Géomatique et d'Analyse Spatiale (SAGEO 2014).</em>
+								<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/Ory_etal_2014.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="http://www.geo.uzh.ch/~sara/pubs/OryChristopheFabrikantBucher_SAGEO14.pdf" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									<a href="http://fr.slideshare.net/jrmieo123/2014-sageo-ory" class="imgLink"> Slides</a>
+								</div>
+								</li>
+								<li class="bib">Hoarau C., Christophe S., Mustière S. (2015) <a class="bib" href=" ">Sliding from imagery realism to topographic abstraction</a>, <em>27th International Cartographic Conference (ICC'15), Rio de Janeiro, Brasil. (abstract)</em>
+									<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/HoarauEtAl2015.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="http://icaci.org/files/documents/ICC_proceedings/ICC2015/papers/2/fullpaper/T2-123_1428055595.pdf" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+									<a href="http://fr.slideshare.net/CharlotteHoarau/sliding-from-imagery-realism-to-topographic-abstraction" class="imgLink"> Slides</a>
+									</div>
+								</li>
+								<li class="bib">Hoarau C., Christophe S., Mustiere S. (2013) <a class="bib" href="http://icaci.org/files/documents/ICC_proceedings/ICC2013/_extendedAbstract/185_proceeding.pdf">Mixing, blending, merging or scrambling topographic maps and orthoimagery in geovisualizations ?</a> <em>XVIth International Cartographic Conference (ICC 2013), Dresden, Germany</em>.
+									<div class="pubLink">
+										<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/Hoarau_etal_2013.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+										<a href="https://www.google.fr/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&ved=0CCwQFjACahUKEwiV4OOtvZLIAhXFWRoKHROmBCM&url=http%3A%2F%2Frecherche.ign.fr%2Flabos%2Futil_basilic%2FpublicDownload.php%3Fid%3D2838&usg=AFQjCNGLnx3ORbSjauBE2JK3uz1r4H7tYw&sig2=vP37hO6zBZ5egcDvDT4YpA&cad=rja" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+										<a href="http://fr.slideshare.net/CharlotteHoarau/icc-2013-mixing-blending-merging-or-scrambling-topographic-maps-and-orthoimagery-in-geovisualization" class="imgLink"> Slides</a>
+									</div>
+								</li>	
+								<li	id="hugo" class="bib"> Loi H., Hurtut T., Vergne R., Thollot J. (2013) <a class="bib" href="https://hal.inria.fr/hal-00857482/document">Discrete Texture Design Using a Programmable Approach</a>, <em>SIGGRAPH Talks, 2013.</em>
+								<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/LoiEtAl2013.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="http://hal.inria.fr/hal-00857482/en" class="imgLink"><img src="img/icons/halinria.png" height="10" alt="HAL-INRIA" title="HAL-INRIA"></a>
+									<a href="https://hal.inria.fr/hal-00857482/document" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>		
+								</div>
+							</ul>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title languageFr">Rapports de recherche</h3>
+							<h3 class="panel-title languageEn">Research Reports</h3>
+						</div>
+						<div class="panel-body">
+							<ul>
+								<li	class="bib"> Loi H., Hurtut T., Vergne R., Thollot J. (2015) <a class="bib" href="https://hal.inria.fr/hal-01141869/document">A Programmable Model for Designing Stationary 2D Arrangements</a>, <em>[Research Report] RR-8713, Inria - Research Centre Grenoble – Rhône-Alpes; INRIA. 2015.</em>
+								<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/LoiEtAl2015.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="https://hal.inria.fr/hal-01141869" class="imgLink"><img src="img/icons/halinria.png" height="10" alt="HAL-INRIA" title="HAL-INRIA"></a>
+									<a href="https://hal.inria.fr/hal-01141869/document" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>		
+								</div>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title languageFr">Communications orales</h3>
+							<h3 class="panel-title languageEn">Communications</h3>
+						</div>
+						<div class="panel-body">
+							<ul>
+								<li class="bib"> Masse, A., Christophe, S. (2016). <a class="bib" href="#">Geovisualisation of animated tides in coastal area with an OpenSource
+                                    OpenGL platform</a>, Agile 2016 Workshop 'Code Loves Maps: Cartographically Oriented Programming Environments', 14 June 2016, Helsinki, Finland (Position Paper).
+									<!--<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/ChristopheEtAl2016.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span> 
+									
+								</li>                                       
+								<li class="bib"> Duménieu, B., Christophe, S. (2016). <a class="bib" href="#">Integrating expressive rendering techniques in a GIS cartographic
+                                    pipeline</a>, Agile 2016 Workshop 'Code Loves Maps: Cartographically Oriented Programming Environments', 14 June 2016, Helsinki, Finland (Position Paper).
+								
+								</li>                       
+							</ul>
+						</div>
+					</div>	
+								
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Posters</h3>
+						</div>
+						<div class="panel-body">
+							<ul>
+						
+								<li id="cassini" class="bib">Ory J., Christophe S., Fabrikant S. (2013) <a class="bib" href=""> Identification of style in topographic maps</a>, poster proceedings, <em>26th International Cartographic Conference (ICC 2013), Dresden, Germany, 2013.</em>
+								<div class="pubLink">
+									<span class="bibtex"><input type="image" src="img/icons/bibtex.png" alt="BibTeX entry for this article" title="BibTeX entry for this article" onclick="window.open('bib/Ory_etal_2013.html','BibTex','width=800,height=200,top=100,left=100,scrollbars=yes,resizable=yes');"></span>
+									<a href="http://recherche.ign.fr/labos/util_basilic/publicDownload.php?id=3116" class="imgLink"><img src="img/icons/pdf_icon.gif" height="16" alt="Full Access" title="Full Access"></a>
+								</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+	  -->
+	</div>
+	</section>
+
+
+	<!-- section on en parle  -->
+	<section id="publicrelation" class="section appear clearfix">
+			
+		<div class="container" style="text-align:justify;">
+		<div class="row mar-bot50">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="section-header">
+						<h2 class="section-heading animated languageFr" data-animation="bounceInUp">Revue de presse</h2>
+						<h2 class="section-heading animated languageEn" data-animation="bounceInUp">Media relations</h2>
+					
+
+						<p class="languageFr">On parle de PLU++ dans les médias.</p>
+						<p class="languageEn">We speak about PLU++ in the medias.</p>
+					</div>
+				</div>
+			</div>
+
+
+					<div class="row">
+				<div class="col-md-12">
+
+					<div class="panel panel-default">
+						<div class="panel-body">
+
+						<article class="col-md-4">
+								<div class="portfolio-item">
+									<img src="img/article/ign_mag_82_small.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+
+											<h5 class="languageFr"><a href="img/article/ign_mag_82.png">Article sur les relations entre l'IGN et l'Université Paris-Est</a> (<a href="http://www.ign.fr/institut/ign-magazine/ign-magazine-ndeg82"> IGN magazine n°82 - page 27</a>)</h5>
+											<h5 class="languageEn"><a href="img/article/ign_mag_82.png">Article about relationships beetween IGN and Paris-Est University</a> (<a href="http://www.ign.fr/institut/ign-magazine/ign-magazine-ndeg82"> IGN magazine n°82 - page 27</a>)</h5>
+											<a href="img/article/ign_mag_82.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+															
+										</div>
+									</div>
+								</div>
+                            </article>							
+						
+
+						<article class="col-md-4">
+								<div class="portfolio-item">
+									<img src="img/article/urbanisme_55_small.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+
+											<h5 class="languageFr"><a href="img/article/0138_001.pdf">Article au sujet la présentation du projet lors des 36e rencontres des agences d'urbanisme.</a> (<a href="https://www.urbanisme.fr/l-individu-createur-de-ville/sommaire-55">Revue urbanisme - Hors-série n°55 - page 27</a>)</h5>
+											<h5 class="languageEn"><a href="img/article/0138_001.pdf">Article about the project presentation during the 36th French urban planners meeting.</a> (<a href="https://www.urbanisme.fr/l-individu-createur-de-ville/sommaire-55">Revue urbanisme - Hors-série n°55 - page 27</a>)</h5>
+											<a href="img/article/0138_001.pdf" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+															
+										</div>
+									</div>
+								</div>
+                            </article>	
+                            
+                            						<article class="col-md-4">
+								<div class="portfolio-item">
+									<img src="img/article/ign_mag_83_small.png" alt="" />
+									<div class="portfolio-desc align-center">
+										<div class="folio-info">
+
+											<h5 class="languageFr"><a href="img/article/ign_mag_83_small.png">Article au sujet du projet pour le numéro d'IGN magazine consacré au Géoportail de l'urbanisme.</a> (<a href="http://www.ign.fr/publications-de-l-ign/Institut/Publications/IGN_Magazine/83/IGN_MAG_83.pdf">IGN magazine -  n°83 - page 12</a>)</h5>
+											<h5 class="languageEn"><a href="img/article/ign_mag_83_small.png">Article about the project presentation in the issue of IGN magazine dedicated to the geoportal of urban planning.</a> (<a href="http://www.ign.fr/publications-de-l-ign/Institut/Publications/IGN_Magazine/83/IGN_MAG_83.pdf">Revue urbanisme - Hors-série n°83 - page 12</a>)</h5>
+											<a href="img/article/ign_mag_83.png" class="fancybox"><i class="fa fa-plus fa-2x"></i></a>
+															
+										</div>
+									</div>
+								</div>
+                            </article>	
+						
+
+						</div>
+					</div>
+
+
+		</div>
+	</section>
+
+	<section class="section mar-top50 mar-bot50"></section>
+
+		<!-- contact -->
+		<section id="contact" class="section appear clearfix">
+			<div class="container">
+
+				<div class="row mar-bot50">
+					<div class="col-md-offset-3 col-md-6">
+						<div class="section-header">
+							<h2 class="section-heading animated languageFr" data-animation="bounceInUp">Contactez nous</h2>
+							<h2 class="section-heading animated languageEn" data-animation="bounceInUp">Contact us</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="cform" id="contact-form">
+							<div id="sendmessage">
+								 <a class="languageFr">Votre message a bien été envoyé. Merci !</a>
+								 <a class="languageEn">Your message has been sent successfully. Thanks !</a>
+							</div>						
+							<form action="contact/contact.php" method="post" role="form" class="contactForm">
+							  <div class="form-group languageFr">
+								<label for="name">Votre nom</label>
+								<input type="text" name="name" class="form-control" id="name" placeholder="Votre nom" data-rule="maxlen:4" data-msg="Please enter at least 4 chars" />
+								<div class="validation"></div>
+							  </div>
+							  <div class="form-group languageEn">
+								<label for="name">Your name</label>
+								<input type="text" name="name" class="form-control" id="name" placeholder="Your name" data-rule="maxlen:4" data-msg="Please enter at least 4 chars" />
+								<div class="validation"></div>
+							  </div>							  
+							  <div class="form-group languageFr">
+								<label for="email">Votre mail</label>
+								<input type="email" class="form-control" name="email" id="email" placeholder="Votre mail" data-rule="email" data-msg="Please enter a valid email" />
+								<div class="validation"></div>
+							  </div>
+							  <div class="form-group languageEn">
+								<label for="email">Your e-mail</label>
+								<input type="email" class="form-control" name="email" id="email" placeholder="Your e-mail" data-rule="email" data-msg="Please enter a valid email" />
+								<div class="validation"></div>
+							  </div>							  
+							  <div class="form-group languageFr">
+								<label for="subject">Sujet</label>
+								<input type="text" class="form-control" name="subject" id="subject" placeholder="Sujet" data-rule="maxlen:4" data-msg="Please enter at least 8 chars of subject" />
+								<div class="validation"></div>
+							  </div>
+							  <div class="form-group languageEn">
+								<label for="subject">Subject</label>
+								<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="maxlen:4" data-msg="Please enter at least 8 chars of subject" />
+								<div class="validation"></div>
+							  </div>
+							  <div class="form-group languageFr">
+								<label for="message">Message</label>
+								<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us"></textarea>
+								<div class="validation"></div>
+							  </div>
+							  <div class="form-group languageEn">
+								<label for="message">Message</label>
+								<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us"></textarea>
+								<div class="validation"></div>
+							  </div>
+							  <button type="submit" class="btn btn-theme pull-left languageFr">ENVOYER</button>
+							  <button type="submit" class="btn btn-theme pull-left languageEn">SEND</button>
+							</form>
+
+						</div>
+					</div>
+					<!-- ./span12 -->
+				</div>
+
+			</div>
+		</section>
+	<a href="#header" class="scrollup"><i class="fa fa-chevron-up"></i></a>
+
+	<section id="footer" class="section footer">
+		<div class="container">
+			<div class="row animated opacity mar-bot20 center-block" data-andown="fadeIn" data-animation="animation">
+				<div class="col-sm-12 center-block">
+                    <ul class="social-network social-circle">
+                        <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li>
+                        <!--<li><a href="http://www.dailymotion.com/mapmuxing" class="icoDailymotion" title="Dailymotion"><i class="fa fa-dailymotion"></i></a></li>
+                        <li><a href="https://twitter.com/mapmux" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="http://fr.slideshare.net/MapMuxing" class="icoSlideshare" title="SlideShare"><i class="fa fa-slideshare"></i></a></li>-->
+                    </ul>
+				</div>
+			</div>
+
+			<div class="row align-center copyright">
+					<div class="col-sm-12"><p>Copyright &copy; 2015 - 2016 IGN - Institut National de l'Information Géographique et Forestière</p></div>
+			</div>
+		</div>
+	</section>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	<script src="js/jquery.easing.1.3.js"></script>
+	<script src="js/jquery.isotope.min.js"></script>
+	<script src="js/jquery.nicescroll.min.js"></script>
+	<script src="js/fancybox/jquery.fancybox.pack.js"></script>
+	<script src="js/skrollr.min.js"></script>
+	<script src="js/jquery.scrollTo-1.4.3.1-min.js"></script>
+	<script src="js/jquery.localscroll-1.2.7-min.js"></script>
+	<script src="js/stellar.js"></script>
+	<script src="js/jquery.appear.js"></script>
+	<script src="js/validate.js"></script>
+	<script src="js/main.js"></script>
+  </body>
+</html>
